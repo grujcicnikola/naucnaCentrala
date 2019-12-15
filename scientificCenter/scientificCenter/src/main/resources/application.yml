@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: scientificCenter  
+  datasource:
+    url: jdbc:mysql://localhost:3306/scientificcenter?useSSL=false&createDatabaseIfNotExist=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: sifra
+    driverClassName : com.mysql.jdbc.Driver
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform : org.hibernate.dialect.MySQL5Dialect
+  data:
+    elasticsearch:
+       cluster-name: Cluster
+       cluster-nodes: localhost:9300
+       properties:
+           http:
+              enabled: true
+  http:
+    multipart:
+            max-file-size: 1MB
+            max-request-size: 1MB 
+
+elasticsearch:
+    baseUrl: http://localhost:9200/
+  
+server:
+  port: 8089
