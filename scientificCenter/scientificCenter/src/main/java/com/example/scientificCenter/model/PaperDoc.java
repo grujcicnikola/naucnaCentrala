@@ -30,23 +30,32 @@ public class PaperDoc {
 	@Field(type = FieldType.Text, store = true)
     private Long id;
 
-	@Field(type = FieldType.Text, store = true)
+	@Field(type = FieldType.Text, analyzer="serbian",store = true)
     private String title;
+
+	@Field(type = FieldType.Text, analyzer="serbian", store = true)
+    private String journaltitle;
 	
-	@Field(type = FieldType.Text, store = true)
+	@Field(type = FieldType.Text, analyzer="serbian", store = true)
 	private String author;
 	
-	@Field(type = FieldType.Text, store = true)
+	@Field(type = FieldType.Text,analyzer="serbian", store = true)
     private String coauthors;
 	
-	@Field(type = FieldType.Text, store = true)
-    private String _abstract;
+	@Field(type = FieldType.Text, analyzer="serbian",store = true)
+    private String keywords;
 	
-	@Field(type = FieldType.Text, store = true)
+	@Field(type = FieldType.Text,analyzer="serbian", store = true)
 	private String area;
 	
 	@Field(type = FieldType.Boolean, store = true)
     private Boolean status;
+	
+	@Field(type = FieldType.Text, analyzer="serbian", store = true)
+    private String content;
+	
+	@Field(type = FieldType.Text, store = true)
+    private String recenzents;
 
 	public Long getId() {
 		return id;
@@ -80,12 +89,22 @@ public class PaperDoc {
 		this.coauthors = coauthors;
 	}
 
-	public String get_abstract() {
-		return _abstract;
+	
+
+	public String getJournaltitle() {
+		return journaltitle;
 	}
 
-	public void set_abstract(String _abstract) {
-		this._abstract = _abstract;
+	public void setJournaltitle(String journaltitle) {
+		this.journaltitle = journaltitle;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
 	}
 
 	public String getArea() {
@@ -114,6 +133,22 @@ public class PaperDoc {
 
 	public static String getDatePattern() {
 		return DATE_PATTERN;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getRecenzents() {
+		return recenzents;
+	}
+
+	public void setRecenzents(String recenzents) {
+		this.recenzents = recenzents;
 	}
 	
 	

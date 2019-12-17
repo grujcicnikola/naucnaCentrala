@@ -5,10 +5,12 @@ import org.springframework.stereotype.Service;
 import com.example.scientificCenter.model.PaperDoc;
 import com.example.scientificCenter.repository.PaperDocRepository;
 import com.example.scientificCenter.repository.PaperRepository;
+import com.example.scientificCenter.serviceInterface.PaperDocDAO;
 
 
 @Service
-public class PaperDocService {
+public class PaperDocService implements PaperDocDAO {
+	
 	@Autowired
     private PaperDocRepository paperRepository;
 	
@@ -36,6 +38,12 @@ public class PaperDocService {
 			return true;
 		else
 			return false;
+	}
+
+	@Override
+	public boolean delete(Long id) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 
