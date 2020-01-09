@@ -21,10 +21,13 @@ spring:
   http:
     multipart:
             max-file-size: 1MB
-            max-request-size: 1MB 
+            max-request-size: 1MB
+  jackson:
+    serialization:
+        FAIL_ON_EMPTY_BEANS: false 
 
 elasticsearch:
     baseUrl: http://localhost:9200/
   
 server:
-  port: 8089
+  port: 8095
