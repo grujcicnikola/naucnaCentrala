@@ -8,6 +8,7 @@ public class ScientificCenterApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ScientificCenterApplication.class, args);
+		System.out.println("Started app");
 	}
 
 }

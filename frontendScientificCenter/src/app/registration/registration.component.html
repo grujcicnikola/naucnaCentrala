@@ -1,0 +1,30 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Form</title> 
+    <link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+    
+</head>
+<body>
+<div>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate>
+    <h1>Sign Up</h1>
+      <div *ngFor="let field of formFields" >
+          <label for={{field.id}}>{{field.label}}</label>
+    
+          <input type="text" name={{field.id}} ngModel *ngIf="field.type.name=='string' && field.id !='password'" >
+          <input type="password" name={{field.id}} ngModel ngModel  *ngIf="field.id =='password'" >
+          <input type="checkbox" name={{field.id}} ngModel  *ngIf="field.type.name=='boolean'">
+          <input type="number" name={{field.id}} ngModel  *ngIf="field.type.name=='long'">
+          <select name={{field.id}} multiple size="3" ngModel *ngIf="field.type.name=='enum'">
+              <option *ngFor="let area of areas" [value]="area.id">{{area.name}}</option>
+          </select>
+      </div>
+      <label class="label danger" *ngIf="valid==false" >{{message}}</label>
+      <button type="submit">Sign Up</button>
+    </form>
+</div>
+</body>
+<!--<select name={{field.id}} multiple size="3" *ngIf="field.type.name=='enum'">
+    <option *ngFor="let area of areas" [value]="{{area.id}}">{{area.name}}</option>
+</select>-->

@@ -26,4 +26,8 @@ export class RegistrationService {
   completeTask(taskId){
     return this.http.post('http://localhost:8080/welcome/tasks/complete/'.concat(taskId), null) as Observable<any>
   }
+
+  registerUser(user, taskId) {
+    return this.http.post("http://localhost:8095/registation/userInput/".concat(taskId), user) as Observable<any>;
+  }
 }
