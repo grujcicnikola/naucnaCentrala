@@ -1,6 +1,8 @@
 package com.example.scientificCenter.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -56,6 +58,15 @@ public class User implements Serializable{
 	
 	@Column
 	private Double lat;
+	
+	@Column
+	private Boolean isRecenzent;
+	
+	@Column
+	private String title;
+	
+	@ManyToMany
+	private List<ScientificArea> scientificAreas = new ArrayList<>();
 
 	public User() {
 		super();
@@ -146,6 +157,42 @@ public class User implements Serializable{
 
 	public void setCountry(String country) {
 		this.country = country;
+	}
+
+
+
+	public Boolean getIsRecenzent() {
+		return isRecenzent;
+	}
+
+
+
+	public void setIsRecenzent(Boolean isRecenzent) {
+		this.isRecenzent = isRecenzent;
+	}
+
+
+
+	public String getTitle() {
+		return title;
+	}
+
+
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+
+
+	public List<ScientificArea> getScientificAreas() {
+		return scientificAreas;
+	}
+
+
+
+	public void setScientificAreas(List<ScientificArea> scientificAreas) {
+		this.scientificAreas = scientificAreas;
 	}
 
 

@@ -25,8 +25,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.scientificCenter.domain.User;
 import com.example.scientificCenter.dto.FormFieldsDTO;
 import com.example.scientificCenter.dto.FormSubmissionDTO;
+import com.example.scientificCenter.service.UserService;
 
 @RestController
 @RequestMapping("registation")
@@ -40,6 +42,9 @@ public class RegistrationController {
 	
 	@Autowired
 	private RepositoryService repositoryService;
+	
+	@Autowired
+	private UserService userService;
 	
 	@Autowired
 	TaskService taskService;
@@ -63,7 +68,7 @@ public class RegistrationController {
 		for(FormField fp : properties) {
 			//System.out.println(fp.getId() + fp.getType());
 		}
-		
+		//runtimeService.setVariable(processInstanceId, "registracija", FSDto);
 		return new ResponseEntity<>(new FormFieldsDTO(task.getId(),  properties,pi.getId()),HttpStatus.OK);
 	}
 	
@@ -79,6 +84,48 @@ public class RegistrationController {
 					fieldsDTO.get(i).getFieldId().equals("password")) {
 				if(fieldsDTO.get(i).getFieldValue() == null ||fieldsDTO.get(i).getFieldValue().isEmpty()) {
 					return new ResponseEntity(HttpStatus.BAD_REQUEST);
+				}
+			}
+		}
+		try {
+			runtimeService.setVariable(processInstanceId, "registration", fieldsDTO);
+			formService.submitTaskForm(taskId, map);
+			List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
+			for (Task t : tasks) {
+				System.out.println(t.getId() + " " + t.getName() + " " + t.getAssignee());
+			}
+		}catch(FormFieldValidationException  e) {
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity(HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/confirmForm/{processInstanceId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getConfirmForm( @PathVariable String processInstanceId)  {
+		
+		Task task = taskService.createTaskQuery().processInstanceId(processInstanceId).list().get(0);
+		System.out.println("ZAPOCET TASK: " + task.getName());
+		TaskFormData tfd = formService.getTaskFormData(task.getId());
+		List<FormField> properties = tfd.getFormFields();
+		
+		for(FormField fp : properties) {
+			System.out.println(fp.getId() + fp.getType());
+		}
+		
+		return new ResponseEntity<>(new FormFieldsDTO(task.getId(),  properties,processInstanceId),HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/confirmUserInput/{username}/{taskId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity activateUser(@PathVariable String username,@RequestBody List<FormSubmissionDTO> fieldsDTO, @PathVariable String taskId) {
+		HashMap<String, Object> map = this.mapListToDto(fieldsDTO);
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String processInstanceId = task.getProcessInstanceId();
+		User user = this.userService.findByUsername(username);
+		for(int i = 0; i < fieldsDTO.size(); i++) {
+			if(fieldsDTO.get(i).getFieldId().equals("confirm")){
+				if(!fieldsDTO.get(i).getFieldValue().equals("")) {
+					user.setActivated(true);
+					userService.save(user);
 				}
 			}
 		}

@@ -1,6 +1,7 @@
 package com.example.scientificCenter.service;
 
 import java.security.Security;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.example.scientificCenter.domain.ScientificArea;
 import com.example.scientificCenter.dto.FormSubmissionDTO;
 
 @Service
@@ -33,6 +35,12 @@ public class NewUserService implements JavaDelegate{
 	@Autowired
 	private JavaMailSender javaMailSender;
 	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private ScientificAreaService areaService;
+	
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		System.out.println("Start save data, user "+execution.getVariable("username").toString());
@@ -41,9 +49,39 @@ public class NewUserService implements JavaDelegate{
 		newUser.setLastName(execution.getVariable("surname").toString());
 		newUser.setEmail(execution.getVariable("email").toString());
 		newUser.setPassword(execution.getVariable("password").toString());
-		identityService.saveUser(newUser);
+		//identityService.saveUser(newUser);
+		com.example.scientificCenter.domain.User user = new com.example.scientificCenter.domain.User();
+		user.setActivated(false);
+		user.setCity(execution.getVariable("city").toString());
+		user.setCountry(execution.getVariable("state").toString());
+		user.setEmail(execution.getVariable("email").toString());
+		user.setName(execution.getVariable("name").toString());
+		user.setSurname(execution.getVariable("surname").toString());
+		user.setUsername(execution.getVariable("username").toString());
+		user.setPassword(execution.getVariable("password").toString());
+		if(execution.getVariable("title").toString() !=null) {
+			user.setTitle(execution.getVariable("title").toString());
+		}
+		if(execution.getVariable("isRecenzent").toString() !=null) {
+			user.setIsRecenzent(true);
+		}else {
+			user.setIsRecenzent(false);
+		}
+		@SuppressWarnings("unchecked")
+		List<FormSubmissionDTO> fieldsDTO = (List<FormSubmissionDTO>)execution.getVariable("registration");
+		List<ScientificArea> areas= new ArrayList<ScientificArea>();
+		for(int i = 0; i < fieldsDTO.size(); i++) {
+			if(fieldsDTO.get(i).getFieldId().equals("scientificAreas")){
+				for(int j =0; j< fieldsDTO.get(i).getAreas().size(); j++) {
+					//System.out.println(fieldsDTO.get(i).getAreas().get(j));
+					areas.add(areaService.findById(Long.parseLong(fieldsDTO.get(i).getAreas().get(j))).get());
+				}
+			}
+		}
+		user.setScientificAreas(areas);
+		userService.save(user);
+		sendConfirmationEmail(execution);
 		
-		sendConfirmationEmail(execution.getVariable("email").toString());
        // Get a Properties object
         /*Properties props = System.getProperties();
         props.put("mail.smtp.auth", true);
@@ -76,18 +114,18 @@ public class NewUserService implements JavaDelegate{
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }*/
-
+		
 	}
 
-	public void sendConfirmationEmail(String email)throws MailException, InterruptedException{
+	public void sendConfirmationEmail(DelegateExecution execution)throws MailException, InterruptedException{
 		
 		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo(email);
+		mail.setTo(execution.getVariable("email").toString());
 		mail.setFrom("petarperic23252@gmail.com");
-		mail.setSubject("MegaTravel - potvrda registracije");
-		mail.setText("Zdravo  ,\n Hvala vam sto koristite nas sajt.");
-
-				
+		mail.setSubject("Scientific central - confirm registration");
+		mail.setText("Hello,\n Please confirm your identiny at this link "+
+		"http://localhost:4200/confirm/"+execution.getVariable("username").toString()+"/"+execution.getProcessInstanceId());
+		
 		javaMailSender.send(mail);
 		System.out.println("Email poslat!");
 	}

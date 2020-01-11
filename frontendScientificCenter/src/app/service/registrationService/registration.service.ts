@@ -14,6 +14,10 @@ export class RegistrationService {
     return this.http.get<FormFields>('http://localhost:8095/registation/register')
    }
 
+   confirmForm(id: string){
+    return this.http.get<FormFields>('http://localhost:8095/registation/confirmForm/'.concat(id));
+   }
+
   getTasks(processInstance : string){
 
     return this.http.get('http://localhost:8080/welcome/get/tasks/'.concat(processInstance)) as Observable<any>
@@ -29,5 +33,9 @@ export class RegistrationService {
 
   registerUser(user, taskId) {
     return this.http.post("http://localhost:8095/registation/userInput/".concat(taskId), user) as Observable<any>;
+  }
+
+  confirmUser(username:string,user, taskId) {
+    return this.http.post("http://localhost:8095/registation/confirmUserInput/"+username+'/'.concat(taskId), user) as Observable<any>;
   }
 }
