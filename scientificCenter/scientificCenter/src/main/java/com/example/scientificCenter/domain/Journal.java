@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -34,6 +35,9 @@ public class Journal {
 	@Column(nullable = false)
 	private String issn;
 	
+	@Column(nullable = false)
+	private Boolean isActivated;
+	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<ScientificArea> areas = new HashSet<ScientificArea>();
 	
@@ -51,6 +55,9 @@ public class Journal {
 
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<Paper> papers = new HashSet<Paper>();
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	private MethodOfPayment methodOfPayment ;
 	
 	public Journal() {
 		super();
@@ -127,6 +134,22 @@ public class Journal {
 
 	public void setPapers(Set<Paper> papers) {
 		this.papers = papers;
+	}
+
+	public MethodOfPayment getMethodOfPayment() {
+		return methodOfPayment;
+	}
+
+	public void setMethodOfPayment(MethodOfPayment methodOfPayment) {
+		this.methodOfPayment = methodOfPayment;
+	}
+
+	public Boolean getIsActivated() {
+		return isActivated;
+	}
+
+	public void setIsActivated(Boolean isActivated) {
+		this.isActivated = isActivated;
 	}
 	
 	

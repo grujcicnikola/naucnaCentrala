@@ -7,17 +7,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { ConfirmComponent } from './confirm/confirm.component';
+import { JournalComponent } from './journal/journal.component';
 
 const appRoutes: Routes = [
   {path: 'register', component : RegistrationComponent},
   {path: 'confirm/:username/:id', component : ConfirmComponent},
+  {path: 'journal', component : JournalComponent},
   ]
 
 @NgModule({
   declarations: [
     AppComponent,
     RegistrationComponent,
-    ConfirmComponent
+    ConfirmComponent,
+    JournalComponent
   ],
   imports: [
     BrowserModule,

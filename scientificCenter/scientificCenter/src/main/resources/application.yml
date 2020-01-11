@@ -39,6 +39,10 @@ spring:
 
 elasticsearch:
     baseUrl: http://localhost:9200/
-  
+
+camunda:
+    createJournalProcessKey: CreateJournal
+    registrationProcessKey: Registration  
+    
 server:
   port: 8095

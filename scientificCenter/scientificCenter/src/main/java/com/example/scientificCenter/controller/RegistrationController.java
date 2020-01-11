@@ -13,6 +13,7 @@ import org.camunda.bpm.engine.impl.util.json.JSONException;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +53,8 @@ public class RegistrationController {
 	@Autowired
 	FormService formService;
 	
-	private String registrationProcessKey="Registration";
+	@Value("${camunda.registrationProcessKey}")
+	private String registrationProcessKey;
 	
 	
 	@RequestMapping(value = "/register", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
