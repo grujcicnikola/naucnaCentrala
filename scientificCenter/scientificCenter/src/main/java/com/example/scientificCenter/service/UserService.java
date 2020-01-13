@@ -1,6 +1,7 @@
 package com.example.scientificCenter.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,11 @@ public class UserService {
 	public void delete(User user) {
 		// TODO Auto-generated method stub
 		repository.delete(user);
+	}
+
+	public Optional<User> getByEmail(String email) {
+		// TODO Auto-generated method stub
+		return repository.findByEmail(email);
 	}
 
 }

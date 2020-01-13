@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.scientificCenter.domain.Editor;
+import com.example.scientificCenter.domain.Journal;
 import com.example.scientificCenter.domain.Recenzent;
 import com.example.scientificCenter.domain.ScientificArea;
 import com.example.scientificCenter.dto.FormFieldsDTO;
@@ -102,6 +103,12 @@ public class JournalController {
 				if(fieldsDTO.get(i).getFieldValue() == null ||fieldsDTO.get(i).getFieldValue().isEmpty() ) {
 					return new ResponseEntity(HttpStatus.BAD_REQUEST);
 				}
+				if(fieldsDTO.get(i).getFieldId().equals("issnNumber")) {
+					Journal journalWithSameIssn =journalService.findByIssn(fieldsDTO.get(i).getFieldValue());
+					if(journalWithSameIssn !=null) {
+						return new ResponseEntity(HttpStatus.BAD_REQUEST);
+					}
+				}
 			}
 		}
 		try {
@@ -125,8 +132,8 @@ public class JournalController {
 		String processInstanceId = task.getProcessInstanceId();
 		Boolean valid = true;
 		for(int i = 0; i < fieldsDTO.size(); i++) {
-			if(fieldsDTO.get(i).getFieldId().equals("editors") ||fieldsDTO.get(i).getFieldId().equals("recenzents")) {
-				if(fieldsDTO.get(i).getAreas() == null) {
+			if(fieldsDTO.get(i).getFieldId().equals("editors")) {
+				if(fieldsDTO.get(i).getFieldValue() == null) {
 					System.out.println("jedno od polja niju dobro");
 					valid = false;
 				}
@@ -205,8 +212,10 @@ public class JournalController {
 	
 		List<UserEditorDTO> dtos = new ArrayList<UserEditorDTO>();
 		for (Editor task : editorsOfInterest) {
-			UserEditorDTO t = new UserEditorDTO(task.getId(), task.getName());
-			dtos.add(t);
+			if(task.getJournal() ==null) {
+				UserEditorDTO t = new UserEditorDTO(task.getId(), task.getName());
+				dtos.add(t);
+			}
 		}
 		
 		return new ResponseEntity<>(dtos,HttpStatus.OK);

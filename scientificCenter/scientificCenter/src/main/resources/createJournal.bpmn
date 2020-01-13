@@ -59,7 +59,7 @@
     <bpmn:userTask id="Task_1vw3xu8" name="Add editors and recenzents" camunda:assignee="${initiator}">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="editors" label="Editors" type="enum" />
+          <camunda:formField id="editors" label="Editors" type="string" />
           <camunda:formField id="recenzents" label="Recenzents" type="enum" />
         </camunda:formData>
       </bpmn:extensionElements>

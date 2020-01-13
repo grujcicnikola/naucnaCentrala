@@ -1,8 +1,6 @@
 package com.example.scientificCenter.domain;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,10 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.*;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 
 
@@ -27,9 +24,9 @@ public class Editor extends User{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Journal journal;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	private List<Journal> journal = new ArrayList<Journal>();
 
 	public Editor() {
 		super();
@@ -44,17 +41,16 @@ public class Editor extends User{
 		this.id = id;
 	}
 
-	public List<Journal> getJournal() {
+	
+
+	public Journal getJournal() {
 		return journal;
 	}
 
-	public void setJournal(List<Journal> journal) {
+	public void setJournal(Journal journal) {
 		this.journal = journal;
 	}
 
-	
-
-	
 	
 	
 	

@@ -67,7 +67,7 @@ export class AddEditorsComponent implements OnInit {
       console.log(property);
       console.log(value[property]);
       if(property =="editors"){
-        o.push({fieldId : property, areas : value[property]});
+        o.push({fieldId : property, fieldValue : value[property]});
         if(value[property] !=""){
           this.valid=true;
         }else{

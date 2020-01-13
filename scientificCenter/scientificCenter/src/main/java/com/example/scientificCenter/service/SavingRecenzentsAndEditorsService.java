@@ -51,13 +51,12 @@ public class SavingRecenzentsAndEditorsService implements JavaDelegate{
 		Journal journal = this.journalService.findByIssn(execution.getVariable("issnNumber").toString());
 		@SuppressWarnings("unchecked")
 		List<FormSubmissionDTO> fieldsDTO = (List<FormSubmissionDTO>)execution.getVariable("editorsAndRecenzents");
-		List<Editor> editors= new ArrayList<Editor>();
+		Editor editor= new Editor();
 		List<Recenzent> recenzents= new ArrayList<Recenzent>();
 		for(int i = 0; i < fieldsDTO.size(); i++) {
 			if(fieldsDTO.get(i).getFieldId().equals("editors") ) {
-				for(int j=0; j<fieldsDTO.get(i).getAreas().size();j++) {
-					editors.add(this.journalService.findEditorById(Long.parseLong(fieldsDTO.get(i).getAreas().get(j))).get());
-				}
+				editor = this.journalService.findEditorById(Long.parseLong(fieldsDTO.get(i).getFieldValue())).get();
+				
 			}
 			if(fieldsDTO.get(i).getFieldId().equals("recenzents")) {
 				for(int j=0; j<fieldsDTO.get(i).getAreas().size();j++) {
@@ -65,17 +64,10 @@ public class SavingRecenzentsAndEditorsService implements JavaDelegate{
 				}
 			}
 		}
-		System.out.println("Ispisi editore");
-		for(int i = 0; i < editors.size(); i++) {
-			//System.out.println(editors.get(i).getUsername());
-			List<Journal> journals= editors.get(i).getJournal();
-			journals.add(journal);
-			editors.get(i).setJournal(journals);
-			for(int j=0; j<journals.size(); j++) {
-				System.out.println(journals.get(j).getIssn());
-			}
-			this.journalService.saveEditor(editors.get(i));
-		}
+		
+		editor.setJournal(journal);
+		this.journalService.saveEditor(editor);
+		
 		for(int i = 0; i < recenzents.size(); i++) {
 			//System.out.println(recenzents.get(i).getUsername());
 			List<Journal> journals= recenzents.get(i).getJournal();

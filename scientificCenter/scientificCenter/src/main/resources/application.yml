@@ -46,3 +46,10 @@ camunda:
     
 server:
   port: 8095
+  
+com:
+    example:
+        app:
+            jwtExpiration: 86400
+            jwtExpirationInMs: 3600000
+            jwtSecret: y5oEr+Hczn77f1xoU9vOfw+K  

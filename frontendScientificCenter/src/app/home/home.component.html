@@ -1,3 +1,102 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
+<!------ Include the above in your HEAD tag ---------->
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">MegaTravel</a>
+    <li class="nav-item" *ngIf="someoneLogged == true">
+            <img src="../assets/img/user.png"/>
+            <label id="welcomeLabel">Welcome:{{email}} </label>
+    </li>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+         <!-- <a *ngIf="adminLogged == true"  class="nav-link" href="/selfSigned">SelfSigned Certificate
+                <span class="sr-only">(current)</span>
+              </a>
+        </li>
+       
+        <li *ngIf="adminLogged == true" class="nav-item">
+          <a   class="nav-link" href="/createFile">Create file</a>
+        </li>
+        <li *ngIf="adminLogged == true" class="nav-item">
+          <a   class="nav-link" href="/connectApplications">Connect applications</a>
+        </li>-->
+        <li class="nav-item">
+          <a  *ngIf="someoneLogged != true"  class="nav-link" href="/login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a  *ngIf="someoneLogged != true"  class="nav-link" href="/register">Register</a>
+        </li>
+        <li class="nav-item">
+          <a *ngIf="editorLogged == true"   class="nav-link" href="/accommodationCategory">Create journal</a>
+        </li>
+       
+       
+        <li class="nav-item">
+            <a *ngIf="someoneLogged == false" class="nav-link" href="/login">Login</a>
+          </li>
+        <li class="nav-item">
+          <a *ngIf="someoneLogged == true" class="nav-link" [routerLink]="" (click)="logout()">Logout</a>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel">
+    
+    <div class="carousel-inner" role="listbox">
+      <!-- Slide One - Set the background image for this slide in the line below -->
+      <div class="carousel-item active" style="background-image: url('../assets/img/book.jpg')">
+        <div class="carousel-caption d-none d-md-block">
+          <h3 class="display-4"><Main>MEGA TRAVEL AGENCY</Main></h3>
+          <p class="lead">Travel with us</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Page Content -->
+<div class="container py-4 mt-4" *ngIf="adminLogged == true">
+  <h1>All certificates</h1>
+  <div class="row mt-4">
+    <div class="col-lg-3 col-sm-6 mb-4" *ngFor="let c of certificates; let i = index">
+      <div class="card shadow border-0 h-100">
+        <!--
+                <p class="card-text">Serial number: {{c.id}}</p>
+                <p class="card-text">Revoked: {{c.revoked}}</p>
+                <p class="card-text">Valid until: {{c.validUntil}}</p>
+                <p class="card-text">Type : {{c.signedBy}}</p>
+                <a id="hrefButton" (click)="validate(c)" class="btn btn-success btn-block" >Validate</a>
+                <div class="row">
+                    <div class="col">
+                            <a id="hrefButton" *ngIf="(c.revoked == false)" (click)="wannaRevoke(c)" class="btn btn-success btn-block">Do you want to revoke?</a>
+                    </div>
+                </div>
+                <div class="row" *ngIf="(myArray[i] == true)">
+                    <div class="col">
+                            <input type="text" class="form-input" placeholder="Reason for revoke..." [(ngModel)]="c.reason" name="reason" id="reason" [required]="true" />
+                            <a id="hrefButton"  (click)="revoke(c)" class="btn btn-success btn-block" >Revoke</a>
+                    </div>
+                </div>
+            -->      
+      </div>
+    </div>
+
+
+  </div>
+  </div>
+
 <div>
     <button (click)="getTasks()">Get tasks</button>
 
