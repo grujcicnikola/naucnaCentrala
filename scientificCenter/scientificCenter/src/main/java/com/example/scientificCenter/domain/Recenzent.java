@@ -1,6 +1,8 @@
 package com.example.scientificCenter.domain;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,19 +14,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
-public class Recenzent {
+@PrimaryKeyJoinColumn(name="id", referencedColumnName="id")
+public class Recenzent extends User{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false)
-	private String title;
-	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<ScientificArea> areas = new HashSet<ScientificArea>();
-
+	private List<Journal> journal = new ArrayList<Journal>();
+	
+	
 	public Recenzent() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -38,21 +40,14 @@ public class Recenzent {
 		this.id = id;
 	}
 
-	public String getTitle() {
-		return title;
+	public List<Journal> getJournal() {
+		return journal;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setJournal(List<Journal> journal) {
+		this.journal = journal;
 	}
 
-	public Set<ScientificArea> getAreas() {
-		return areas;
-	}
-
-	public void setAreas(Set<ScientificArea> areas) {
-		this.areas = areas;
-	}
 	
 	
 }

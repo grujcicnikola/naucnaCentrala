@@ -1,6 +1,8 @@
 package com.example.scientificCenter.domain;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,26 +12,24 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 
 
 @Entity
-public class Editor {
+@PrimaryKeyJoinColumn(name="id", referencedColumnName="id")
+public class Editor extends User{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false)
-	private String title;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Journal journal;
-	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<ScientificArea> areas = new HashSet<ScientificArea>();
+	@ManyToMany(fetch = FetchType.EAGER)
+	private List<Journal> journal = new ArrayList<Journal>();
 
 	public Editor() {
 		super();
@@ -44,29 +44,18 @@ public class Editor {
 		this.id = id;
 	}
 
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public Journal getJournal() {
+	public List<Journal> getJournal() {
 		return journal;
 	}
 
-	public void setJournal(Journal journal) {
+	public void setJournal(List<Journal> journal) {
 		this.journal = journal;
 	}
 
-	public Set<ScientificArea> getAreas() {
-		return areas;
-	}
+	
 
-	public void setAreas(Set<ScientificArea> areas) {
-		this.areas = areas;
-	}
+	
+	
 	
 	
 	

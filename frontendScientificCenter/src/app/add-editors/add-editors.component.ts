@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { ScientificAreaService } from '../service/scientificAreaService/scientific-area.service';
 import { RegistrationService } from '../service/registrationService/registration.service';
 import { FormFields } from '../model/FormFields';
-import { ScientificAreaService } from '../service/scientificAreaService/scientific-area.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MethodOfPaymentService } from '../service/methodOfPayment/method-of-payment.service';
 import { JournalService } from '../service/journalService/journal.service';
 
 @Component({
-  selector: 'app-journal',
-  templateUrl: './journal.component.html',
-  styleUrls: ['./journal.component.css']
+  selector: 'app-add-editors',
+  templateUrl: './add-editors.component.html',
+  styleUrls: ['./add-editors.component.css']
 })
-export class JournalComponent implements OnInit {
+export class AddEditorsComponent implements OnInit {
+
   private repeated_password = "";
   private categories = [];
   private formFieldsDto = new FormFields();
@@ -22,13 +22,17 @@ export class JournalComponent implements OnInit {
   private enumValues = [];
   private tasks = [];
   private areas = [];
-  private message = "You must select at least one scientific area!";
+  private message = "You must select at least one editor!";
+  private message1 = "You must select at least two recenzents!";
   private valid = true;
-  private methods =[];
-  constructor(private router: ActivatedRoute, private journalService: JournalService,
-    private methodsService: MethodOfPaymentService, private areasService: ScientificAreaService) { 
+  private valid1 = true;
+  private procesInstanceId : string;
+  private editors = [];
+  private recenzents =[];
+  constructor(private router: ActivatedRoute, private journalService: JournalService, private areasService: ScientificAreaService) { 
     //let x = regService.startProcess();
-    this.journalService.startProcess().subscribe(
+    this.procesInstanceId = this.router.snapshot.params.id;
+    this.journalService.getTasks(this.procesInstanceId).subscribe(
         data =>{
           this.formFieldsDto = data;
           this.formFields = this.formFieldsDto.formFields;
@@ -41,17 +45,16 @@ export class JournalComponent implements OnInit {
           });
          
         },error =>{alert("Error")});
-      this.areasService.getAll().subscribe(
+      this.journalService.getEditors(this.procesInstanceId).subscribe(
         res =>{
-          this.areas=res;
+          this.editors=res;
         }
       )
-      this.methodsService.getAll().subscribe(
+      this.journalService.getRecenzents(this.procesInstanceId).subscribe(
         res =>{
-          this.methods=res;
+          this.recenzents=res;
         }
-      )
-    
+      )    
   }
 
   ngOnInit() {
@@ -63,9 +66,7 @@ export class JournalComponent implements OnInit {
     for (var property in value) {
       console.log(property);
       console.log(value[property]);
-      if(property !="scientificAreas")
-        o.push({fieldId : property, fieldValue : value[property]});
-      else{
+      if(property =="editors"){
         o.push({fieldId : property, areas : value[property]});
         if(value[property] !=""){
           this.valid=true;
@@ -73,19 +74,27 @@ export class JournalComponent implements OnInit {
           this.valid = false;
           console.log("validacija "+this.valid);
         }
+      }else{
+        o.push({fieldId : property, areas : value[property]});
+        if(value[property].length>=2){
+          this.valid1=true;
+        }else{
+          this.valid1 = false;
+          console.log("validacija "+this.valid1);
+        }
       }
     }
-    
+    console.log("validacijaK "+this.valid);
+    console.log("validacijaK "+this.valid1);
     console.log(o);
-    if(this.valid==true){
-      let x = this.journalService.registerUser(o, this.formFieldsDto.taskId);
+    if(this.valid==true && this.valid1==true){
+      let x = this.journalService.registerEditorsAndRecenzents(o, this.formFieldsDto.taskId);
 
       x.subscribe(
         res => {
           console.log(res);
           
           alert("You registered successfully!")
-          window.location.href="http://localhost:4200/addEditors/"+this.processInstance;
         },
         err => {
           this.handleError(err)
@@ -104,3 +113,4 @@ export class JournalComponent implements OnInit {
     
   }
 }
+

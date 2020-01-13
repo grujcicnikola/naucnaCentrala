@@ -9,4 +9,6 @@ import com.example.scientificCenter.domain.Journal;
 @Repository
 public interface JournalRepository extends JpaRepository<Journal, Long> {
 
+	Journal findByIssn(String string);
+
 }

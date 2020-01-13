@@ -14,10 +14,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.*;
 
 
 @Entity
+
 @Inheritance(strategy=InheritanceType.JOINED)
 public class User implements Serializable{
 	/**
@@ -66,7 +68,13 @@ public class User implements Serializable{
 	private String title;
 	
 	@ManyToMany
-	private List<ScientificArea> scientificAreas = new ArrayList<>();
+	private List<ScientificArea> areas = new ArrayList<>();
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name="user_roles", 
+			joinColumns = @JoinColumn(name="user_id", referencedColumnName = "id"),
+		    inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	public Set<UserRole> roles;
 
 	public User() {
 		super();
@@ -185,14 +193,29 @@ public class User implements Serializable{
 
 
 
-	public List<ScientificArea> getScientificAreas() {
-		return scientificAreas;
+	
+
+
+	public List<ScientificArea> getAreas() {
+		return areas;
 	}
 
 
 
-	public void setScientificAreas(List<ScientificArea> scientificAreas) {
-		this.scientificAreas = scientificAreas;
+	public void setAreas(List<ScientificArea> areas) {
+		this.areas = areas;
+	}
+
+
+
+	public Set<UserRole> getRoles() {
+		return roles;
+	}
+
+
+
+	public void setRoles(Set<UserRole> roles) {
+		this.roles = roles;
 	}
 
 

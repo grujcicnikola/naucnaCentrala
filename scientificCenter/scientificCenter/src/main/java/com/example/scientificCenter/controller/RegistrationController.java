@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.scientificCenter.domain.Editor;
 import com.example.scientificCenter.domain.User;
 import com.example.scientificCenter.dto.FormFieldsDTO;
 import com.example.scientificCenter.dto.FormSubmissionDTO;
@@ -152,5 +153,22 @@ public class RegistrationController {
 		}
 		
 		return map;
+	}
+	
+	@RequestMapping(value = "/test", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> test()  {
+		Editor novi = new Editor();
+		novi.setActivated(false);
+		novi.setCity("novi sad");
+		novi.setCountry("srb");
+		novi.setEmail("bla");
+		novi.setIsRecenzent(false);
+		novi.setName("name");
+		novi.setUsername("username");
+		novi.setPassword("sifra");
+		novi.setSurname("surname");
+		
+		this.userService.save(novi);
+		return new ResponseEntity<>(null,HttpStatus.OK);
 	}
 }

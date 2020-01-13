@@ -47,11 +47,7 @@ public class Journal {
 	@OneToOne
 	private Editor editorInChief;
 	
-	@OneToMany(fetch = FetchType.EAGER)
-	private Set<Editor> editors = new HashSet<Editor>();
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	private Set<Recenzent> recenzents = new HashSet<Recenzent>();
 
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<Paper> papers = new HashSet<Paper>();
@@ -112,21 +108,7 @@ public class Journal {
 		this.editorInChief = editorInChief;
 	}
 
-	public Set<Editor> getEditors() {
-		return editors;
-	}
-
-	public void setEditors(Set<Editor> editors) {
-		this.editors = editors;
-	}
-
-	public Set<Recenzent> getRecenzents() {
-		return recenzents;
-	}
-
-	public void setRecenzents(Set<Recenzent> recenzents) {
-		this.recenzents = recenzents;
-	}
+	
 
 	public Set<Paper> getPapers() {
 		return papers;

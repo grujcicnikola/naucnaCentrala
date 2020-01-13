@@ -78,7 +78,7 @@ public class NewUserService implements JavaDelegate{
 				}
 			}
 		}
-		user.setScientificAreas(areas);
+		user.setAreas(areas);
 		userService.save(user);
 		sendConfirmationEmail(execution);
 		
