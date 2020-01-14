@@ -6,6 +6,7 @@ import { ScientificAreaService } from '../service/scientificAreaService/scientif
 import { HttpErrorResponse } from '@angular/common/http';
 import { MethodOfPaymentService } from '../service/methodOfPayment/method-of-payment.service';
 import { JournalService } from '../service/journalService/journal.service';
+import { ElementSchemaRegistry } from '@angular/compiler';
 
 @Component({
   selector: 'app-journal',
@@ -25,12 +26,14 @@ export class JournalComponent implements OnInit {
   private message = "You must select at least one scientific area!";
   private valid = true;
   private methods =[];
+  private valueSA ="";
   constructor(private router: ActivatedRoute, private journalService: JournalService,
     private methodsService: MethodOfPaymentService, private areasService: ScientificAreaService) { 
     //let x = regService.startProcess();
     this.journalService.startProcess().subscribe(
         data =>{
           this.formFieldsDto = data;
+          console.log(data);
           this.formFields = this.formFieldsDto.formFields;
           this.processInstance = this.formFieldsDto.processInstanceId;
           this.formFields.forEach( (field) =>{
@@ -66,7 +69,27 @@ export class JournalComponent implements OnInit {
       if(property !="scientificAreas")
         o.push({fieldId : property, fieldValue : value[property]});
       else{
-        o.push({fieldId : property, areas : value[property]});
+        ///o.push({fieldId : property, areas : value[property]});
+        this.valueSA="";
+        this.areas.forEach(area=>{
+              var i =0;
+              value[property].forEach(element => {
+                  if(element ==area.id){
+                    if(i==0){
+                      this.valueSA +=area.name;
+                    }else{
+                      this.valueSA +=",";
+                      this.valueSA +=area.name;
+                    }
+                  }
+                  i++;
+              });
+            })
+            //this.valueSA +=value[property][i];  
+          
+        
+        o.push({fieldId : property, areas : value[property], fieldValue : this.valueSA});
+        console.log("******"+this.valueSA);
         if(value[property] !=""){
           this.valid=true;
         }else{
@@ -103,4 +126,6 @@ export class JournalComponent implements OnInit {
     }
     
   }
+ 
+  
 }

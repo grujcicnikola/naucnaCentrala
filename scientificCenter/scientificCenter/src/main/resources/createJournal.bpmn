@@ -17,7 +17,7 @@
               <camunda:constraint name="required" config="true" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="scientificAreas" label="Scientific areas" type="enum" />
+          <camunda:formField id="scientificAreas" label="Scientific areas" type="string" />
           <camunda:formField id="wayOfPaying" label="How will you pay?" type="string">
             <camunda:validation>
               <camunda:constraint name="required" config="true" />
@@ -78,7 +78,7 @@
           <camunda:formField id="name1" label="Name" type="string" defaultValue="${name}" />
           <camunda:formField id="issnNumber1" label="ISSN number" type="long" defaultValue="${issnNumber}" />
           <camunda:formField id="wayOfPaying1" label="How will you pay" type="string" defaultValue="${wayOfPaying}" />
-          <camunda:formField id="scientificAreas1" label="Scientific areas" type="enum" defaultValue="${scientificAreas}" />
+          <camunda:formField id="scientificAreas1" label="Scientific areas" type="string" defaultValue="${scientificAreas}" />
           <camunda:formField id="isOpenAccess1" label="Is Open access?" type="boolean" defaultValue="${isOpenAccess}" />
           <camunda:formField id="goodData" label="Is data correct?" type="boolean" />
           <camunda:formField id="activateJournal" label="Activate" type="boolean" />

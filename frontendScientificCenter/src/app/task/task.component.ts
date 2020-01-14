@@ -28,6 +28,7 @@ export class TaskComponent implements OnInit {
   private taskId: string;
   private obj : any;
   methods: any;
+  private helpVariableForWay : any;
   constructor(private router: ActivatedRoute, private regService: RegistrationService, 
     private areasService: ScientificAreaService, private taskService: TaskService, private methodsService: MethodOfPaymentService) { 
     //let x = regService.startProcess();
@@ -38,24 +39,41 @@ export class TaskComponent implements OnInit {
           console.log(data);
           this.formFields = this.formFieldsDto.formFields;
           this.processInstance = this.formFieldsDto.processInstanceId;
-          this.formFields.forEach( (field) =>{
+          this.areasService.getAll().subscribe(
+            res =>{
+              this.areas=res;
+              this.formFields.forEach( (field) =>{
             
-            if( field.type.name=='enum'){
-              this.enumValues = Object.keys(field.type.values);
+                if( field.type.name=='enum'){
+                  this.enumValues = Object.keys(field.type.values);
+                }
+              });
+              
+
             }
-          });
+          )
+          this.methodsService.getAll().subscribe(
+            res =>{
+              console.log("methode "+res);
+              this.methods=res;
+              this.formFields.forEach( (field) =>{
+            
+                if( field.id=='wayOfPaying1'){
+                  //this.enumValues = Object.keys(field.type.values);
+                  res.forEach(element=>{
+                    if(element.id==field.defaultValue){
+                      this.helpVariableForWay= field.defaultValue;
+                      field.defaultValue=element.name;
+                    }
+                  })
+                }
+              });
+            }
+          )
+          
          
         },error =>{alert("Error")});
-      this.areasService.getAll().subscribe(
-        res =>{
-          this.areas=res;
-        }
-      )
-      this.methodsService.getAll().subscribe(
-        res =>{
-          this.methods=res;
-        }
-      )
+      
     
   }
 
@@ -68,8 +86,13 @@ export class TaskComponent implements OnInit {
     for (var property in value) {
       console.log(property);
       console.log(value[property]);
-      if(property !="scientificAreas")
-        o.push({fieldId : property, fieldValue : value[property]});
+      if(property !="scientificAreas"){
+        if(property !="wayOfPaying1"){
+          o.push({fieldId : property, fieldValue : this.helpVariableForWay});
+        }else{
+          o.push({fieldId : property, fieldValue : value[property]});
+        }
+      }
       else{
         o.push({fieldId : property, areas : value[property]});
         if(value[property] !=""){

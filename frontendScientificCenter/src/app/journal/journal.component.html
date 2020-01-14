@@ -12,11 +12,11 @@
       <div *ngFor="let field of formFields" >
           <label for={{field.id}}>{{field.label}}</label>
     
-          <input type="text" name={{field.id}} ngModel *ngIf="field.type.name=='string' && field.id !='password' && field.id !='wayOfPaying'" >
+          <input type="text" name={{field.id}} ngModel *ngIf="field.type.name=='string' && field.id !='password' && field.id !='wayOfPaying' && field.id!='scientificAreas'" >
           <input type="password" name={{field.id}} ngModel ngModel  *ngIf="field.id =='password'" >
           <input type="checkbox" name={{field.id}} ngModel  *ngIf="field.type.name=='boolean'">
           <input type="number" name={{field.id}} ngModel  *ngIf="field.type.name=='long'">
-          <select name={{field.id}} multiple size="3" ngModel *ngIf="field.type.name=='enum' ">
+          <select name={{field.id}} multiple size="3" ngModel *ngIf="field.type.name=='string' && field.id=='scientificAreas'">
               <option *ngFor="let area of areas" [value]="area.id">{{area.name}}</option>
           </select>
           <select name={{field.id}}  ngModel *ngIf="field.id =='wayOfPaying'">
