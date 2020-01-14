@@ -87,8 +87,14 @@ export class HomeComponent implements OnInit {
 
   getTasks(){
     this.userServ.getUsersTasks(this.email).subscribe(data =>{
+      console.log(data);
       this.tasks = data;
     })
 
+  }
+
+  startTask(task){
+    console.log(task);
+    window.location.href="http://localhost:4200/task/".concat(task);
   }
 }

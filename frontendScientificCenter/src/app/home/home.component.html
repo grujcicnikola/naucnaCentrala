@@ -67,41 +67,25 @@
 </header>
 
 <!-- Page Content -->
-<div class="container py-4 mt-4" *ngIf="adminLogged == true">
-  <h1>All certificates</h1>
+<div class="container py-4 mt-4" ><!--*ngIf="adminLogged == true">-->
+  <h1>All tasks</h1>
+  <button (click)="getTasks()">Get tasks</button>
   <div class="row mt-4">
-    <div class="col-lg-3 col-sm-6 mb-4" *ngFor="let c of certificates; let i = index">
+    <div class="col-lg-3 col-sm-6 mb-4" *ngFor="let task of tasks; let i = index">
       <div class="card shadow border-0 h-100">
-        <!--
-                <p class="card-text">Serial number: {{c.id}}</p>
-                <p class="card-text">Revoked: {{c.revoked}}</p>
-                <p class="card-text">Valid until: {{c.validUntil}}</p>
-                <p class="card-text">Type : {{c.signedBy}}</p>
-                <a id="hrefButton" (click)="validate(c)" class="btn btn-success btn-block" >Validate</a>
+        
+                <p class="card-text">{{task.name}}</p>
+                <p class="card-text">{{task.assignee}}</p>
                 <div class="row">
                     <div class="col">
-                            <a id="hrefButton" *ngIf="(c.revoked == false)" (click)="wannaRevoke(c)" class="btn btn-success btn-block">Do you want to revoke?</a>
+                            <a id="hrefButton"  (click)="startTask(task.taskId)" class="btn btn-success btn-block">StartTask</a>
                     </div>
                 </div>
-                <div class="row" *ngIf="(myArray[i] == true)">
-                    <div class="col">
-                            <input type="text" class="form-input" placeholder="Reason for revoke..." [(ngModel)]="c.reason" name="reason" id="reason" [required]="true" />
-                            <a id="hrefButton"  (click)="revoke(c)" class="btn btn-success btn-block" >Revoke</a>
-                    </div>
-                </div>
-            -->      
+               
+                 
       </div>
     </div>
 
 
   </div>
-  </div>
-
-<div>
-    <button (click)="getTasks()">Get tasks</button>
-
-    <table>
-    <tr *ngFor="let task of tasks" > <td>{{task.name}}</td><td>{{task.assignee}}</td><td><button (click)="claim(task.taskId)">Claim</button></td> <td><button (click)="complete(task.taskId)">Complete</button></td></tr>
-
-    </table>
 </div>
