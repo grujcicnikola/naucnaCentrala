@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.scientificCenter.domain.Journal;
 import com.example.scientificCenter.dto.FormFieldsDTO;
 import com.example.scientificCenter.dto.FormSubmissionDTO;
 import com.example.scientificCenter.dto.TaskDTO;
@@ -86,18 +87,67 @@ public class TaskController {
 		System.out.println("naziv taska "+task.getName());
 		if(task.getName().equals("Confirmation of recenzent status")) {
 			runtimeService.setVariable(processInstanceId, "confirmation", fieldsDTO);
-			formService.submitTaskForm(taskId, map);
-			List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
-			for (Task t : tasks) {
-				System.out.println(t.getId() + " " + t.getName() + " " + t.getAssignee());
-			}
 		}else if(task.getName().equals("Review data and activate journal")) {
+			boolean needDelete= false;
+			String issn = "";
+			for(int i = 0; i < fieldsDTO.size(); i++) {
+				if(fieldsDTO.get(i).getFieldId().equals("goodData") ) {
+					if(fieldsDTO.get(i).getFieldValue().equals("")) {
+						needDelete = true;
+					}
+				}
+				if(fieldsDTO.get(i).getFieldId().equals("issnNumber1") ) {
+					issn =fieldsDTO.get(i).getFieldValue();
+				}
+				
+			}
+			if(needDelete) {
+				System.out.println("brise se casopis sa issn "+issn);
+				Journal journal =this.journalService.findByIssn(issn);
+				this.journalService.delete(journal);
+			}
 			runtimeService.setVariable(processInstanceId, "activationOfJournal", fieldsDTO);
+			
+		}else if(task.getName().equals("Input data for journal")) {
+			for(int i = 0; i < fieldsDTO.size(); i++) {
+				if(fieldsDTO.get(i).getFieldId().equals("name") ||fieldsDTO.get(i).getFieldId().equals("issnNumber") ||
+						fieldsDTO.get(i).getFieldId().equals("wayOfPaying")) {
+					if(fieldsDTO.get(i).getFieldValue() == null ||fieldsDTO.get(i).getFieldValue().isEmpty() ) {
+						return new ResponseEntity(HttpStatus.BAD_REQUEST);
+					}
+				}
+			}
+			runtimeService.setVariable(processInstanceId, "journal", fieldsDTO);
+				
+		}else if(task.getName().equals("Add editors and recenzents")) {
+			Boolean valid = true;
+			for(int i = 0; i < fieldsDTO.size(); i++) {
+				if(fieldsDTO.get(i).getFieldId().equals("editors")) {
+					if(fieldsDTO.get(i).getFieldValue() == null) {
+						System.out.println("jedno od polja niju dobro");
+						valid = false;
+					}
+				}
+				if(fieldsDTO.get(i).getFieldId().equals("recenzents")) {
+					if(fieldsDTO.get(i).getAreas().size()<2) {
+						System.out.println("recenzent nije dobar");
+						valid = false;
+					}
+				}
+			}
+			if(valid==false) {
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
+			}
+			runtimeService.setVariable(processInstanceId, "editorsAndRecenzents", fieldsDTO);
+		}
+		try {
 			formService.submitTaskForm(taskId, map);
 			List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
 			for (Task t : tasks) {
 				System.out.println(t.getId() + " " + t.getName() + " " + t.getAssignee());
 			}
+		}catch(FormFieldValidationException  e) {
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}
 		/*try {
 			runtimeService.setVariable(processInstanceId, "registration", fieldsDTO);

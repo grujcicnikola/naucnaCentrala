@@ -80,19 +80,21 @@ public class JournalController {
 		System.out.println("ZAPOCINJE PROCES Create journla");
 		ProcessInstance pi = runtimeService.startProcessInstanceByKey(createJournalProcessKey);
 		System.out.println("ZAPOCET PROCES: " + pi.getId());
+		
 		Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
 		System.out.println("set assigne" +email);
-		task.setAssignee(email);
+		//task.set(email);
+		runtimeService.setVariable(pi.getId(), "initiator", email);
 		this.taskService.saveTask(task);
 		System.out.println("ZAPOCET TASK: " + task.getName());
-		TaskFormData tfd = formService.getTaskFormData(task.getId());
+		/*TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();
 		
 		for(FormField fp : properties) {
 			//System.out.println(fp.getId() + fp.getType());
-		}
+		}*/
 		//runtimeService.setVariable(processInstanceId, "registracija", FSDto);
-		return new ResponseEntity<>(new FormFieldsDTO(task.getId(),  properties,pi.getId()),HttpStatus.OK);
+		return new ResponseEntity<>(new TaskDTO(task.getId(), task.getName(),task.getAssignee()), HttpStatus.OK);//(task.getId(),  properties,pi.getId()),HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/userInput/{taskId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -199,15 +201,16 @@ public class JournalController {
 				}
 			}
 		}
-		
+		String email = (String) runtimeService.getVariable(processInstanceId, "initiator");
 		List<Editor> editors = this.journalService.findAllEditors();
 		Set<Editor> editorsOfInterest = new HashSet<Editor>();
 		for(int i =0; i < editors.size(); i++) {
 			for(int j =0; j < editors.get(i).getAreas().size(); j++) {
 				for(int k =0; k< areas.size(); k++) {
 					if(editors.get(i).getAreas().get(j).equals(areas.get(k))) {
-						editorsOfInterest.add(editors.get(i));
-						
+						if(!editors.get(i).getEmail().equals(email)) {
+							editorsOfInterest.add(editors.get(i));
+						}
 					}
 				}
 			}
@@ -246,6 +249,7 @@ public class JournalController {
 			for(int j =0; j <recenzents.get(i).getAreas().size(); j++) {
 				for(int k =0; k< areas.size(); k++) {
 					if(recenzents.get(i).getAreas().get(j).equals(areas.get(k))) {
+						System.out.println("---dodaati recenzent u listi "+recenzents.get(i).getEmail());
 						recenzentsOfInterest.add(recenzents.get(i));
 						
 					}

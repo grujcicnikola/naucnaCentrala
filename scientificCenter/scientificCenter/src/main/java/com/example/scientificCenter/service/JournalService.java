@@ -30,7 +30,11 @@ public class JournalService {
 		// TODO Auto-generated method stub
 		this.journalRepository.save(journal);
 	}
-
+	
+	public void delete(Journal journal) {
+		this.journalRepository.delete(journal);;
+	}
+	
 	public List<Editor> findAllEditors(){
 		return this.editorRepository.findAll();
 	}

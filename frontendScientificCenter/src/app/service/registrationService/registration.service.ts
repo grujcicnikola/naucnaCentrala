@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FormFields } from 'src/app/model/FormFields';
+import { Task } from 'src/app/model/Task';
+import { Form } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +12,8 @@ export class RegistrationService {
 
   constructor(private http:HttpClient) { }
   
-  startProcess(email : String){
-    return this.http.get<FormFields>('http://localhost:8095/registation/register/'+email+'/');
+  startProcess(){
+    return this.http.get<Form>('http://localhost:8095/registation/register');
    }
 
    confirmForm(id: string){

@@ -3,6 +3,7 @@ package com.example.scientificCenter.controller;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.camunda.bpm.engine.*;
 import org.camunda.bpm.engine.form.FormField;
@@ -30,6 +31,7 @@ import com.example.scientificCenter.domain.Editor;
 import com.example.scientificCenter.domain.User;
 import com.example.scientificCenter.dto.FormFieldsDTO;
 import com.example.scientificCenter.dto.FormSubmissionDTO;
+import com.example.scientificCenter.dto.TaskDTO;
 import com.example.scientificCenter.service.UserService;
 
 @RestController
@@ -58,16 +60,16 @@ public class RegistrationController {
 	private String registrationProcessKey;
 	
 	
-	@RequestMapping(value = "/register/{email}/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getRegistrationForm(@PathVariable String email)  {
+	@RequestMapping(value = "/register", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getRegistrationForm()  {
 		System.out.println("ZAPOCINJE PROCES REGISTRACIJE");
 		ProcessInstance pi = runtimeService.startProcessInstanceByKey(registrationProcessKey);
 		System.out.println("ZAPOCET PROCES: " + registrationProcessKey);
 		Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
 		System.out.println("ZAPOCET TASK: " + task.getName());
-		System.out.println("set assigne" +email);
-		task.setAssignee(email);
-		this.taskService.saveTask(task);
+		//System.out.println("set assigne" +email);
+		//task.setAssignee(email);
+		//this.taskService.saveTask(task);
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();
 		
@@ -75,7 +77,7 @@ public class RegistrationController {
 			//System.out.println(fp.getId() + fp.getType());
 		}
 		//runtimeService.setVariable(processInstanceId, "registracija", FSDto);
-		return new ResponseEntity<>(new FormFieldsDTO(task.getId(),  properties,pi.getId()),HttpStatus.OK);
+		return new ResponseEntity<>(new FormFieldsDTO(task.getId(),  properties,pi.getId()), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/userInput/{taskId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -92,7 +94,21 @@ public class RegistrationController {
 					return new ResponseEntity(HttpStatus.BAD_REQUEST);
 				}
 			}
+			if(fieldsDTO.get(i).getFieldId().equals("scientificAreas")){
+				if(fieldsDTO.get(i).getAreas().size()==0) {
+					return new ResponseEntity(HttpStatus.BAD_REQUEST);
+				}
+			}
+			if(fieldsDTO.get(i).getFieldId().equals("email")){
+				org.camunda.bpm.engine.identity.User userWithSameEmail = identityService.createUserQuery().userId(fieldsDTO.get(i).getFieldValue()) .singleResult();
+				Optional<User> userEmailApp= this.userService.getByEmail(fieldsDTO.get(i).getFieldValue());
+				if(userEmailApp.isPresent() || userWithSameEmail !=null) {
+					return new ResponseEntity(HttpStatus.IM_USED);
+				}
+				
+			}
 		}
+		
 		try {
 			runtimeService.setVariable(processInstanceId, "registration", fieldsDTO);
 			formService.submitTaskForm(taskId, map);

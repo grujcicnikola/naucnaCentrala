@@ -12,16 +12,23 @@
       <div *ngFor="let field of formFields" >
           <label for={{field.id}}>{{field.label}}</label>
     
-          <input type="text" name={{field.id}} ngModel={{field.defaultValue}} *ngIf="field.type.name=='string' && field.id !='password' || field.id =='wayOfPaying1'" >
-          <input type="password" name={{field.id}} ngModel={{field.defaultValue}}   *ngIf="field.id =='password'" >
-          <input type="checkbox" name={{field.id}} ngModel={{field.defaultValue}}  *ngIf="field.type.name=='boolean'">
-          <input type="number" name={{field.id}} ngModel={{field.defaultValue}}  *ngIf="field.type.name=='long'">
-          <select name={{field.id}} multiple size="3" ngModel={{field.defaultValue}} *ngIf="field.type.name=='enum'">
-              <option *ngFor="let area of areas" [value]="area.id">{{area.name}}</option>
+          <input type="text" id={{field.id}} name={{field.id}} ngModel={{field.value.value}} *ngIf="field.type.name=='string' && ( field.id !='password' && field.id !='wayOfPaying' && field.id!='scientificAreas' && field.id!='editors')" >
+          <input type="password" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}   *ngIf="field.id =='password'" >
+          <input type="checkbox" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}  *ngIf="field.type.name=='boolean'">
+          <input type="number" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}  *ngIf="field.type.name=='long'">
+          <select class="form-control" name={{field.id}}  id={{field.id}} ngMmatNativeControl multiple size="3" ngModel={{scarea11}} *ngIf="field.type.name=='enum' && field.id!='recenzents' || ( field.type.name=='string' && field.id=='scientificAreas')">
+              <option *ngFor="let area of areas" value="{{area.id}}">{{area.name}}</option>
           </select>
-          <select name={{field.id}}  ngModel={{field.defaultValue}} *ngIf=" field.id =='wayOfPaying'">
+          
+          <select name={{field.id}} id={{field.id}}   ngModel={{ways}} *ngIf=" field.id =='wayOfPaying'">
             <option *ngFor="let method of methods" [value]="method.id">{{method.name}}</option>
             </select>
+            <select name={{field.id}}  id={{field.id}} ngModel *ngIf="field.type.name=='string' && field.id=='editors'">
+                <option *ngFor="let editor of editors" [value]="editor.id">{{editor.username}}</option>
+            </select>
+            <select name={{field.id}}  id={{field.id}} multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id=='recenzents'">
+              <option *ngFor="let recenzent of recenzents" [value]="recenzent.id">{{recenzent.username}}</option>
+          </select>  
       </div>
       <label class="label danger" *ngIf="valid==false" >{{message}}</label>
       <button type="submit">Sign Up</button>

@@ -29,21 +29,17 @@
           <a   class="nav-link" href="/connectApplications">Connect applications</a>
         </li>-->
         <li class="nav-item">
-          <a  *ngIf="someoneLogged != true"  class="nav-link" href="/login">Login</a>
+          <button  *ngIf="someoneLogged != true"  class="nav-link" (click)="startLogin()">Login</button>
         </li>
         <li class="nav-item">
-          <a  *ngIf="someoneLogged != true"  class="nav-link" href="/register">Register</a>
+          <button  *ngIf="someoneLogged != true"  class="nav-link" (click)="startRegister()" >Register</button>
         </li>
         <li class="nav-item">
-          <a *ngIf="editorLogged == true"   class="nav-link" href="/accommodationCategory">Create journal</a>
+          <button *ngIf="editorLogged == true"   class="nav-link" (click)="startJournal()">Create journal</button>
         </li>
        
-       
         <li class="nav-item">
-            <a *ngIf="someoneLogged == false" class="nav-link" href="/login">Login</a>
-          </li>
-        <li class="nav-item">
-          <a *ngIf="someoneLogged == true" class="nav-link" [routerLink]="" (click)="logout()">Logout</a>
+          <button *ngIf="someoneLogged == true" class="nav-link" [routerLink]="" (click)="logout()">Logout</button>
         </li>
         
       </ul>
@@ -59,7 +55,7 @@
       <div class="carousel-item active" style="background-image: url('../assets/img/book.jpg')">
         <div class="carousel-caption d-none d-md-block">
           <h3 class="display-4"><Main>SCIENTIFIC CENTRAL</Main></h3>
-          <p class="lead">Travel with us</p>
+          <p class="lead"></p>
         </div>
       </div>
     </div>

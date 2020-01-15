@@ -44,9 +44,10 @@ const appRoutes: Routes = [
     RouterModule.forRoot(
       appRoutes,
       {enableTracing : true}
-    )
+    ),
+    
   ],
-  providers: [httpInterceptorProviders],
+  providers: [httpInterceptorProviders,],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -35,7 +35,19 @@ export class RegistrationComponent implements OnInit {
   constructor(private router: ActivatedRoute, private regService: RegistrationService, private areasService: ScientificAreaService,
     private userServ : UserService,private tokenStorage : TokenStorageService) { 
     //let x = regService.startProcess();
-    
+    this.regService.startProcess().subscribe(
+      data =>{
+        //this.formFieldsDto = data;
+        this.formFields = this.formFieldsDto.formFields;
+        this.processInstance = this.formFieldsDto.processInstanceId;
+        this.formFields.forEach( (field) =>{
+          
+          if( field.type.name=='enum'){
+            this.enumValues = Object.keys(field.type.values);
+          }
+        });
+       
+      },error =>{alert("Error")});
       this.areasService.getAll().subscribe(
         res =>{
           this.areas=res;
@@ -45,50 +57,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.tokenStorage.getToken()) {
-      this.someoneLogged = true;
-      
-      let jwt = this.tokenStorage.getToken();
-      console.log("Tokeen: " + jwt);
-      let jwtData = jwt.split('.')[1];
-      let decodedJwtJsonData = window.atob(jwtData);
-      let decodedJwtData = JSON.parse(decodedJwtJsonData);
-      this.email = decodedJwtData.sub;
-
-      //console.log('jwtData: ' + jwtData);
-      //console.log('decodedJwtJsonData: ' + decodedJwtJsonData);
-      //console.log('decodedJwtData: ' + decodedJwtData);
-      console.log('User: ' + this.email);
-      this.regService.startProcess(this.email).subscribe(
-        data =>{
-          this.formFieldsDto = data;
-          this.formFields = this.formFieldsDto.formFields;
-          this.processInstance = this.formFieldsDto.processInstanceId;
-          this.formFields.forEach( (field) =>{
-            
-            if( field.type.name=='enum'){
-              this.enumValues = Object.keys(field.type.values);
-            }
-          });
-         
-        },error =>{alert("Error")});
-         
-      this.userServ.getUserByEmail(this.email).subscribe(data =>{
-        this.loggedUser = data as User;
-
-        this.loggedUser.roles.forEach(element =>{
-          console.log("Uloga: " + element.name);
-          if(element.name === "ROLE_ADMIN")
-          {
-            this.adminLogged = true;
-          }else if(element.name=== "ROLE_EDITOR"){
-            this.edditorLogged = true;
-          }else if(element.name === "ROLE_RECENZENT"){
-            this.recenzentLogged = true;
-          }
-        });
-      });
-    }
+    
     
   }
 
@@ -120,6 +89,7 @@ export class RegistrationComponent implements OnInit {
           console.log(res);
           
           alert("You registered successfully!")
+          window.location.href = "http://localhost:4200";
         },
         err => {
           this.handleError(err)

@@ -63,6 +63,7 @@ export class ConfirmComponent implements OnInit {
           console.log(res);
           
           alert("You registered successfully!")
+          window.location.href = "http://localhost:4200";
         },
         err => {
           this.handleError(err)

@@ -63,7 +63,7 @@
   button {
     padding: 19px 39px 18px 39px;
     color: #FFF;
-    background-color: #4bc970;
+    background-color: #2d2d2d;
     font-size: 18px;
     text-align: center;
     font-style: normal;
@@ -96,7 +96,7 @@
   }
   
   .number {
-    background-color: #5fcf80;
+    background-color: #2d2d2d;
     color: #fff;
     height: 30px;
     width: 30px;

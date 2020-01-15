@@ -92,15 +92,11 @@ public class UserController {
 		Optional<User> user = this.userService.getByEmail(email);
 		if(user.get()!= null) {
 			List<Task> tasks = new ArrayList<Task>();
-			Set<UserRole> roles =user.get().getRoles();
-			UserRole roleOfAdmin = this.userRoleService.findRoleByName(UserRoleName.ROLE_ADMIN);
-			if(roles.contains(roleOfAdmin)) {
-				tasks.addAll(taskService.createTaskQuery().processDefinitionKey(this.createJournalProcessKey).taskAssignee("demo").list());
-				tasks.addAll(taskService.createTaskQuery().processDefinitionKey(this.registrationProcessKey).taskAssignee("demo").list());
-			}else {
-				tasks.addAll(taskService.createTaskQuery().processDefinitionKey(this.createJournalProcessKey).taskAssignee(email).list());
-				tasks.addAll(taskService.createTaskQuery().processDefinitionKey(this.registrationProcessKey).taskAssignee(email).list());
-			}
+			//Set<UserRole> roles =user.get().getRoles();
+			//UserRole roleOfAdmin = this.userRoleService.findRoleByName(UserRoleName.ROLE_ADMIN);
+			tasks.addAll(taskService.createTaskQuery().processDefinitionKey(this.createJournalProcessKey).taskAssignee(email).list());
+			tasks.addAll(taskService.createTaskQuery().processDefinitionKey(this.registrationProcessKey).taskAssignee(email).list());
+			
 			List<TaskDTO> dtos = new ArrayList<TaskDTO>();
 			for (Task task : tasks) {
 				TaskDTO t = new TaskDTO(task.getId(), task.getName(), task.getAssignee());

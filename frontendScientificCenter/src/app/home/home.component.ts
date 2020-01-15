@@ -4,6 +4,8 @@ import { UserService } from '../service/userService/user.service';
 import { TokenStorageService } from '../auth/token-storage.service';
 import { User } from '../model/User';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RegistrationService } from '../service/registrationService/registration.service';
+import { JournalService } from '../service/journalService/journal.service';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +27,7 @@ export class HomeComponent implements OnInit {
   tasks: any;
   
   constructor(private router: ActivatedRoute, private tokenStorage : TokenStorageService,
-    private userServ : UserService) { }
+    private userServ : UserService, private regService: RegistrationService,private journalService: JournalService) { }
 
 
   ngOnInit() {
@@ -96,5 +98,20 @@ export class HomeComponent implements OnInit {
   startTask(task){
     console.log(task);
     window.location.href="http://localhost:4200/task/".concat(task);
+  }
+
+  startRegister(){
+    window.location.href="http://localhost:4200/register";
+
+  }
+
+  startLogin(){
+    window.location.href="http://localhost:4200/login";
+  }
+  startJournal(){
+    this.journalService.startProcess(this.email).subscribe(
+      data =>{
+        window.location.href="http://localhost:4200/task/"+data.taskId;
+      },error =>{alert("Error")});
   }
 }
