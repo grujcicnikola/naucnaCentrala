@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   someoneLogged : boolean = false;
   email : string = "";
   adminLogged : boolean = false;
-  edditorLogged : boolean = false;
+  editorLogged : boolean = false;
   roles: string[];
   loggedUser : User;
   recenzentLogged: boolean = false;
@@ -53,7 +53,7 @@ export class HomeComponent implements OnInit {
           {
             this.adminLogged = true;
           }else if(element.name=== "ROLE_EDITOR"){
-            this.edditorLogged = true;
+            this.editorLogged = true;
           }else if(element.name === "ROLE_RECENZENT"){
             this.recenzentLogged = true;
           }

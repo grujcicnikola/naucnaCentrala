@@ -6,10 +6,10 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
   <div class="container">
-    <a class="navbar-brand" href="#">MegaTravel</a>
+    <a class="navbar-brand" href="#">Scientific central</a>
     <li class="nav-item" *ngIf="someoneLogged == true">
-            <img src="../assets/img/user.png"/>
-            <label id="welcomeLabel">Welcome:{{email}} </label>
+            <!--<img src="../assets/img/user.png"/>-->
+            <label id="welcomeLabel">{{email}} </label>
     </li>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -58,7 +58,7 @@
       <!-- Slide One - Set the background image for this slide in the line below -->
       <div class="carousel-item active" style="background-image: url('../assets/img/book.jpg')">
         <div class="carousel-caption d-none d-md-block">
-          <h3 class="display-4"><Main>MEGA TRAVEL AGENCY</Main></h3>
+          <h3 class="display-4"><Main>SCIENTIFIC CENTRAL</Main></h3>
           <p class="lead">Travel with us</p>
         </div>
       </div>
@@ -67,7 +67,7 @@
 </header>
 
 <!-- Page Content -->
-<div class="container py-4 mt-4" ><!--*ngIf="adminLogged == true">-->
+<div class="container py-4 mt-4" *ngIf="someoneLogged == true">
   <h1>All tasks</h1>
   <button (click)="getTasks()">Get tasks</button>
   <div class="row mt-4">
