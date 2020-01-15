@@ -7,6 +7,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MethodOfPaymentService } from '../service/methodOfPayment/method-of-payment.service';
 import { JournalService } from '../service/journalService/journal.service';
 import { ElementSchemaRegistry } from '@angular/compiler';
+import { User } from '../model/User';
+import { TokenStorageService } from '../auth/token-storage.service';
+import { UserService } from '../service/userService/user.service';
 
 @Component({
   selector: 'app-journal',
@@ -27,23 +30,18 @@ export class JournalComponent implements OnInit {
   private valid = true;
   private methods =[];
   private valueSA ="";
+
+  someoneLogged : boolean = false;
+  email : string = "";
+  adminLogged : boolean = false;
+  edditorLogged : boolean = false;
+  recenzentLogged: boolean = false;
+  roles: string[];
+  loggedUser : User;
   constructor(private router: ActivatedRoute, private journalService: JournalService,
-    private methodsService: MethodOfPaymentService, private areasService: ScientificAreaService) { 
+    private methodsService: MethodOfPaymentService, private userServ : UserService,private tokenStorage : TokenStorageService, private areasService: ScientificAreaService) { 
     //let x = regService.startProcess();
-    this.journalService.startProcess().subscribe(
-        data =>{
-          this.formFieldsDto = data;
-          console.log(data);
-          this.formFields = this.formFieldsDto.formFields;
-          this.processInstance = this.formFieldsDto.processInstanceId;
-          this.formFields.forEach( (field) =>{
-            
-            if( field.type.name=='enum'){
-              this.enumValues = Object.keys(field.type.values);
-            }
-          });
-         
-        },error =>{alert("Error")});
+    
       this.areasService.getAll().subscribe(
         res =>{
           this.areas=res;
@@ -58,6 +56,50 @@ export class JournalComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.tokenStorage.getToken()) {
+      this.someoneLogged = true;
+      
+      let jwt = this.tokenStorage.getToken();
+      console.log("Tokeen: " + jwt);
+      let jwtData = jwt.split('.')[1];
+      let decodedJwtJsonData = window.atob(jwtData);
+      let decodedJwtData = JSON.parse(decodedJwtJsonData);
+      this.email = decodedJwtData.sub;
+
+      //console.log('jwtData: ' + jwtData);
+      //console.log('decodedJwtJsonData: ' + decodedJwtJsonData);
+      //console.log('decodedJwtData: ' + decodedJwtData);
+      //console.log('User: ' + this.email);
+      this.journalService.startProcess(this.email).subscribe(
+        data =>{
+          this.formFieldsDto = data;
+          console.log(data);
+          this.formFields = this.formFieldsDto.formFields;
+          this.processInstance = this.formFieldsDto.processInstanceId;
+          this.formFields.forEach( (field) =>{
+            
+            if( field.type.name=='enum'){
+              this.enumValues = Object.keys(field.type.values);
+            }
+          });
+         
+        },error =>{alert("Error")});
+      this.userServ.getUserByEmail(this.email).subscribe(data =>{
+        this.loggedUser = data as User;
+
+        this.loggedUser.roles.forEach(element =>{
+          console.log("Uloga: " + element.name);
+          if(element.name === "ROLE_ADMIN")
+          {
+            this.adminLogged = true;
+          }else if(element.name=== "ROLE_EDITOR"){
+            this.edditorLogged = true;
+          }else if(element.name === "ROLE_RECENZENT"){
+            this.recenzentLogged = true;
+          }
+        });
+      });
+    }
   }
 
   

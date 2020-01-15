@@ -4,6 +4,9 @@ import { RegistrationService } from '../service/registrationService/registration
 import { FormFields } from '../model/FormFields';
 import { ScientificAreaService } from '../service/scientificAreaService/scientific-area.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { User } from '../model/User';
+import { TokenStorageService } from '../auth/token-storage.service';
+import { UserService } from '../service/userService/user.service';
 
 @Component({
   selector: 'app-registration',
@@ -22,9 +25,41 @@ export class RegistrationComponent implements OnInit {
   private areas = [];
   private message = "You must select at least one scientific area!";
   private valid = true;
-  constructor(private router: ActivatedRoute, private regService: RegistrationService, private areasService: ScientificAreaService) { 
+  someoneLogged : boolean = false;
+  email : string = "";
+  adminLogged : boolean = false;
+  edditorLogged : boolean = false;
+  recenzentLogged: boolean = false;
+  roles: string[];
+  loggedUser : User;
+  constructor(private router: ActivatedRoute, private regService: RegistrationService, private areasService: ScientificAreaService,
+    private userServ : UserService,private tokenStorage : TokenStorageService) { 
     //let x = regService.startProcess();
-    this.regService.startProcess().subscribe(
+    
+      this.areasService.getAll().subscribe(
+        res =>{
+          this.areas=res;
+        }
+      )
+    
+  }
+
+  ngOnInit() {
+    if (this.tokenStorage.getToken()) {
+      this.someoneLogged = true;
+      
+      let jwt = this.tokenStorage.getToken();
+      console.log("Tokeen: " + jwt);
+      let jwtData = jwt.split('.')[1];
+      let decodedJwtJsonData = window.atob(jwtData);
+      let decodedJwtData = JSON.parse(decodedJwtJsonData);
+      this.email = decodedJwtData.sub;
+
+      //console.log('jwtData: ' + jwtData);
+      //console.log('decodedJwtJsonData: ' + decodedJwtJsonData);
+      //console.log('decodedJwtData: ' + decodedJwtData);
+      console.log('User: ' + this.email);
+      this.regService.startProcess(this.email).subscribe(
         data =>{
           this.formFieldsDto = data;
           this.formFields = this.formFieldsDto.formFields;
@@ -37,15 +72,24 @@ export class RegistrationComponent implements OnInit {
           });
          
         },error =>{alert("Error")});
-      this.areasService.getAll().subscribe(
-        res =>{
-          this.areas=res;
-        }
-      )
-    
-  }
+         
+      this.userServ.getUserByEmail(this.email).subscribe(data =>{
+        this.loggedUser = data as User;
 
-  ngOnInit() {
+        this.loggedUser.roles.forEach(element =>{
+          console.log("Uloga: " + element.name);
+          if(element.name === "ROLE_ADMIN")
+          {
+            this.adminLogged = true;
+          }else if(element.name=== "ROLE_EDITOR"){
+            this.edditorLogged = true;
+          }else if(element.name === "ROLE_RECENZENT"){
+            this.recenzentLogged = true;
+          }
+        });
+      });
+    }
+    
   }
 
   

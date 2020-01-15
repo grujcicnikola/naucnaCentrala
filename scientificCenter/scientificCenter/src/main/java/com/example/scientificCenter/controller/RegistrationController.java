@@ -58,13 +58,16 @@ public class RegistrationController {
 	private String registrationProcessKey;
 	
 	
-	@RequestMapping(value = "/register", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getRegistrationForm()  {
+	@RequestMapping(value = "/register/{email}/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getRegistrationForm(@PathVariable String email)  {
 		System.out.println("ZAPOCINJE PROCES REGISTRACIJE");
 		ProcessInstance pi = runtimeService.startProcessInstanceByKey(registrationProcessKey);
 		System.out.println("ZAPOCET PROCES: " + registrationProcessKey);
 		Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
 		System.out.println("ZAPOCET TASK: " + task.getName());
+		System.out.println("set assigne" +email);
+		task.setAssignee(email);
+		this.taskService.saveTask(task);
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();
 		

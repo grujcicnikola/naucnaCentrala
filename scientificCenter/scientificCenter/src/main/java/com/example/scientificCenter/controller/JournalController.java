@@ -75,12 +75,15 @@ public class JournalController {
 	@Value("${camunda.createJournalProcessKey}")
 	private String createJournalProcessKey;
 	
-	@RequestMapping(value = "/create", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getRegistrationForm()  {
+	@RequestMapping(value = "/create/{email}/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getRegistrationForm(@PathVariable String email)  {
 		System.out.println("ZAPOCINJE PROCES Create journla");
 		ProcessInstance pi = runtimeService.startProcessInstanceByKey(createJournalProcessKey);
 		System.out.println("ZAPOCET PROCES: " + pi.getId());
 		Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
+		System.out.println("set assigne" +email);
+		task.setAssignee(email);
+		this.taskService.saveTask(task);
 		System.out.println("ZAPOCET TASK: " + task.getName());
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();

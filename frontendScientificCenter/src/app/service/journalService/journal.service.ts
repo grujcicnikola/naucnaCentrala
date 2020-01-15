@@ -13,8 +13,8 @@ export class JournalService {
 
   constructor(private http:HttpClient) { }
   
-  startProcess(){
-    return this.http.get<FormFields>('http://localhost:8095/journal/create')
+  startProcess(email: String){
+    return this.http.get<FormFields>('http://localhost:8095/journal/create/'+email+'/')
    }
 
    confirmForm(id: string){
