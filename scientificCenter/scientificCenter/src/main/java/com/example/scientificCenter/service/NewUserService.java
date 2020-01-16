@@ -45,12 +45,7 @@ public class NewUserService implements JavaDelegate{
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		System.out.println("Start save data, user "+execution.getVariable("username").toString());
-		User newUser = identityService.newUser(execution.getVariable("username").toString());
-		newUser.setFirstName(execution.getVariable("name").toString());
-		newUser.setLastName(execution.getVariable("surname").toString());
-		newUser.setEmail(execution.getVariable("email").toString());
-		newUser.setPassword(execution.getVariable("password").toString());
-		//identityService.saveUser(newUser);
+		
 		com.example.scientificCenter.domain.User user = new com.example.scientificCenter.domain.User();
 		user.setActivated(false);
 		user.setCity(execution.getVariable("city").toString());
@@ -65,7 +60,7 @@ public class NewUserService implements JavaDelegate{
 		if(execution.getVariable("title").toString() !=null) {
 			user.setTitle(execution.getVariable("title").toString());
 		}
-		if(execution.getVariable("isRecenzent").toString() !=null) {
+		if(execution.getVariable("isRecenzent").toString().equals("true")) {
 			user.setIsRecenzent(true);
 		}else {
 			user.setIsRecenzent(false);

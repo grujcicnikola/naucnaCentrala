@@ -1,14 +1,10 @@
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 
-<!------ Include the above in your HEAD tag ---------->
-
-<!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
   <div class="container">
     <a class="navbar-brand" href="#">Scientific central</a>
     <li class="nav-item" *ngIf="someoneLogged == true">
-            <!--<img src="../assets/img/user.png"/>-->
             <label id="welcomeLabel">{{email}} </label>
     </li>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,17 +13,6 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item active">
-         <!-- <a *ngIf="adminLogged == true"  class="nav-link" href="/selfSigned">SelfSigned Certificate
-                <span class="sr-only">(current)</span>
-              </a>
-        </li>
-       
-        <li *ngIf="adminLogged == true" class="nav-item">
-          <a   class="nav-link" href="/createFile">Create file</a>
-        </li>
-        <li *ngIf="adminLogged == true" class="nav-item">
-          <a   class="nav-link" href="/connectApplications">Connect applications</a>
-        </li>-->
         <li class="nav-item">
           <button  *ngIf="someoneLogged != true"  class="nav-link" (click)="startLogin()">Login</button>
         </li>
@@ -47,19 +32,13 @@
   </div>
 </nav>
 
+
 <header>
-  <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel">
-    
-    <div class="carousel-inner" role="listbox">
-      <!-- Slide One - Set the background image for this slide in the line below -->
-      <div class="carousel-item active" style="background-image: url('../assets/img/book.jpg')">
-        <div class="carousel-caption d-none d-md-block">
-          <h3 class="display-4"><Main>SCIENTIFIC CENTRAL</Main></h3>
-          <p class="lead"></p>
-        </div>
-      </div>
-    </div>
+	<div class="overlay">
+  <h1>SCIENTIFIC CENTRAL</h1>
+  <p class="card-text"></p>
   </div>
+    
 </header>
 
 <!-- Page Content -->

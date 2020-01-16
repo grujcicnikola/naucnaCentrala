@@ -8,6 +8,7 @@ import { TaskService } from '../service/taskService/task.service';
 import { MethodOfPaymentService } from '../service/methodOfPayment/method-of-payment.service';
 import { JournalService } from '../service/journalService/journal.service';
 import { ScientificArea } from '../model/ScientificArea';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-task',
@@ -37,8 +38,9 @@ export class TaskComponent implements OnInit {
   private recenzents =[];
   private valueSA ="";
   private ways : any;
-  private scarea11: any;
-  private sss: any;
+  private review = false;
+ /* private scarea11: any;
+  private sss: any;*/
 
   constructor(private router: ActivatedRoute, private regService: RegistrationService, 
     private areasService: ScientificAreaService, private taskService: TaskService,
@@ -59,9 +61,23 @@ export class TaskComponent implements OnInit {
                 if( field.type.name=='enum'){
                   this.enumValues = Object.keys(field.type.values);
                 }
+                if(field.id=="isOpenAccess1"){
+                  this.review = true;
+                  let element1 =<any> document.getElementById("name1");
+                  let element2 =<any> document.getElementById("issnNumber1");
+                  let element3 =<any> document.getElementById("scientificAreas1");
+                  let element4 =<any> document.getElementById("wayOfPaying1");
+                  let element5 =<any> document.getElementById("isOpenAccess1");
+                  element1.readOnly=true;
+                  element2.readOnly=true;
+                  element3.readOnly=true;
+                  element4.readOnly=true;
+                  element5.readOnly=true;
+                  
+                }
                 
               });
-              this.formFields.forEach( (field) =>{
+              /*this.formFields.forEach( (field) =>{
             
                 if( field.id=='scientificAreas'){
                   let element11 =<any> document.getElementById("scientificAreas");
@@ -93,7 +109,7 @@ export class TaskComponent implements OnInit {
                   //this.onChange(niz[0]);
                  
                 }
-              });
+              });*/
               
 
             }
@@ -126,9 +142,10 @@ export class TaskComponent implements OnInit {
                       console.log("-----+ "+field.value.value);
                       let element1 =<any> document.getElementById("wayOfPaying");
                       console.log(element1);
-                      element1.values=this.helpVariableForWay;
-                      this.onChange1(this.helpVariableForWay);
-                      
+                      if(element1!=null){
+                        element1.values=this.helpVariableForWay;
+                        this.onChange1(this.helpVariableForWay);
+                      }
                       //((document.getElementById("wayOfPaying")) as HTMLElement).nodeValue = this.helpVariableForWay; ;
                     }
                   })
@@ -149,6 +166,7 @@ export class TaskComponent implements OnInit {
 
   
   onSubmit(value, form){
+    this.valid = true;
     let o = new Array();
     for (var property in value) {
       console.log(property);
@@ -166,6 +184,10 @@ export class TaskComponent implements OnInit {
               this.valid=true;
             }else{
               console.log(property)
+              
+              if(property=="editors"){
+                this.message = "You must select at least one editor!"
+              }else 
               this.valid = false;
               console.log("validacija "+this.valid);
             }
@@ -176,27 +198,38 @@ export class TaskComponent implements OnInit {
       else{
         if(property !="scientificAreas"){
           o.push({fieldId : property, areas : value[property]});
+          if(property=="recenzents"){
+            if(value[property].length<2){
+              this.message = "You must select at least two recenzents!"
+              this.valid = false;
+            }
+          }
+      
           //o.push({fieldId : property, fieldValue : value[property]});
         }else{
         ///o.push({fieldId : property, areas : value[property]});
-          this.valueSA="";
-          this.areas.forEach(area=>{
-                var i =0;
-                value[property].forEach(element => {
-                    if(element ==area.id){
-                      if(i==0){
-                        this.valueSA +=area.name;
-                      }else{
-                        this.valueSA +=",";
-                        this.valueSA +=area.name;
+          if(value[property].length<2){
+            this.message = "You must select at least one area!"
+            this.valid = false;
+          }else{
+            this.valueSA="";
+            this.areas.forEach(area=>{
+                  var i =0;
+                  value[property].forEach(element => {
+                      if(element ==area.id){
+                        if(i==0){
+                          this.valueSA +=area.name;
+                        }else{
+                          this.valueSA +=",";
+                          this.valueSA +=area.name;
+                        }
                       }
-                    }
-                    i++;
-                });
-              })
+                      i++;
+                  });
+                })
               //this.valueSA +=value[property][i];  
             
-          
+            }
           o.push({fieldId : property, areas : value[property], fieldValue : this.valueSA});
           console.log("******"+this.valueSA);
           if(value[property] !=""){
@@ -252,13 +285,13 @@ export class TaskComponent implements OnInit {
     }
     
   }
-  onChange(newValue) {
+  /*onChange(newValue) {
     let element1 =<any> document.getElementById("scientificAreas");
     console.log(element1);
     console.log(newValue);
     this.scarea11 = newValue;  // don't forget to update the model here
     // ... do other stuff here ...
-}
+}*/
 
 onChange1(newValue) {
   

@@ -44,7 +44,7 @@ public class Journal {
 	@Column(nullable = false)
 	private Boolean isOpenAccess;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	private Editor editorInChief;
 	
 	

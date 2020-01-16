@@ -36,7 +36,8 @@ public class SavingActivation implements JavaDelegate{
 	
 	@Autowired
 	private JournalService journalService;
-		
+	
+	
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		User user = this.userService.findByUsername(execution.getVariable("username").toString());
@@ -46,6 +47,12 @@ public class SavingActivation implements JavaDelegate{
 				user.setActivated(true);
 				user.getRoles().add(role);
 				userService.save(user);
+				org.camunda.bpm.engine.identity.User newUser = identityService.newUser(execution.getVariable("username").toString());
+				newUser.setFirstName(execution.getVariable("name").toString());
+				newUser.setLastName(execution.getVariable("surname").toString());
+				newUser.setEmail(execution.getVariable("email").toString());
+				newUser.setPassword(execution.getVariable("password").toString());
+				identityService.saveUser(newUser);
 			}	
 		}
 		

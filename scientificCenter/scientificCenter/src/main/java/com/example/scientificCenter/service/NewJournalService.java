@@ -51,7 +51,7 @@ public class NewJournalService implements JavaDelegate{
 		journal.setIssn(execution.getVariable("issnNumber").toString());
 		journal.setTitle(execution.getVariable("name").toString());
 		journal.setIsActivated(false);
-		if(execution.getVariable("isOpenAccess").toString() !=null) {
+		if(execution.getVariable("isOpenAccess").toString().equals("true")) {
 			journal.setIsOpenAccess(true);
 		}else {
 			journal.setIsOpenAccess(false);

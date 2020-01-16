@@ -53,6 +53,12 @@ public class JournalService {
 		return this.editorRepository.findById(id);
 	}
 	
+
+	public Optional<Editor> findEditorByJournal(Journal id) {
+		// TODO Auto-generated method stub
+		return this.editorRepository.findEditorByJournal(id);
+	}
+	
 	public Optional<Recenzent> findRecenzentById(Long id) {
 		// TODO Auto-generated method stub
 		return this.recenzentRepository.findById(id);
@@ -67,5 +73,6 @@ public class JournalService {
 		// TODO Auto-generated method stub
 		this.recenzentRepository.save(recenzent);
 	}
+
 }
 

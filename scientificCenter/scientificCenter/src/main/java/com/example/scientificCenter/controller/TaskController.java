@@ -3,6 +3,7 @@ package com.example.scientificCenter.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.IdentityService;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.scientificCenter.domain.Editor;
 import com.example.scientificCenter.domain.Journal;
 import com.example.scientificCenter.dto.FormFieldsDTO;
 import com.example.scientificCenter.dto.FormSubmissionDTO;
@@ -49,6 +51,7 @@ public class TaskController {
 	
 	@Autowired
 	private UserService userService;
+	
 	
 	@Autowired
 	private ScientificAreaService areaService;
@@ -92,7 +95,7 @@ public class TaskController {
 			String issn = "";
 			for(int i = 0; i < fieldsDTO.size(); i++) {
 				if(fieldsDTO.get(i).getFieldId().equals("goodData") ) {
-					if(fieldsDTO.get(i).getFieldValue().equals("")) {
+					if(!fieldsDTO.get(i).getFieldValue().equals("true")) {
 						needDelete = true;
 					}
 				}
@@ -104,6 +107,11 @@ public class TaskController {
 			if(needDelete) {
 				System.out.println("brise se casopis sa issn "+issn);
 				Journal journal =this.journalService.findByIssn(issn);
+				Optional<Editor> editor =this.journalService.findEditorByJournal(journal);
+				if(editor.isPresent()) {
+					editor.get().setJournal(null);
+					this.journalService.saveEditor(editor.get());
+				}
 				this.journalService.delete(journal);
 			}
 			runtimeService.setVariable(processInstanceId, "activationOfJournal", fieldsDTO);
@@ -123,7 +131,7 @@ public class TaskController {
 			Boolean valid = true;
 			for(int i = 0; i < fieldsDTO.size(); i++) {
 				if(fieldsDTO.get(i).getFieldId().equals("editors")) {
-					if(fieldsDTO.get(i).getFieldValue() == null) {
+					if(fieldsDTO.get(i).getFieldValue().isEmpty()) {
 						System.out.println("jedno od polja niju dobro");
 						valid = false;
 					}
