@@ -38,13 +38,13 @@ public class Journal {
 	@Column(nullable = false)
 	private Boolean isActivated;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<ScientificArea> areas = new HashSet<ScientificArea>();
 	
 	@Column(nullable = false)
 	private Boolean isOpenAccess;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private Editor editorInChief;
 	
 	

@@ -13,7 +13,7 @@ export class RegistrationService {
   constructor(private http:HttpClient) { }
   
   startProcess(){
-    return this.http.get<Form>('http://localhost:8095/registation/register');
+    return this.http.get<FormFields>('http://localhost:8095/registation/register');
    }
 
    confirmForm(id: string){

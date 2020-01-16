@@ -74,7 +74,7 @@ public class RegistrationController {
 		List<FormField> properties = tfd.getFormFields();
 		
 		for(FormField fp : properties) {
-			//System.out.println(fp.getId() + fp.getType());
+			System.out.println(fp.getId() + fp.getType());
 		}
 		//runtimeService.setVariable(processInstanceId, "registracija", FSDto);
 		return new ResponseEntity<>(new FormFieldsDTO(task.getId(),  properties,pi.getId()), HttpStatus.OK);
@@ -142,17 +142,9 @@ public class RegistrationController {
 		HashMap<String, Object> map = this.mapListToDto(fieldsDTO);
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		String processInstanceId = task.getProcessInstanceId();
-		User user = this.userService.findByUsername(username);
-		for(int i = 0; i < fieldsDTO.size(); i++) {
-			if(fieldsDTO.get(i).getFieldId().equals("confirm")){
-				if(!fieldsDTO.get(i).getFieldValue().equals("")) {
-					user.setActivated(true);
-					userService.save(user);
-				}
-			}
-		}
+		
 		try {
-			runtimeService.setVariable(processInstanceId, "registration", fieldsDTO);
+			runtimeService.setVariable(processInstanceId, "confirmation", fieldsDTO);
 			formService.submitTaskForm(taskId, map);
 			List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
 			for (Task t : tasks) {

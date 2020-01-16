@@ -193,38 +193,41 @@ public class JournalController {
 		@SuppressWarnings("unchecked")
 		List<FormSubmissionDTO> fieldsDTO = (List<FormSubmissionDTO>)runtimeService.getVariable(processInstanceId, "journal");
 		List<ScientificArea> areas = new ArrayList<ScientificArea>();
-		for(int i = 0; i < fieldsDTO.size(); i++) {
-			if(fieldsDTO.get(i).getFieldId().equals("scientificAreas")){
-				for(int j =0; j<fieldsDTO.get(i).getAreas().size(); j++) {
-					System.out.println("naucna oblast "+fieldsDTO.get(i).getAreas().get(j));
-					areas.add(this.areaService.findById(Long.parseLong(fieldsDTO.get(i).getAreas().get(j))).get());
+		if(fieldsDTO !=null) {
+			for(int i = 0; i < fieldsDTO.size(); i++) { //ovo je null
+				if(fieldsDTO.get(i).getFieldId().equals("scientificAreas")){
+					for(int j =0; j<fieldsDTO.get(i).getAreas().size(); j++) {
+						System.out.println("naucna oblast "+fieldsDTO.get(i).getAreas().get(j));
+						areas.add(this.areaService.findById(Long.parseLong(fieldsDTO.get(i).getAreas().get(j))).get());
+					}
 				}
 			}
-		}
-		String email = (String) runtimeService.getVariable(processInstanceId, "initiator");
-		List<Editor> editors = this.journalService.findAllEditors();
-		Set<Editor> editorsOfInterest = new HashSet<Editor>();
-		for(int i =0; i < editors.size(); i++) {
-			for(int j =0; j < editors.get(i).getAreas().size(); j++) {
-				for(int k =0; k< areas.size(); k++) {
-					if(editors.get(i).getAreas().get(j).equals(areas.get(k))) {
-						if(!editors.get(i).getEmail().equals(email)) {
-							editorsOfInterest.add(editors.get(i));
+			String email = (String) runtimeService.getVariable(processInstanceId, "initiator");
+			List<Editor> editors = this.journalService.findAllEditors();
+			Set<Editor> editorsOfInterest = new HashSet<Editor>();
+			for(int i =0; i < editors.size(); i++) {
+				for(int j =0; j < editors.get(i).getAreas().size(); j++) {
+					for(int k =0; k< areas.size(); k++) {
+						if(editors.get(i).getAreas().get(j).equals(areas.get(k))) {
+							if(!editors.get(i).getEmail().equals(email)) {
+								editorsOfInterest.add(editors.get(i));
+							}
 						}
 					}
 				}
 			}
-		}
-	
-		List<UserEditorDTO> dtos = new ArrayList<UserEditorDTO>();
-		for (Editor task : editorsOfInterest) {
-			if(task.getJournal() ==null) {
-				UserEditorDTO t = new UserEditorDTO(task.getId(), task.getName());
-				dtos.add(t);
+			
+			List<UserEditorDTO> dtos = new ArrayList<UserEditorDTO>();
+			for (Editor task : editorsOfInterest) {
+				if(task.getJournal() ==null) {
+					UserEditorDTO t = new UserEditorDTO(task.getId(), task.getName());
+					dtos.add(t);
+				}
 			}
+			
+			return new ResponseEntity<>(dtos,HttpStatus.OK);
 		}
-		
-		return new ResponseEntity<>(dtos,HttpStatus.OK);
+		return new ResponseEntity<>(null,HttpStatus.OK);
     }
 	
 	
@@ -234,36 +237,40 @@ public class JournalController {
 		@SuppressWarnings("unchecked")
 		List<FormSubmissionDTO> fieldsDTO = (List<FormSubmissionDTO>)runtimeService.getVariable(processInstanceId, "journal");
 		List<ScientificArea> areas = new ArrayList<ScientificArea>();
-		for(int i = 0; i < fieldsDTO.size(); i++) {
-			if(fieldsDTO.get(i).getFieldId().equals("scientificAreas")){
-				for(int j =0; j<fieldsDTO.get(i).getAreas().size(); j++) {
-					System.out.println("naucna oblast "+fieldsDTO.get(i).getAreas().get(j));
-					areas.add(this.areaService.findById(Long.parseLong(fieldsDTO.get(i).getAreas().get(j))).get());
-				}
-			}
-		}
-		
-		List<Recenzent> recenzents = this.journalService.findAllRecenzents();
-		Set<Recenzent> recenzentsOfInterest = new HashSet<Recenzent>();
-		for(int i =0; i < recenzents.size(); i++) {
-			for(int j =0; j <recenzents.get(i).getAreas().size(); j++) {
-				for(int k =0; k< areas.size(); k++) {
-					if(recenzents.get(i).getAreas().get(j).equals(areas.get(k))) {
-						System.out.println("---dodaati recenzent u listi "+recenzents.get(i).getEmail());
-						recenzentsOfInterest.add(recenzents.get(i));
-						
+		if(fieldsDTO !=null) {
+			for(int i = 0; i < fieldsDTO.size(); i++) {//ovo je nulll
+				if(fieldsDTO.get(i).getFieldId().equals("scientificAreas")){
+					for(int j =0; j<fieldsDTO.get(i).getAreas().size(); j++) {
+						System.out.println("naucna oblast "+fieldsDTO.get(i).getAreas().get(j));
+						areas.add(this.areaService.findById(Long.parseLong(fieldsDTO.get(i).getAreas().get(j))).get());
 					}
 				}
 			}
-		}
-	
-		List<UserEditorDTO> dtos = new ArrayList<UserEditorDTO>();
-		for (Recenzent task : recenzentsOfInterest) {
-			UserEditorDTO t = new UserEditorDTO(task.getId(), task.getName());
-			dtos.add(t);
-		}
+			
+			List<Recenzent> recenzents = this.journalService.findAllRecenzents();
+			Set<Recenzent> recenzentsOfInterest = new HashSet<Recenzent>();
+			for(int i =0; i < recenzents.size(); i++) {
+				for(int j =0; j <recenzents.get(i).getAreas().size(); j++) {
+					for(int k =0; k< areas.size(); k++) {
+						if(recenzents.get(i).getAreas().get(j).equals(areas.get(k))) {
+							System.out.println("---dodaati recenzent u listi "+recenzents.get(i).getEmail());
+							recenzentsOfInterest.add(recenzents.get(i));
+							
+						}
+					}
+				}
+			}
 		
-		return new ResponseEntity<>(dtos,HttpStatus.OK);
+			List<UserEditorDTO> dtos = new ArrayList<UserEditorDTO>();
+			for (Recenzent task : recenzentsOfInterest) {
+				UserEditorDTO t = new UserEditorDTO(task.getId(), task.getName());
+				dtos.add(t);
+			}
+			
+			return new ResponseEntity<>(dtos,HttpStatus.OK);
+		}
+		return new ResponseEntity<>(null,HttpStatus.OK);
+		
     }
 	private HashMap<String, Object> mapListToDto(List<FormSubmissionDTO> list)
 	{

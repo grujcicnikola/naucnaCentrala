@@ -60,7 +60,7 @@
       <bpmn:incoming>SequenceFlow_1jx97ya</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="ExclusiveGateway_1ddkmca">
-      <bpmn:incoming>SequenceFlow_1utwxdr</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0smi9j8</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1nmmd6h</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_19v50xs</bpmn:outgoing>
     </bpmn:exclusiveGateway>
@@ -109,7 +109,7 @@
       <bpmn:outgoing>SequenceFlow_1wkzqzh</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_0j95nsm" sourceRef="Task_0i4zhxs" targetRef="ExclusiveGateway_0gy8v9s" />
-    <bpmn:sequenceFlow id="SequenceFlow_1utwxdr" name="confirmed" sourceRef="ExclusiveGateway_0gy8v9s" targetRef="ExclusiveGateway_1ddkmca">
+    <bpmn:sequenceFlow id="SequenceFlow_1utwxdr" name="confirmed" sourceRef="ExclusiveGateway_0gy8v9s" targetRef="Task_0ln154y">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${confirm=="true"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1wkzqzh" name="did not confirm" sourceRef="ExclusiveGateway_0gy8v9s" targetRef="Task_1dwrye5">
@@ -118,7 +118,7 @@
     <bpmn:userTask id="Task_1yojlyn" name="Confirmation of recenzent status" camunda:assignee="petarperic23252@gmail.com">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="recenzent" label="Set status recenzent of user $" type="boolean" />
+          <camunda:formField id="recenzent" label="Set status recenzent of user ${username}" type="boolean" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1nmmd6h</bpmn:incoming>
@@ -126,6 +126,11 @@
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_0axqh5m" sourceRef="Task_1yojlyn" targetRef="Task_0kqsh5k" />
     <bpmn:sequenceFlow id="SequenceFlow_1u7qglt" sourceRef="Task_1ohhj2q" targetRef="Task_11ymuzt" />
+    <bpmn:sequenceFlow id="SequenceFlow_0smi9j8" sourceRef="Task_0ln154y" targetRef="ExclusiveGateway_1ddkmca" />
+    <bpmn:serviceTask id="Task_0ln154y" name="Saving data" camunda:class="com.example.scientificCenter.service.SavingActivation">
+      <bpmn:incoming>SequenceFlow_1utwxdr</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0smi9j8</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Registration">
@@ -201,9 +206,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1utwxdr_di" bpmnElement="SequenceFlow_1utwxdr">
         <di:waypoint x="815" y="117" />
-        <di:waypoint x="1105" y="117" />
+        <di:waypoint x="880" y="117" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="838" y="114" width="49" height="14" />
+          <dc:Bounds x="812" y="113" width="49" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1wkzqzh_di" bpmnElement="SequenceFlow_1wkzqzh">
@@ -226,6 +231,13 @@
         <di:waypoint x="360" y="117" />
         <di:waypoint x="480" y="117" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0smi9j8_di" bpmnElement="SequenceFlow_0smi9j8">
+        <di:waypoint x="980" y="117" />
+        <di:waypoint x="1105" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0ds2ji3_di" bpmnElement="Task_0ln154y">
+        <dc:Bounds x="880" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

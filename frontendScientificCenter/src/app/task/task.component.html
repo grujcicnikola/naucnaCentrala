@@ -16,9 +16,10 @@
           <input type="password" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}   *ngIf="field.id =='password'" >
           <input type="checkbox" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}  *ngIf="field.type.name=='boolean'">
           <input type="number" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}  *ngIf="field.type.name=='long'">
-          <select class="form-control" name={{field.id}}  id={{field.id}} ngMmatNativeControl multiple size="3" ngModel={{scarea11}} *ngIf="field.type.name=='enum' && field.id!='recenzents' || ( field.type.name=='string' && field.id=='scientificAreas')">
-              <option *ngFor="let area of areas" value="{{area.id}}">{{area.name}}</option>
+          <select class="form-control" name={{field.id}}  id={{field.id}}  multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id!='recenzents' || ( field.type.name=='string' && field.id=='scientificAreas')">
+              <option *ngFor="let area of areas" [value]="area.id" >{{area.name}}</option>
           </select>
+          
           
           <select name={{field.id}} id={{field.id}}   ngModel={{ways}} *ngIf=" field.id =='wayOfPaying'">
             <option *ngFor="let method of methods" [value]="method.id">{{method.name}}</option>
@@ -38,3 +39,4 @@
 <!--<select name={{field.id}} multiple size="3" *ngIf="field.type.name=='enum'">
     <option *ngFor="let area of areas" [value]="{{area.id}}">{{area.name}}</option>
 </select>-->
+

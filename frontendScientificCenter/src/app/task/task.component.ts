@@ -7,6 +7,7 @@ import { ScientificAreaService } from '../service/scientificAreaService/scientif
 import { TaskService } from '../service/taskService/task.service';
 import { MethodOfPaymentService } from '../service/methodOfPayment/method-of-payment.service';
 import { JournalService } from '../service/journalService/journal.service';
+import { ScientificArea } from '../model/ScientificArea';
 
 @Component({
   selector: 'app-task',
@@ -25,7 +26,7 @@ export class TaskComponent implements OnInit {
   processInstance : any;
   private enumValues = [];
   private tasks = [];
-  private areas = [];
+  private areas : ScientificArea[];
   private message = "You must select at least one scientific area!";
   private valid = true;
   private taskId: string;
@@ -37,6 +38,7 @@ export class TaskComponent implements OnInit {
   private valueSA ="";
   private ways : any;
   private scarea11: any;
+  private sss: any;
 
   constructor(private router: ActivatedRoute, private regService: RegistrationService, 
     private areasService: ScientificAreaService, private taskService: TaskService,
@@ -57,17 +59,24 @@ export class TaskComponent implements OnInit {
                 if( field.type.name=='enum'){
                   this.enumValues = Object.keys(field.type.values);
                 }
+                
               });
               this.formFields.forEach( (field) =>{
             
                 if( field.id=='scientificAreas'){
+                  let element11 =<any> document.getElementById("scientificAreas");
+                      console.log(element11);
+                      console.log(this.areas);
+                      let element112 =<any> document.getElementById("serviceList");
+                      console.log(element112);
+                      console.log(this.areas);
                   var splitted = field.value.value.split(","); 
                   console.log(splitted); 
                   var niz =[];
                   this.areas.forEach(area=>{
                     var i =0;
                     splitted.forEach(element => {
-                      console.log(element +" "+ area.name); 
+                      //console.log(element +" "+ area.name); 
                         if(element ==area.name){
                           niz.push(area);
                         }
@@ -75,7 +84,12 @@ export class TaskComponent implements OnInit {
                     
                   })
                   console.log(niz);
-                  this.scarea11=niz;
+                  this.scarea11=["1"]
+                  this.sss.push(this.areas[0]);
+                  let element1 =<any> document.getElementById("scientificAreas");
+                      console.log(element1);
+                      //element1.values=this.helpVariableForWay;
+                      //this.onChange1(this.helpVariableForWay);
                   //this.onChange(niz[0]);
                  
                 }
@@ -251,6 +265,21 @@ onChange1(newValue) {
   console.log(newValue);
   this.ways = newValue;  // don't forget to update the model here
   // ... do other stuff here ...
+}
+
+
+function ($scope) {
+    
+    $scope.selection = [];
+    
+   /* $scope.toggle = function (idx) {
+        var pos = $scope.selection.indexOf(idx);
+        if (pos == -1) {
+            $scope.selection.push(idx);
+        } else {
+            $scope.selection.splice(pos, 1);
+        }
+    };*/
 }
 }
 

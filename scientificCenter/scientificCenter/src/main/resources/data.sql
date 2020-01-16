@@ -11,7 +11,7 @@ INSERT INTO `method_of_payment` (`id`, `name`) VALUES ('3', 'paypal');
 insert into roles(name) values('ROLE_ADMIN');
 insert into roles(name) values('ROLE_RECENZENT');
 insert into roles(name) values('ROLE_EDITOR');
-
+insert into roles(name) values('ROLE_USER');
 
 INSERT INTO `user` (`activated`, `city`, `country`, `email`, `is_recenzent`, `name`, `password`, `surname`, `username`) VALUES (true, 'Zrenjanin', 'Srbija', 'petarperic23252@gmail.com', false, 'petar', '$2b$10$Fteo8iSDjs2OWFQE/4Ruw.88AXPrVDfb2v4v0SGeAD8e6uwsCkLsG', 'peric', 'petarperic');
 INSERT INTO `user` (`activated`, `city`, `country`, `email`, `is_recenzent`, `name`, `password`, `surname`, `username`) VALUES (true, 'Novi Sad', 'Srbija', 'nikola@gmail.com', true, 'nikola', '$2b$10$Fteo8iSDjs2OWFQE/4Ruw.88AXPrVDfb2v4v0SGeAD8e6uwsCkLsG', 'grujcic', 'nikolagrujcic');

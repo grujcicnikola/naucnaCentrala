@@ -1,7 +1,5 @@
 package com.example.scientificCenter.service;
 
-import java.util.Set;
-
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -10,15 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.example.scientificCenter.domain.Recenzent;
+import com.example.scientificCenter.domain.Journal;
 import com.example.scientificCenter.domain.User;
 import com.example.scientificCenter.domain.UserRole;
 import com.example.scientificCenter.domain.UserRoleName;
-import com.example.scientificCenter.repository.RecenzentRepository;
 
 
 @Service
-public class ConfirmationRecenzentService implements JavaDelegate{
+public class SavingActivation implements JavaDelegate{
 
 	@Autowired
 	IdentityService identityService;
@@ -36,24 +33,23 @@ public class ConfirmationRecenzentService implements JavaDelegate{
 	
 	@Autowired
 	private UserRoleService userRoleService;
+	
 	@Autowired
-	private RecenzentRepository recService;
+	private JournalService journalService;
 		
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
-		
 		User user = this.userService.findByUsername(execution.getVariable("username").toString());
-		
-		if(execution.getVariable("recenzent").toString().equals("true")) {
-			UserRole role = this.userRoleService.findRoleByName(UserRoleName.ROLE_RECENZENT);
-			user.setIsRecenzent(true);
-			Set<UserRole> roles =user.getRoles();
-			roles.clear();
-			user.getRoles().add(role);
-			Recenzent rec = new Recenzent(user);
-			this.userService.delete(user);
-			this.userService.save(rec);
+		if(execution.getVariable("confirm").toString().equals("true")){
+			if(execution.getVariable("isRecenzent").toString().equals("false")) {
+				UserRole role = this.userRoleService.findRoleByName(UserRoleName.ROLE_USER);
+				user.setActivated(true);
+				user.getRoles().add(role);
+				userService.save(user);
+			}	
 		}
+		
 	}
-	
 }
+	
+

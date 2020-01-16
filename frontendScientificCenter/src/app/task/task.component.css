@@ -117,3 +117,11 @@
   
   }
   .danger {background-color: #f44336;}
+
+  .selectable:hover {
+    cursor: pointer;
+}
+
+.selected {
+    background-color: yellow;
+}

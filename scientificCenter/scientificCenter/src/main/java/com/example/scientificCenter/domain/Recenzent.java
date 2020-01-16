@@ -32,6 +32,11 @@ public class Recenzent extends User{
 		// TODO Auto-generated constructor stub
 	}
 
+	public Recenzent(User user) {
+		// TODO Auto-generated constructor stub
+		super(user);
+	}
+
 	public Long getId() {
 		return id;
 	}

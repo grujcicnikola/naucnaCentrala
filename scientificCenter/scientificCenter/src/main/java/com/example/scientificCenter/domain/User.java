@@ -67,7 +67,7 @@ public class User implements Serializable{
 	@Column
 	private String title;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	private List<ScientificArea> areas = new ArrayList<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -82,6 +82,27 @@ public class User implements Serializable{
 	}
 
 	
+
+	public User(User user) {
+		// TODO Auto-generated constructor stub
+		this.activated=user.activated;
+		this.areas=user.areas;
+		this.city=user.city;
+		this.country=user.country;
+		this.email=user.email;
+		this.id=user.id;
+		this.isRecenzent=user.isRecenzent;
+		this.lat=user.lat;
+		this.lon=user.lon;
+		this.name=user.name;
+		this.surname=user.surname;
+		this.password=user.password;
+		this.username=user.username;
+		this.title=user.title;
+		this.roles=user.roles;
+	}
+
+
 
 	public Long getId() {
 		return id;

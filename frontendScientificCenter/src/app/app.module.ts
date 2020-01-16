@@ -13,6 +13,7 @@ import { AddEditorsComponent } from './add-editors/add-editors.component';
 import { LoginComponent } from './login/login.component';
 import { httpInterceptorProviders } from './auth/auth-interceptor';
 import { TaskComponent } from './task/task.component';
+import { MultiSelectAllModule } from '@syncfusion/ej2-angular-dropdowns';
 
 const appRoutes: Routes = [
   {path: 'register', component : RegistrationComponent},
@@ -41,6 +42,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    MultiSelectAllModule,
     RouterModule.forRoot(
       appRoutes,
       {enableTracing : true}

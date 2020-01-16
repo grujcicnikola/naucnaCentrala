@@ -37,7 +37,8 @@ export class RegistrationComponent implements OnInit {
     //let x = regService.startProcess();
     this.regService.startProcess().subscribe(
       data =>{
-        //this.formFieldsDto = data;
+        this.formFieldsDto = data;
+        console.log(this.formFields);
         this.formFields = this.formFieldsDto.formFields;
         this.processInstance = this.formFieldsDto.processInstanceId;
         this.formFields.forEach( (field) =>{

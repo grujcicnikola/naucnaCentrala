@@ -90,7 +90,7 @@ public class UserController {
     public @ResponseBody ResponseEntity<List<TaskDTO>> getTaskForCurrentUser(@PathVariable String email) {
 		System.out.println("set assigne" +email);
 		Optional<User> user = this.userService.getByEmail(email);
-		if(user.get()!= null) {
+		if(user.isPresent()) {
 			List<Task> tasks = new ArrayList<Task>();
 			//Set<UserRole> roles =user.get().getRoles();
 			//UserRole roleOfAdmin = this.userRoleService.findRoleByName(UserRoleName.ROLE_ADMIN);
