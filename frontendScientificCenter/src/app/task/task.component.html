@@ -32,8 +32,8 @@
             </div>
             <div *ngIf="review==true" >
                     <label for={{field.id}}>{{field.label}}</label>   
-                    <input type="text" readonly id={{field.id}}  name={{field.id}} ngModel={{field.defaultValue}} *ngIf="field.type.name=='string' && ( field.id !='password'  && field.id !='wayOfPaying1' && field.id!='scientificAreas' && field.id!='editors') || (field.type.name=='boolean' && field.id =='isOpenAccess1') " >
-                    <input type="text" readonly id={{field.id}}  name={{field.id}} ngModel={{field.value.value}} *ngIf="field.type.name=='string' && field.id =='wayOfPaying1'">
+                    <input type="text" readonly id={{field.id}}  name={{field.id}} ngModel={{field.defaultValue}} *ngIf="field.type.name=='string' && ( field.id !='password'  && field.id !='wayOfPaying1' && field.id!='scientificAreas1' && field.id!='editors') || (field.type.name=='boolean' && field.id =='isOpenAccess1') " >
+                    <input type="text" readonly id={{field.id}}  name={{field.id}} ngModel={{field.value.value}} *ngIf="field.type.name=='string' && (field.id =='wayOfPaying1'|| field.id=='scientificAreas1')">
                     <input type="password"readonly id={{field.id}} name={{field.id}} ngModel={{field.defaultValue}}   *ngIf="field.id =='password'" >
                     <input type="checkbox" id={{field.id}} name={{field.id}} ngModel  *ngIf="field.type.name=='boolean' && field.id !='isOpenAccess1'">
                     <input type="number" readonly id={{field.id}} name={{field.id}} ngModel={{field.defaultValue}}  *ngIf="field.type.name=='long'"> 

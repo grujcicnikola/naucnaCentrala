@@ -74,46 +74,27 @@ public class AuthController {
 		
 		if(user.get().isActivated())
 		{
-			boolean success = false;
 			try {
-				//System.out.println("Stigao "+ login.getEmail());
-				//System.out.println("Stigla sifra: " + login.getPassword());
-				System.out.println("pre authentication");
+				
 				Authentication authentication = authenticationManager.authenticate(
 		                new UsernamePasswordAuthenticationToken(
-		                		login.getEmail(),//ovde me je strah da stavim encode
+		                		login.getEmail(),
 		                        login.getPassword()
 		                )
 		        );
-				System.out.println("pre SecurityContextHolder");
-				//postavljanje autentifikacije u context
 				SecurityContextHolder.getContext().setAuthentication(authentication);
-				
-				System.out.println("pre jwt");
 				String jwt = jwtProvider.generateJwtToken(authentication);
 		        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		        System.out.println("Stigao token : "+jwt);
 		        System.out.println("Username: " + userDetails.getUsername());
 		        System.out.println("Password: " + userDetails.getPassword());
-		        
-		       // return ResponseEntity.ok(new JwtResponse(jwt,userDetails.getUsername(),userDetails.getAuthorities()));
-		        
-		       /* 	if (LoggerController.getInstance().logInfo() == true) {
-		        		logger.info(" 1 1 " + userServ.getByEmail(login.getEmail()).get().getId() + " 3 0");
-		        	}else {
-		        		System.out.println("Handling log exeption");
-		        	}
-		        	
-		       */
 		        return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
 		        
 			}catch(AuthenticationException e) {
-				return new ResponseEntity<>("bla bla bla", HttpStatus.NOT_ACCEPTABLE);
+				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 			}
 			
-		}else
-		{
-			//Nije potvrdio registraciju email-om pa ne zelimo ni da pokusava sa autentifikacijom 
+		}else {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 		
@@ -121,10 +102,7 @@ public class AuthController {
 	
 	@RequestMapping(value = "/logout/{id}/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserDTO> logout(@PathVariable("id") String email) {
-
-		System.out.println("Pogodio logout get po mailu");
-		System.out.println("Stigao mejl: " + email);
-		Optional<User> user = userServ.getByEmail(email);
+Optional<User> user = userServ.getByEmail(email);
 		return new ResponseEntity<>(new UserDTO(user.get()), HttpStatus.OK);
 	}
 	

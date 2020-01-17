@@ -28,7 +28,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	private UserRepository userRep;
 
-	//definisinemo nacin pristupanja korisniku
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String arg0) throws UsernameNotFoundException {
@@ -37,8 +36,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				.orElseThrow(() -> 
                 new UsernameNotFoundException("User Not Found with -> email : " + arg0)
 				);
-		System.out.println("UDSI " + UserPrinciple.build(user).toString());
-		//return UserPrinciple.build(user);
 		return getUserPrincipal(user);
 	}
 	

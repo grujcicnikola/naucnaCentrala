@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.example.scientificCenter.domain.Editor;
 import com.example.scientificCenter.domain.Journal;
 import com.example.scientificCenter.domain.MethodOfPayment;
 import com.example.scientificCenter.domain.ScientificArea;
@@ -71,6 +72,8 @@ public class NewJournalService implements JavaDelegate{
 		journal.setAreas(areas);
 		Optional<MethodOfPayment> method =this.methodService.findById(Long.parseLong(execution.getVariable("wayOfPaying").toString()));
 		journal.setMethodOfPayment(method.get());
+		Optional<com.example.scientificCenter.domain.User> editor = this.userService.getByEmail(execution.getVariable("initiator").toString());
+		journal.setEditorInChief((Editor)editor.get());
 		this.journalService.save(journal);
 		
 	}

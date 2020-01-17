@@ -67,12 +67,12 @@ export class TaskComponent implements OnInit {
                   let element2 =<any> document.getElementById("issnNumber1");
                   let element3 =<any> document.getElementById("scientificAreas1");
                   let element4 =<any> document.getElementById("wayOfPaying1");
-                  let element5 =<any> document.getElementById("isOpenAccess1");
+                  //let element5 =<any> document.getElementById("isOpenAccess1");
                   element1.readOnly=true;
                   element2.readOnly=true;
                   element3.readOnly=true;
                   element4.readOnly=true;
-                  element5.readOnly=true;
+                  //element5.readOnly=true;
                   
                 }
                 

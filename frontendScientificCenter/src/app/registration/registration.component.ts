@@ -103,7 +103,13 @@ export class RegistrationComponent implements OnInit {
   
     if (err.status === 400) {
       alert('You did not fill all required data!');
-    }else{
+    }else if(err.status === 406){
+      alert('Username is already in use!');
+    }
+    else if(err.status === 409){
+      alert('Email is already in use!');
+    }
+    else{
       alert('Error ocured!');
     }
     

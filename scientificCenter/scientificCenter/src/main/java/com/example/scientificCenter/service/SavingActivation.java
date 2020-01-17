@@ -1,5 +1,7 @@
 package com.example.scientificCenter.service;
 
+import java.util.Optional;
+
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -40,20 +42,22 @@ public class SavingActivation implements JavaDelegate{
 	
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
-		User user = this.userService.findByUsername(execution.getVariable("username").toString());
-		if(execution.getVariable("confirm").toString().equals("true")){
-			if(execution.getVariable("isRecenzent").toString().equals("false")) {
+		Optional<User> user = this.userService.getByEmail(execution.getVariable("email").toString());
+		if(user.isPresent()) {
+			if(execution.getVariable("confirm").toString().equals("true")){
+			
 				UserRole role = this.userRoleService.findRoleByName(UserRoleName.ROLE_USER);
-				user.setActivated(true);
-				user.getRoles().add(role);
-				userService.save(user);
+				user.get().setActivated(true);
+				user.get().getRoles().add(role);
+				userService.save(user.get());
 				org.camunda.bpm.engine.identity.User newUser = identityService.newUser(execution.getVariable("username").toString());
 				newUser.setFirstName(execution.getVariable("name").toString());
 				newUser.setLastName(execution.getVariable("surname").toString());
 				newUser.setEmail(execution.getVariable("email").toString());
 				newUser.setPassword(execution.getVariable("password").toString());
 				identityService.saveUser(newUser);
-			}	
+				
+			}
 		}
 		
 	}

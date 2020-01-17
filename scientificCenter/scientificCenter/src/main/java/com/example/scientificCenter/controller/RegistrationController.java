@@ -99,11 +99,18 @@ public class RegistrationController {
 					return new ResponseEntity(HttpStatus.BAD_REQUEST);
 				}
 			}
+			if(fieldsDTO.get(i).getFieldId().equals("username")){
+				org.camunda.bpm.engine.identity.User userWithSameUsername = identityService.createUserQuery().userId(fieldsDTO.get(i).getFieldValue()) .singleResult();
+				User userUsername= this.userService.findByUsername(fieldsDTO.get(i).getFieldValue());
+				if(userUsername!=null || userWithSameUsername !=null) {
+					return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+				}
+				
+			}
 			if(fieldsDTO.get(i).getFieldId().equals("email")){
-				org.camunda.bpm.engine.identity.User userWithSameEmail = identityService.createUserQuery().userId(fieldsDTO.get(i).getFieldValue()) .singleResult();
-				Optional<User> userEmailApp= this.userService.getByEmail(fieldsDTO.get(i).getFieldValue());
-				if(userEmailApp.isPresent() || userWithSameEmail !=null) {
-					return new ResponseEntity(HttpStatus.IM_USED);
+				Optional<User> userWithSameEmail = this.userService.getByEmail(fieldsDTO.get(i).getFieldValue());
+				if(userWithSameEmail.isPresent()) {
+					return new ResponseEntity(HttpStatus.CONFLICT);
 				}
 				
 			}
