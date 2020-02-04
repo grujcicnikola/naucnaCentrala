@@ -6,6 +6,10 @@ import { User } from '../model/User';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RegistrationService } from '../service/registrationService/registration.service';
 import { JournalService } from '../service/journalService/journal.service';
+import { Journal } from '../model/Journal';
+import { TransactionService } from '../service/transactionService/transaction.service';
+import { Transaction } from '../model/Transaction';
+import { PaperService } from '../service/paperService/paper.service';
 
 @Component({
   selector: 'app-home',
@@ -24,10 +28,14 @@ export class HomeComponent implements OnInit {
   roles: string[];
   loggedUser : User;
   recenzentLogged: boolean = false;
+  userLogged : boolean = false;
+  authorLogged : boolean = false;
   tasks: any;
+  journals: Journal[];
   
   constructor(private router: ActivatedRoute, private tokenStorage : TokenStorageService,
-    private userServ : UserService, private regService: RegistrationService,private journalService: JournalService) { }
+    private userServ : UserService, private regService: RegistrationService,private journalService: JournalService,
+    private transServ: TransactionService, private paperService: PaperService) { }
 
 
   ngOnInit() {
@@ -58,6 +66,10 @@ export class HomeComponent implements OnInit {
             this.editorLogged = true;
           }else if(element.name === "ROLE_RECENZENT"){
             this.recenzentLogged = true;
+          }else if(element.name === "ROLE_USER"){
+            this.userLogged = true;
+          }else if(element.name === "ROLE_AUTHOR"){
+            this.authorLogged = true;
           }
         });
       });
@@ -68,7 +80,7 @@ export class HomeComponent implements OnInit {
     this.tokenStorage.signOut();
     this.someoneLogged = false;
     this.userServ.logout(this.email).subscribe(data =>{
-      window.location.href="http://localhost:4200";
+      window.location.href="https://localhost:4202";
     });
     
   }
@@ -78,7 +90,7 @@ export class HomeComponent implements OnInit {
     if(err.status === 401){
       alert('Error unauthorized!');
     }else if(err.status === 500){
-      window.location.href = "http://localhost:4200";
+      window.location.href = "https://localhost:4202";
     }
     else
     {
@@ -97,21 +109,110 @@ export class HomeComponent implements OnInit {
 
   startTask(task){
     console.log(task);
-    window.location.href="http://localhost:4200/task/".concat(task);
+    window.location.href="https://localhost:4202/task/".concat(task);
   }
 
   startRegister(){
-    window.location.href="http://localhost:4200/register";
+    window.location.href="https://localhost:4202/register";
 
   }
 
   startLogin(){
-    window.location.href="http://localhost:4200/login";
+    window.location.href="https://localhost:4202/login";
+  }
+
+  userTransactions(){
+    window.location.href="https://localhost:4202/myTransactions";
   }
   startJournal(){
     this.journalService.startProcess(this.email).subscribe(
       data =>{
-        window.location.href="http://localhost:4200/task/"+data.taskId;
+        window.location.href="https://localhost:4202/task/"+data.taskId;
       },error =>{alert("Error")});
   }
+
+  seeList(){
+    console.log("ivana");
+    this.journalService.getAll().subscribe(
+      data=>{
+        this.journals=data;
+
+        this.journals.forEach(element =>{
+          console.log("SUBS"+element.subscriptions);
+          if(element.subscriptions != null)
+          {
+            console.log("Element " + element.title + " , sub: " + element.subscriptions.length);
+            
+            element.canSubscribe = true;
+            element.canUnsubscribe = false;
+            element.subscriptions.forEach(element2 =>{
+              console.log("ACTIVE STATUS" + element2.active);
+              if(element2.userEmail == this.email && element2.active == true)
+              { 
+                element.canSubscribe = false;
+                element.canUnsubscribe = true;
+              }else if(element2.userEmail == this.email && element2.active == false)
+              {
+               
+                element.canSubscribe = true;
+                element.canUnsubscribe = false;
+              }
+            });
+          }else
+          {
+            element.canSubscribe = true;
+            element.canUnsubscribe = false;
+          }
+           
+        });
+        console.log(this.journals);
+      }
+    )
+  }
+
+  buyJournal(journal: Journal){
+    let transaction = new Transaction();
+    transaction.buyerEmail = this.loggedUser.email;
+    transaction.amount =journal.price;
+    transaction.journalId=journal.id;
+    transaction.merchantIssn=journal.issn;
+    
+    this.transServ.create(transaction).subscribe(
+      data=>{
+        alert("Success "+data.orderId);
+        window.location.href = "https://localhost:1234/createPayment/"+data.orderId;
+      },error =>{this.handleError(error)}
+      );
+    
+    //console.log("kupi casopis sa idijem "+journal.id);
+    //window.location.href = "https://localhost:1234/journal/"+journal.issn + "/" + journal.price;
+  }
+
+  submitPaper(journal: Journal){
+    this.paperService.startProcess(this.email, journal).subscribe(
+      data =>{
+        window.location.href="https://localhost:4202/task/"+data.taskId;
+      },error =>{alert("Error")});
+  }
+
+  subscribe(journal : Journal){
+    
+    window.location.href = "https://localhost:1234/subscription/"+journal.issn + "/" + this.email;
+  }
+
+  unsubscribe(journal : Journal){
+
+    window.location.href= "https://localhost:1234/cancelSub/"+journal.issn + "/" + this.email;
+  }
+
+  handleError(err: HttpErrorResponse) {
+    
+    if(err.status === 503){
+      alert('This magazine does not have any available payment methods!');
+    }else{
+      alert("Error");
+    }
+    
+  }
+
 }

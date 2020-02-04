@@ -8,8 +8,8 @@ import { MethodOfPayment } from 'src/app/model/MethodOfPayment';
 export class MethodOfPaymentService {
 
   constructor(private http:HttpClient) { }
-  
+  url ="https://localhost:8088/"
   getAll(){
-    return this.http.get<MethodOfPayment[]>('http://localhost:8095/methodOfPayment/getAll')
+    return this.http.get<MethodOfPayment[]>(this.url+'methodOfPayment/getAll')
    }
   }

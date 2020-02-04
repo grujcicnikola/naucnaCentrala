@@ -7,17 +7,17 @@ import { HttpClient } from '@angular/common/http';
 export class UserService {
 
   constructor(private http : HttpClient) { }
-
+  url ="https://localhost:8088/"
   logout(email : String){
-    return this.http.get('http://localhost:8095/auth/logout/'+email+'/');
+    return this.http.get(this.url+'auth/logout/'+email+'/');
   }
   
   getUserByEmail(email : String){
-    return this.http.get('http://localhost:8095/user/email/'+email+'/');
+    return this.http.get(this.url+'user/email/'+email+'/');
   }
 
   //get/tasks'
   getUsersTasks(email : String){
-    return this.http.get('http://localhost:8095/user/get/tasks/'+email+'/');
+    return this.http.get(this.url+'user/get/tasks/'+email+'/');
   }
 }

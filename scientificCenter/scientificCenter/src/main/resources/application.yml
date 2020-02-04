@@ -7,6 +7,7 @@ spring:
     password: sifra
     driverClassName : com.mysql.jdbc.Driver
     initialization-mode: always
+     
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -42,14 +43,24 @@ elasticsearch:
 
 camunda:
     createJournalProcessKey: CreateJournal
-    registrationProcessKey: Registration  
+    registrationProcessKey: Registration
+    submittingPaperProcessKey: SubmittingPaper  
     
 server:
-  port: 8095
-  
+  port: 8088
+  ssl:
+    enabled: true
+    key-store: ${KEY_STORE_CLASSPATH}
+    key-store-password: ${KEY_STORE_PASSWORD}
+    key-alias: scs
+    trust-store: ${KEY_STORE_CLASSPATH_TRUST}
+    trust-store-password: ${KEY_STORE_TRUST_PASSWORD}
 com:
     example:
         app:
-            jwtExpiration: 86400
-            jwtExpirationInMs: 3600000
+            jwtExpiration: 8640000
+            jwtExpirationInMs: 360000000
             jwtSecret: y5oEr+Hczn77f1xoU9vOfw+K  
+            kpFront: https://localhost:1234
+            zuulUrl: https://localhost:8086/
+

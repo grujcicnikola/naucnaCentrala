@@ -27,7 +27,7 @@ import com.example.scientificCenter.service.ScientificAreaService;
 
 @RestController
 @RequestMapping("scientificArea")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://localhost:4202")
 public class ScientificAreaController {
 	
 	@Autowired

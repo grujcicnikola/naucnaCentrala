@@ -11,33 +11,22 @@ import { Form } from '@angular/forms';
 export class RegistrationService {
 
   constructor(private http:HttpClient) { }
-  
+
+  url ="https://localhost:8088/"
+
   startProcess(){
-    return this.http.get<FormFields>('http://localhost:8095/registation/register');
+    return this.http.get<FormFields>(this.url+'registation/register');
    }
 
    confirmForm(id: string){
-    return this.http.get<FormFields>('http://localhost:8095/registation/confirmForm/'.concat(id));
+    return this.http.get<FormFields>(this.url+'registation/confirmForm/'.concat(id));
    }
 
-  getTasks(processInstance : string){
-
-    return this.http.get('http://localhost:8080/welcome/get/tasks/'.concat(processInstance)) as Observable<any>
-  }
-
-  claimTask(taskId){
-    return this.http.post('http://localhost:8080/welcome/tasks/claim/'.concat(taskId), null) as Observable<any>
-  }
-
-  completeTask(taskId){
-    return this.http.post('http://localhost:8080/welcome/tasks/complete/'.concat(taskId), null) as Observable<any>
-  }
-
-  registerUser(user, taskId) {
-    return this.http.post("http://localhost:8095/registation/userInput/".concat(taskId), user) as Observable<any>;
+ registerUser(user, taskId) {
+    return this.http.post(this.url+"registation/userInput/".concat(taskId), user) as Observable<any>;
   }
 
   confirmUser(username:string,user, taskId) {
-    return this.http.post("http://localhost:8095/registation/confirmUserInput/"+username+'/'.concat(taskId), user) as Observable<any>;
+    return this.http.post(this.url+"registation/confirmUserInput/"+username+'/'.concat(taskId), user) as Observable<any>;
   }
 }

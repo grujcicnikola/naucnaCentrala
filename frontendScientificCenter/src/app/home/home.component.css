@@ -89,6 +89,22 @@ input {
       font-size: 15px;
        color:white;
   }
+
+  a#subButton{
+    margin-bottom: 10px;
+    margin-top: 5px;
+    background: rgb(46, 138, 46);
+    font-size: 15px;
+     color:white;
+  }
+
+  a#unSubButton{
+    margin-bottom: 10px;
+    margin-top: 5px;
+    background: rgb(46, 138, 46);
+    font-size: 15px;
+     color:white;
+  }
       
   @font-face {
     font-family: 'Open Sans';

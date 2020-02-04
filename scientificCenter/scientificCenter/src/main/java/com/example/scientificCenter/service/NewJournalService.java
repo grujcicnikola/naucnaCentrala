@@ -71,7 +71,7 @@ public class NewJournalService implements JavaDelegate{
 		}
 		journal.setAreas(areas);
 		Optional<MethodOfPayment> method =this.methodService.findById(Long.parseLong(execution.getVariable("wayOfPaying").toString()));
-		journal.setMethodOfPayment(method.get());
+		//journal.setMethodOfPayment(method.get());
 		Optional<com.example.scientificCenter.domain.User> editor = this.userService.getByEmail(execution.getVariable("initiator").toString());
 		journal.setEditorInChief((Editor)editor.get());
 		this.journalService.save(journal);

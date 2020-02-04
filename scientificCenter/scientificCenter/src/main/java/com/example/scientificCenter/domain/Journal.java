@@ -1,5 +1,6 @@
 package com.example.scientificCenter.domain;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -44,16 +45,26 @@ public class Journal {
 	@Column(nullable = false)
 	private Boolean isOpenAccess;
 	
+	@Column(nullable = false)
+	private Double price;
+	
 	@OneToOne(fetch = FetchType.EAGER)
 	private Editor editorInChief;
 	
-	
+	@Column(nullable = false)
+	private int subscriptionNum;
 
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<Paper> papers = new HashSet<Paper>();
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	private MethodOfPayment methodOfPayment ;
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<MethodOfPayment> methodOfPayment =new HashSet<MethodOfPayment>();
+	
+	@OneToMany(mappedBy="journal",fetch = FetchType.LAZY)
+	private List<Subscription> subscriptions = new ArrayList<Subscription>();
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	private List<Membership> membership = new ArrayList<Membership>();
 	
 	public Journal() {
 		super();
@@ -108,8 +119,6 @@ public class Journal {
 		this.editorInChief = editorInChief;
 	}
 
-	
-
 	public Set<Paper> getPapers() {
 		return papers;
 	}
@@ -118,11 +127,27 @@ public class Journal {
 		this.papers = papers;
 	}
 
-	public MethodOfPayment getMethodOfPayment() {
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public int getSubscriptionNum() {
+		return subscriptionNum;
+	}
+
+	public void setSubscriptionNum(int subscriptionNum) {
+		this.subscriptionNum = subscriptionNum;
+	}
+
+	public Set<MethodOfPayment> getMethodOfPayment() {
 		return methodOfPayment;
 	}
 
-	public void setMethodOfPayment(MethodOfPayment methodOfPayment) {
+	public void setMethodOfPayment(Set<MethodOfPayment> methodOfPayment) {
 		this.methodOfPayment = methodOfPayment;
 	}
 
@@ -133,8 +158,21 @@ public class Journal {
 	public void setIsActivated(Boolean isActivated) {
 		this.isActivated = isActivated;
 	}
-	
-	
-	
 
+	public List<Subscription> getSubscriptions() {
+		return subscriptions;
+	}
+
+	public void setSubscriptions(List<Subscription> subscriptions) {
+		this.subscriptions = subscriptions;
+	}
+
+	public List<Membership> getMembership() {
+		return membership;
+	}
+
+	public void setMembership(List<Membership> membership) {
+		this.membership = membership;
+	}
+	
 }

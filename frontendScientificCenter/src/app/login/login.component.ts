@@ -73,14 +73,11 @@ export class LoginComponent implements OnInit {
           this.authService.attemptAuth(this.loginInfo).subscribe(
             data => {
               this.tokenStorage.saveToken(data.token);
-              //this.tokenStorage.saveUsername(data.email);
               //this.tokenStorage.saveAuthorities(data.authorities);
-      
               this.isLoginFailed = false;
               this.isLoggedIn = true;
-              //this.roles = this.tokenStorage;
               alert("Succesful");
-              window.location.href = "http://localhost:4200";
+              window.location.href = "https://localhost:4202";
             },err =>{this.handleAuthError(err)}
           );
 

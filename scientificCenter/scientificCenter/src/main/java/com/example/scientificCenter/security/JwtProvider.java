@@ -2,8 +2,11 @@ package com.example.scientificCenter.security;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -18,10 +21,11 @@ import io.jsonwebtoken.UnsupportedJwtException;
 @Component
 public class JwtProvider {
 
-	 private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
+	 	private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
+	 	
+	 	@Autowired
+	 	private HttpServletRequest request;
 
-	    
-	    
 	 	@Value("${com.example.app.jwtSecret}")
 	    private String jwtSecret;
 
@@ -60,10 +64,42 @@ public class JwtProvider {
 	        return false;
 	    }
 	    
+	    public String getEmailLoggedUser() {
+			
+			String header = request.getHeader("Authorization");
+			
+			if(header != null)
+			{
+				String parts[] = header.split(" "); 
+				
+				String email = this.getUserNameFromJwtToken(parts[1]);  
+				
+				return email;  
+			}else
+			{
+				return null;
+			}
+		}
+	    
 	    public String getUserNameFromJwtToken(String token) {
 	        return Jwts.parser()
 				                .setSigningKey(jwtSecret)
 				                .parseClaimsJws(token)
 				                .getBody().getSubject();
 	    }
+
+		public String getUsernameLoggedUser() {
+			 String header = request.getHeader("Authorization");
+			 //System.out.println("Header AUTH "+ header);
+			 if (header!=null) {
+			     String parts[]=header.split(" ");
+			     String username = this.getUserNameFromJwtToken(parts[1]);
+			     return username;
+			 }else {
+			     return null;
+			 }
+    
+		}
+		
+		
 }

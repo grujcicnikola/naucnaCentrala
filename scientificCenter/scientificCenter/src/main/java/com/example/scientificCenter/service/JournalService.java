@@ -35,6 +35,10 @@ public class JournalService {
 		this.journalRepository.delete(journal);;
 	}
 	
+	public List<Journal> findAll(){
+		return this.journalRepository.findAll();
+	}
+	
 	public List<Editor> findAllEditors(){
 		return this.editorRepository.findAll();
 	}
@@ -72,6 +76,16 @@ public class JournalService {
 	public void saveRecenzent(Recenzent recenzent) {
 		// TODO Auto-generated method stub
 		this.recenzentRepository.save(recenzent);
+	}
+	
+	public Journal getJournalById(Long id) {
+		
+		return this.journalRepository.findOneById(id);
+	}
+
+	public Optional<Journal> findOneById(Long journalId) {
+		// TODO Auto-generated method stub
+		return journalRepository.findById(journalId);
 	}
 
 }

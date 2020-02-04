@@ -45,7 +45,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("auth")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://localhost:4202")
 public class AuthController {
 
 
@@ -88,7 +88,12 @@ public class AuthController {
 		        System.out.println("Stigao token : "+jwt);
 		        System.out.println("Username: " + userDetails.getUsername());
 		        System.out.println("Password: " + userDetails.getPassword());
+		        Optional<User> thisUser= this.userServ.getByEmail(login.getEmail());
+		        if(user.isPresent()) {
+		        	
+		        }
 		        return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
+		        //return new ResponseEntity<>(new JwtResponse(jwt,thisUser.get().getRoles()), HttpStatus.OK);
 		        
 			}catch(AuthenticationException e) {
 				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);

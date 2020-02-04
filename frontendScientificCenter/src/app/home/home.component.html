@@ -9,7 +9,7 @@
     </li>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
-        </button>
+    </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item active">
@@ -22,14 +22,22 @@
         <li class="nav-item">
           <button *ngIf="editorLogged == true"   class="nav-link" (click)="startJournal()">Create journal</button>
         </li>
-       
+        
         <li class="nav-item">
           <button *ngIf="someoneLogged == true" class="nav-link" [routerLink]="" (click)="logout()">Logout</button>
         </li>
         
+        <li class="nav-item">
+          <button *ngIf="userLogged== true"   class="nav-link" (click)="userTransactions()">My transactions</button>
+        </li>
       </ul>
+      
     </div>
+    
   </div>
+ 
+     
+  
 </nav>
 
 
@@ -55,12 +63,51 @@
                     <div class="col">
                             <a id="hrefButton"  (click)="startTask(task.taskId)" class="btn btn-success btn-block">StartTask</a>
                     </div>
-                </div>
-               
-                 
+                  </div>  
       </div>
     </div>
-
-
   </div>
 </div>
+
+<div class="container py-4 mt-4" *ngIf="someoneLogged == true">
+  <h1>All journals</h1>
+  <button (click)="seeList()">See list</button>
+  <div class="row mt-4">
+    <div class="col-lg-3 col-sm-6 mb-4" *ngFor="let journal of journals; let i = index">
+      <div class="card shadow border-0 h-100">
+        <h4 class="card-title">{{journal.title}}</h4>
+        <p class="card-text">ISSN: {{journal.issn}}</p>
+        <p class="card-text">Price: {{journal.price}}€</p>
+        <div class="row">
+          <div class="col" *ngIf="journal.isOpenAccess == true">
+             <p class="card-text">open-access</p>
+          </div>
+          <div class="col" *ngIf="journal.isOpenAccess == false">
+            <p class="card-text">not open-access</p>
+         </div>
+        </div>
+        <div class="row" *ngIf="authorLogged == true">
+          <div class="col" >
+             <a id="hrefButton"  (click)="submitPaper(journal)" class="btn btn-success btn-block">Submit paper</a>
+          </div>
+        </div> 
+        <div class="row"  *ngIf="userLogged == true">
+           <div class="col" *ngIf="journal.isOpenAccess == false">
+              <a id="hrefButton"  (click)="buyJournal(journal)" class="btn btn-success btn-block">Buy</a>
+           </div>
+         </div>
+         <div class="row"  *ngIf="userLogged == true">
+          <div class="col">
+             <a id="subButton"  (click)="subscribe(journal)" class="btn btn-success btn-block"  *ngIf=" journal.canSubscribe == true && userLogged == true">Subscribe</a>
+          </div>
+        </div>
+        <div class="row"  *ngIf="userLogged == true">
+          <div class="col">
+             <a id="unSubButton"  (click)="unsubscribe(journal)" class="btn btn-success btn-block" *ngIf="journal.canUnsubscribe == true && userLogged == true">Unsubscribe</a>
+          </div>
+        </div>    
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -90,7 +90,7 @@ export class RegistrationComponent implements OnInit {
           console.log(res);
           
           alert("You registered successfully!")
-          window.location.href = "http://localhost:4200";
+          window.location.href = "https://localhost:4202";
         },
         err => {
           this.handleError(err)

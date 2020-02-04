@@ -78,7 +78,8 @@ public class NewUserService implements JavaDelegate{
 		}
 		user.setAreas(areas);
 		userService.save(user);
-		sendConfirmationEmail(execution);
+		//System.out.println()
+		//sendConfirmationEmail(execution);
 		
        // Get a Properties object
         /*Properties props = System.getProperties();

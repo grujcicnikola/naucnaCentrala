@@ -14,7 +14,7 @@ const httpOptions = {
 })
 export class AuthService {
 
-  private loginUrl = 'http://localhost:8095/auth/login';
+  private loginUrl = 'https://localhost:8088/auth/login';
   
   constructor(private http: HttpClient) { }
 

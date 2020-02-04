@@ -36,7 +36,7 @@ import com.example.scientificCenter.service.UserService;
 
 @RestController
 @RequestMapping("registation")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://localhost:4202")
 public class RegistrationController {
 	@Autowired
 	IdentityService identityService;
@@ -85,6 +85,7 @@ public class RegistrationController {
 		HashMap<String, Object> map = this.mapListToDto(fieldsDTO);
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		String processInstanceId = task.getProcessInstanceId();
+		System.out.println("++++++++++++++++"+processInstanceId);
 		for(int i = 0; i < fieldsDTO.size(); i++) {
 			if(fieldsDTO.get(i).getFieldId().equals("name") ||fieldsDTO.get(i).getFieldId().equals("surname") ||
 					fieldsDTO.get(i).getFieldId().equals("city")||fieldsDTO.get(i).getFieldId().equals("state") ||

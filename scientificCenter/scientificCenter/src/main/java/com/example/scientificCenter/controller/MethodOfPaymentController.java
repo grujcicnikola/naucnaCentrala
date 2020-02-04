@@ -22,7 +22,7 @@ import com.example.scientificCenter.service.ScientificAreaService;
 
 @RestController
 @RequestMapping("methodOfPayment")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://localhost:4202")
 public class MethodOfPaymentController {
 	
 	@Autowired

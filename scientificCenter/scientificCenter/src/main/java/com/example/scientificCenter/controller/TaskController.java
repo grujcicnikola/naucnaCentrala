@@ -38,7 +38,7 @@ import com.example.scientificCenter.service.UserService;
 
 @RestController
 @RequestMapping("task")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://localhost:4202")
 public class TaskController {
 	@Autowired
 	IdentityService identityService;
@@ -147,6 +147,8 @@ public class TaskController {
 				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}
 			runtimeService.setVariable(processInstanceId, "editorsAndRecenzents", fieldsDTO);
+		}else if(task.getName().equals("Membership payment")) {
+			runtimeService.setVariable(processInstanceId, "confirmation", fieldsDTO);
 		}
 		try {
 			formService.submitTaskForm(taskId, map);

@@ -1,0 +1,26 @@
+<div class="main">
+
+    <section class="signup">
+        <div class="container">
+            <div class="signup-content">
+                <form ngNativeValidate id="signup-form" class="signup-form" action="#" (ngSubmit)="sign()" method="POST">
+                    <h2 class="form-title">Create payment - demo</h2>
+                    <div class="form-group">
+                        <input type="text" class="form-input" placeholder="Merchant email" [(ngModel)]="payment.merchantEmail"  name="merchantEmail" id="merchantEmail"
+                            [required]="true" />
+                            
+                    </div>
+                    <div class="form-group">
+                        <input type="number" step="0.01" class="form-input" placeholder="Amount" [(ngModel)]="payment.amount"  name="amount" id="amount"
+                            [required]="true"  />
+                          
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" name="submit" id="submit" class="form-submit" value="Submit" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+  
+  </div>

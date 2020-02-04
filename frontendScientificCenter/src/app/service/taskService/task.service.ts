@@ -10,12 +10,13 @@ export class TaskService {
   
 
   constructor(private http : HttpClient) { }
+  url ="https://localhost:8088/"
 
   taskForm(task : String){
-    return this.http.get<FormFields>('http://localhost:8095/task/getTaskForm/'+task);
+    return this.http.get<FormFields>(this.url+'task/getTaskForm/'+task);
   }
 
   registerUser(user, taskId) {
-    return this.http.post("http://localhost:8095/task/userInput/".concat(taskId), user) as Observable<any>;
+    return this.http.post(this.url+"task/userInput/".concat(taskId), user) as Observable<any>;
   }
 }

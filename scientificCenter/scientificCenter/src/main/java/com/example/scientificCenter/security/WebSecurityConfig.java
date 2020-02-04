@@ -53,8 +53,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-    	http.headers()
-        .contentSecurityPolicy("script-src 'self' https://trustedscripts.example.com; object-src https://trustedplugins.example.com; report-uri /csp-report-endpoint/");
+    	//http.headers()
+        //.contentSecurityPolicy("script-src 'self' https://trustedscripts.example.com; object-src https://trustedplugins.example.com; report-uri /csp-report-endpoint/");
         http.cors().and().csrf().disable().
                 authorizeRequests()
                 .antMatchers("/journal/**").permitAll()
@@ -64,6 +64,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/task/**").permitAll()
+                .antMatchers("/paper/**").permitAll()
+                .antMatchers("/subscription/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()

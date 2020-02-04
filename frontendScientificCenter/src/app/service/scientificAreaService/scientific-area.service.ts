@@ -8,8 +8,8 @@ import { ScientificArea } from 'src/app/model/ScientificArea';
 export class ScientificAreaService {
 
   constructor(private http:HttpClient) { }
-  
+  url ="https://localhost:8088/"
   getAll(){
-    return this.http.get<ScientificArea[]>('http://localhost:8095/scientificArea/getAll')
+    return this.http.get<ScientificArea[]>(this.url+'scientificArea/getAll')
    }
 }

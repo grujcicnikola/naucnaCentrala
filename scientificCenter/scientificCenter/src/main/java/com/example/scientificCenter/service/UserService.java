@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.scientificCenter.domain.ScientificArea;
 import com.example.scientificCenter.domain.User;
+import com.example.scientificCenter.repository.AuthorRepository;
 import com.example.scientificCenter.repository.ScientificAreaRepository;
 import com.example.scientificCenter.repository.UserRepository;
 
@@ -17,6 +18,9 @@ public class UserService {
 	
 	@Autowired
     private UserRepository repository;
+	
+	@Autowired
+    private AuthorRepository authorRepository;
 	
 	public List<User> findAll() {
 		// TODO Auto-generated method stub

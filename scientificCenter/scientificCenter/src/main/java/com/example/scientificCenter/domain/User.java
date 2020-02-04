@@ -5,16 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinTable;
 import javax.persistence.*;
 
 
@@ -75,6 +65,9 @@ public class User implements Serializable{
 			joinColumns = @JoinColumn(name="user_id", referencedColumnName = "id"),
 		    inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	public Set<UserRole> roles;
+	
+	@OneToMany(mappedBy="user",fetch = FetchType.LAZY)
+	private List<Subscription> subscriptions = new ArrayList<Subscription>();
 
 	public User() {
 		super();
@@ -257,10 +250,16 @@ public class User implements Serializable{
 		return lat;
 	}
 
-
-
 	public void setLat(Double lat) {
 		this.lat = lat;
+	}
+
+	public List<Subscription> getSubscriptions() {
+		return subscriptions;
+	}
+
+	public void setSubscriptions(List<Subscription> subscriptions) {
+		this.subscriptions = subscriptions;
 	}
 	
 	

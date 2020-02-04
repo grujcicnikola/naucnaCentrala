@@ -31,6 +31,7 @@ import com.example.scientificCenter.domain.UserRoleName;
 import com.example.scientificCenter.dto.ScientificAreaDTO;
 import com.example.scientificCenter.dto.TaskDTO;
 import com.example.scientificCenter.dto.UserDTO;
+import com.example.scientificCenter.security.JwtProvider;
 import com.example.scientificCenter.service.ScientificAreaService;
 import com.example.scientificCenter.service.UserRoleService;
 import com.example.scientificCenter.service.UserService;
@@ -38,7 +39,7 @@ import com.example.scientificCenter.service.UserService;
 
 @RestController
 @RequestMapping("user")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://localhost:4202")
 public class UserController {
 	
 	@Autowired
@@ -63,6 +64,9 @@ public class UserController {
 	FormService formService;
 	
 	@Autowired
+    JwtProvider jwtProvider;
+	
+	@Autowired
 	private UserRoleService userRoleService;
 	
 	@Value("${camunda.registrationProcessKey}")
@@ -70,6 +74,9 @@ public class UserController {
 	
 	@Value("${camunda.createJournalProcessKey}")
 	private String createJournalProcessKey;
+	
+	@Value("${camunda.submittingPaperProcessKey}")
+	private String submittingPaperProcessKey;
 	
 	@RequestMapping(value = "/email/{id}/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserDTO> getUserByEmail(@PathVariable("id") String email) {
@@ -88,6 +95,8 @@ public class UserController {
 	
 	@GetMapping(path = "/get/tasks/{email}/", produces = "application/json")
     public @ResponseBody ResponseEntity<List<TaskDTO>> getTaskForCurrentUser(@PathVariable String email) {
+		String userEmail = jwtProvider.getUsernameLoggedUser();
+		System.out.println("userEmail " + userEmail);
 		System.out.println("set assigne" +email);
 		Optional<User> user = this.userService.getByEmail(email);
 		if(user.isPresent()) {
@@ -96,6 +105,7 @@ public class UserController {
 			//UserRole roleOfAdmin = this.userRoleService.findRoleByName(UserRoleName.ROLE_ADMIN);
 			tasks.addAll(taskService.createTaskQuery().processDefinitionKey(this.createJournalProcessKey).taskAssignee(email).list());
 			tasks.addAll(taskService.createTaskQuery().processDefinitionKey(this.registrationProcessKey).taskAssignee(email).list());
+			tasks.addAll(taskService.createTaskQuery().processDefinitionKey(this.submittingPaperProcessKey).taskAssignee(email).list());
 			
 			List<TaskDTO> dtos = new ArrayList<TaskDTO>();
 			for (Task task : tasks) {
