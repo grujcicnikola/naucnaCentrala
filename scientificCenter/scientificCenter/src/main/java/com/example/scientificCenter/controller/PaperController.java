@@ -1,5 +1,9 @@
 package com.example.scientificCenter.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +25,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.scientificCenter.domain.Journal;
 import com.example.scientificCenter.dto.FormSubmissionDTO;
@@ -78,6 +84,48 @@ public class PaperController {
 		System.out.println("ZAPOCET TASK: " + task.getName()+ task.getAssignee() );
 		
 		return new ResponseEntity<>(new TaskDTO(task.getId(), task.getName(),task.getAssignee()), HttpStatus.OK);
+	}
+	
+	/* @RequestMapping(value = "/getImage/{id}", method = RequestMethod.GET)
+	public ResponseEntity<List<ImageDTO>> getFile(@PathVariable @Min(1) Long id) {
+		System.out.print("pogodio image get");
+		List<Image> slike = new ArrayList<>();
+		List<ImageDTO> listaSvihDTO = new ArrayList<ImageDTO>();
+		slike = imageRepository.findAllByAccommodationId(id);
+		for (int i = 0; i < slike.size(); i++) {
+			System.out.print("slika "+i);
+			listaSvihDTO.add(new ImageDTO(slike.get(i)));
+		}
+		return new ResponseEntity<>(listaSvihDTO, HttpStatus.OK);
+
+	}*/
+
+
+
+	@RequestMapping(value = "/uploadPDF/", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	public ResponseEntity<?> uploadFile(@RequestParam("File") MultipartFile request) {
+		System.out.print("pogodio pdf");
+		String returnValue ="";
+		try {
+			returnValue = saveImage(request);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<>(returnValue, HttpStatus.OK);
+
+	}
+
+	
+
+	public String saveImage(MultipartFile file) throws IOException {
+		String folder = "files/";
+		byte[] bytes = file.getBytes();
+		Path path = Paths.get(folder + file.getOriginalFilename());
+		System.out.println(path.toAbsolutePath());
+		Files.write(path, bytes);
+		return path.toAbsolutePath().toString();
 	}
 	
 }

@@ -9,6 +9,8 @@ import com.example.scientificCenter.model.PaperDoc;
 @Repository
 public interface PaperRepository extends JpaRepository<Paper, Long> {
 
+	Paper findByTitle(String title);
+
 	
 
 }

@@ -9,6 +9,8 @@ import { MethodOfPaymentService } from '../service/methodOfPayment/method-of-pay
 import { JournalService } from '../service/journalService/journal.service';
 import { ScientificArea } from '../model/ScientificArea';
 import { element } from 'protractor';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { PaperService } from '../service/paperService/paper.service';
 
 @Component({
   selector: 'app-task',
@@ -39,12 +41,21 @@ export class TaskComponent implements OnInit {
   private valueSA ="";
   private ways : any;
   private review = false;
+  fileUrl: string;
+  fileToUpload: File;
+  hasPDF : boolean;
+  selectedItems = [];
+  dropdownList = [];
+  enumLabels = [];
+  enumNames = [];
+  enumSingleSelectValues = {};
+  dropdownSettings: IDropdownSettings = {};
  /* private scarea11: any;
   private sss: any;*/
 
   constructor(private router: ActivatedRoute, private regService: RegistrationService, 
     private areasService: ScientificAreaService, private taskService: TaskService,
-     private methodsService: MethodOfPaymentService, private journalService: JournalService) { 
+     private methodsService: MethodOfPaymentService, private journalService: JournalService, private paperService: PaperService) { 
     //let x = regService.startProcess();
     this.taskId = this.router.snapshot.params.taskId;
     this.taskService.taskForm(this.taskId).subscribe(
@@ -52,15 +63,16 @@ export class TaskComponent implements OnInit {
           this.formFieldsDto = data;
           console.log(data);
           this.formFields = this.formFieldsDto.formFields;
+          this.fieldsFormat();
           this.processInstance = this.formFieldsDto.processInstanceId;
           this.areasService.getAll().subscribe(
             res =>{
               this.areas=res;
               this.formFields.forEach( (field) =>{
             
-                if( field.type.name=='enum'){
+                /*if( field.type.name=='enum'){
                   this.enumValues = Object.keys(field.type.values);
-                }
+                }*/
                 if(field.id=="isOpenAccess1"){
                   this.review = true;
                   let element1 =<any> document.getElementById("name1");
@@ -162,6 +174,18 @@ export class TaskComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'item_id',
+      textField: 'item_text',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
+    this.hasPDF = false;
+    
   }
 
   
@@ -171,6 +195,7 @@ export class TaskComponent implements OnInit {
     for (var property in value) {
       console.log(property);
       console.log(value[property]);
+
       if(property !="scientificAreas" && property !="recenzents"){
         if(property =="wayOfPaying1"){
           o.push({fieldId : property, fieldValue : this.helpVariableForWay});
@@ -251,24 +276,46 @@ export class TaskComponent implements OnInit {
           }
         }
       }
+      
     }
     
     console.log(o);
     console.log("validno"+this.valid);
     if(this.valid==true){
-      let x = this.taskService.registerUser(o, this.formFieldsDto.taskId);
-
-      x.subscribe(
-        res => {
-          console.log(res);
+      
+      if(this.hasPDF){
+            this.paperService.postFile(this.fileToUpload).subscribe(data=>{
+              o.push({fieldId : "pdf", fieldValue : data});
+              console.log("konacno"+o);
+              let x = this.taskService.registerUser(o, this.formFieldsDto.taskId);
+              x.subscribe(
+                res => {
+                  console.log(res);
+                
+                  alert("You registered successfully!")
+                  window.location.href = "https://localhost:4202";
+                },
+                err => {
+                  this.handleError(err)
+                }
+              );
+            });
           
-          alert("You registered successfully!")
-          window.location.href = "https://localhost:4202";
-        },
-        err => {
-          this.handleError(err)
-        }
-      );
+      
+        
+      }else{
+        let x = this.taskService.registerUser(o, this.formFieldsDto.taskId);
+        x.subscribe(
+          res => {
+            console.log(res);
+            alert("You registered successfully!")
+            window.location.href = "https://localhost:4202";
+          },
+          err => {
+             this.handleError(err)
+           }
+         );
+      }
     }
   }
 
@@ -285,34 +332,72 @@ export class TaskComponent implements OnInit {
     }
     
   }
-  /*onChange(newValue) {
-    let element1 =<any> document.getElementById("scientificAreas");
-    console.log(element1);
+    /*onChange(newValue) {
+      let element1 =<any> document.getElementById("scientificAreas");
+      console.log(element1);
+      console.log(newValue);
+      this.scarea11 = newValue;  // don't forget to update the model here
+      // ... do other stuff here ...
+  }*/
+
+  onChange1(newValue) {
+    
     console.log(newValue);
-    this.scarea11 = newValue;  // don't forget to update the model here
+    this.ways = newValue;  // don't forget to update the model here
     // ... do other stuff here ...
-}*/
-
-onChange1(newValue) {
-  
-  console.log(newValue);
-  this.ways = newValue;  // don't forget to update the model here
-  // ... do other stuff here ...
-}
+  }
 
 
-function ($scope) {
-    
-    $scope.selection = [];
-    
-   /* $scope.toggle = function (idx) {
-        var pos = $scope.selection.indexOf(idx);
-        if (pos == -1) {
-            $scope.selection.push(idx);
-        } else {
-            $scope.selection.splice(pos, 1);
+  function ($scope) {
+      
+      $scope.selection = [];
+      
+    /* $scope.toggle = function (idx) {
+          var pos = $scope.selection.indexOf(idx);
+          if (pos == -1) {
+              $scope.selection.push(idx);
+          } else {
+              $scope.selection.splice(pos, 1);
+          }
+      };*/
+  }
+
+  fieldsFormat() {
+    console.log(this.formFields);
+    this.formFields.forEach((field) => {
+    if (field.type.name === 'enum') {
+        if (field.id == "scientificAreas__") {
+          const array = [];
+          const enumValues = Object.entries(field.type.values);
+
+          for (const value of enumValues) {
+            console.log(value[0]);
+            console.log(value[1]);
+            array.push({ item_id: value[0], item_text: value[1] });
+          }
+          this.enumLabels.push(field.label);
+          this.enumNames.push(field.id);
+          this.dropdownList.push(array);
+          this.selectedItems.push([]);
+          console.log(this.dropdownList);
         }
-    };*/
-}
+      }
+      if(field.id =="pdf"){
+        this.hasPDF = true;
+        
+      }
+    });
+  }
+
+  handleFileInput(file:FileList){
+    this.fileToUpload =file.item(0);
+    var reader = new FileReader();
+    reader.onload=(event:any)=>{
+      this.fileUrl =event.target.result;
+    }
+    reader.readAsDataURL(this.fileToUpload);
+    console.log("URL "+this.fileUrl);
+    console.log("file "+this.fileToUpload);
+    }
 }
 

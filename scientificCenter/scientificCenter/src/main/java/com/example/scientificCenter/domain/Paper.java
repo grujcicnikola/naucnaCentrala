@@ -33,8 +33,14 @@ public class Paper {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ScientificArea area;
 	
-    @Column(nullable = false)
+    @Column
     private Boolean status;
+    
+    @Column(nullable = false)
+    private String pdf;
+    
+    @Column(nullable = false)
+    private String keywords;
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Journal journal;
@@ -106,6 +112,22 @@ public class Paper {
 
 	public void setJournal(Journal journal) {
 		this.journal = journal;
+	}
+
+	public String getPdf() {
+		return pdf;
+	}
+
+	public void setPdf(String pdf) {
+		this.pdf = pdf;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
 	}
 
 	

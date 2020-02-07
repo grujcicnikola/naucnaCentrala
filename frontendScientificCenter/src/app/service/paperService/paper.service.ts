@@ -10,7 +10,6 @@ export class PaperService {
 
   
   url ="https://localhost:8088/paper"
-
   constructor(private http:HttpClient) { }
   
   startProcess(email: String, journal: Journal){
@@ -21,6 +20,11 @@ export class PaperService {
     return this.http.get<FormFields>(this.url+'/confirmForm/'.concat(id));
    }
 
-  
+   postFile( fileToUpload: File) {
+    const formData: FormData = new FormData();  
+    formData.append("File", fileToUpload);
+    return this.http.post(this.url + '/uploadPDF/', formData,{ responseType: 'text'});
+      
+  }
 
 }

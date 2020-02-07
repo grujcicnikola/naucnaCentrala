@@ -2,8 +2,10 @@ package com.example.scientificCenter.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.IdentityService;
@@ -27,12 +29,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.scientificCenter.domain.Coauthor;
 import com.example.scientificCenter.domain.Editor;
 import com.example.scientificCenter.domain.Journal;
+import com.example.scientificCenter.domain.Paper;
 import com.example.scientificCenter.dto.FormFieldsDTO;
 import com.example.scientificCenter.dto.FormSubmissionDTO;
 import com.example.scientificCenter.dto.TaskDTO;
+import com.example.scientificCenter.service.CoauthorService;
 import com.example.scientificCenter.service.JournalService;
+import com.example.scientificCenter.service.PaperService;
 import com.example.scientificCenter.service.ScientificAreaService;
 import com.example.scientificCenter.service.UserService;
 
@@ -61,6 +67,12 @@ public class TaskController {
 	
 	
 	@Autowired
+	private CoauthorService coauthorService;
+	
+	@Autowired
+	private PaperService paperService;
+	
+	@Autowired
 	TaskService taskService;
 	
 	@Autowired
@@ -72,10 +84,7 @@ public class TaskController {
 		String processInstanceId = task.getProcessInstanceId();
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();
-		for(FormField fp : properties) {
-			System.out.println(fp.getId() + fp.getType());
-		}
-		System.out.println("*****************d*****");
+		
         return new FormFieldsDTO(task.getId(), properties,processInstanceId);
 		
         //return new ResponseEntity(dtos,  HttpStatus.OK);
@@ -149,6 +158,33 @@ public class TaskController {
 			runtimeService.setVariable(processInstanceId, "editorsAndRecenzents", fieldsDTO);
 		}else if(task.getName().equals("Membership payment")) {
 			runtimeService.setVariable(processInstanceId, "confirmation", fieldsDTO);
+		}else if(task.getName().equals("Input data about paper")) {
+			runtimeService.setVariable(processInstanceId, "paper", fieldsDTO);
+		}else if(task.getName().equals("Input coauthors")) {
+			String title =runtimeService.getVariable(processInstanceId, "title").toString();
+			System.out.println("dodajem koatore za paper "+title);
+			Coauthor coauthor = new Coauthor();
+			for(int i = 0; i < fieldsDTO.size(); i++) {
+				if(fieldsDTO.get(i).getFieldId().equals("nameCoauthor")) {
+					coauthor.setName(fieldsDTO.get(i).getFieldValue());
+					fieldsDTO.get(i).setFieldValue("");
+				}else if(fieldsDTO.get(i).getFieldId().equals("emailCoauthor")) {
+					coauthor.setEmail(fieldsDTO.get(i).getFieldValue());
+					fieldsDTO.get(i).setFieldValue("");
+				}else if(fieldsDTO.get(i).getFieldId().equals("cityCoauthor")) {
+					coauthor.setCity(fieldsDTO.get(i).getFieldValue());
+					fieldsDTO.get(i).setFieldValue("");
+				}else if(fieldsDTO.get(i).getFieldId().equals("stateCoauthor")) {
+					coauthor.setState(fieldsDTO.get(i).getFieldValue());
+					fieldsDTO.get(i).setFieldValue("");
+				}
+			}
+			Paper paper = this.paperService.findByTitle(title);
+			Set<Paper> papers = new HashSet<Paper>();
+			papers.add(paper);
+			coauthor.setPapers(papers);
+			this.coauthorService.save(coauthor);
+			map = this.mapListToDto(fieldsDTO);
 		}
 		try {
 			formService.submitTaskForm(taskId, map);

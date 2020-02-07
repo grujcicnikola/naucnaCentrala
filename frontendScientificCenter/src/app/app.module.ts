@@ -18,6 +18,7 @@ import { PaymentFailedComponent } from './payment-failed/payment-failed.componen
 import { TestPageComponent } from './test-page/test-page.component';
 import { UserTransactionsComponent } from './user-transactions/user-transactions.component';
 import { MatTableModule } from '@angular/material';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 const appRoutes: Routes = [
   {path: 'register', component : RegistrationComponent},
@@ -58,6 +59,7 @@ const appRoutes: Routes = [
       appRoutes,
       {enableTracing : true}
     ),
+    NgMultiSelectDropDownModule.forRoot()
     
   ],
   providers: [httpInterceptorProviders],

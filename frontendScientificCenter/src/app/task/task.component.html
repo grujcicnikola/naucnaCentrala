@@ -1,35 +1,48 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up Form</title> 
+    <title>Task Form</title> 
     <link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
     
 </head>
 <body>
 <div>
     <form #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate>
-    <h1>Sign Up</h1>
+    <h1>Task form</h1>
       <div *ngFor="let field of formFields" >
             <div *ngIf="review==false" >
                 <label for={{field.id}}>{{field.label}}</label>   
-                <input type="text" id={{field.id}}  name={{field.id}} ngModel={{field.value.value}} *ngIf="field.type.name=='string' && ( field.id !='password'  && field.id !='wayOfPaying' && field.id!='scientificAreas' && field.id!='editors') " >
+                <input type="text" id={{field.id}}  name={{field.id}} ngModel={{field.value.value}} *ngIf="field.type.name=='string' && ( field.id !='password'  && field.id !='wayOfPaying' && field.id !='pdf' && field.id!='scientificAreas' && field.id!='editors') " >
                 <input type="password" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}   *ngIf="field.id =='password'" >
                 <input type="checkbox" id={{field.id}} name={{field.id}} ngModel  *ngIf="field.type.name=='boolean' && field.id !='isOpenAccess1'">
                     
                 <input type="number" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}  *ngIf="field.type.name=='long'">
-                <select class="form-control" name={{field.id}}  id={{field.id}}  multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id!='recenzents' || ( field.type.name=='string' && field.id=='scientificAreas')">
+                <!--<select class="form-control" name={{field.id}}  id={{field.id}}  multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id!='recenzents' || ( field.type.name=='string' && field.id=='scientificAreas')">
                     <option *ngFor="let area of areas" [value]="area.id" >{{area.name}}</option>
-                </select> 
+                </select>--> 
                 <select name={{field.id}} id={{field.id}}   ngModel={{ways}} *ngIf=" field.id =='wayOfPaying'">
                     <option *ngFor="let method of methods" [value]="method.id">{{method.name}}</option>
-                    </select>
-                    <select name={{field.id}}  id={{field.id}} ngModel *ngIf="field.type.name=='string' && field.id=='editors'">
-                        <option *ngFor="let editor of editors" [value]="editor.id">{{editor.username}}</option>
-                    </select>
-                    <select name={{field.id}}  id={{field.id}} multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id=='recenzents'">
+                </select>
+                <select name={{field.id}}  id={{field.id}} ngModel *ngIf="field.type.name=='string' && field.id=='editors'">
+                    <option *ngFor="let editor of editors" [value]="editor.id">{{editor.username}}</option>
+                </select>
+                <select name={{field.id}}  id={{field.id}} multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id=='recenzents'">
                     <option *ngFor="let recenzent of recenzents" [value]="recenzent.id">{{recenzent.username}}</option>
+                </select> 
+                <select class="form-control" name={{field.id}}  id={{field.id}}  multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id!='recenzents' || ( field.type.name=='string' && field.id=='scientificAreas')">
+                    <option *ngFor="let area of areas" [value]="area.id" >{{area.name}}</option>
                 </select>  
+                <!--<div *ngIf=" field.type.name =='enum'">
+                    <div class="form-label-group" *ngFor="let enum of dropdownList;  index as i">
+                        
+                        <ng-multiselect-dropdown  [disabled]="false" [name]="enumNames[i]" [data]="enum" [(ngModel)]="selectedItems[i]" [settings]="dropdownSettings"></ng-multiselect-dropdown>
+                    </div>
+                </div> --> 
+                <div class="form-group" *ngIf="field.type.name=='string' && field.id=='pdf'">
+                    <input type="file"  accept="application/pdf,application/vnd.ms-excel"  (change)="handleFileInput($event.target.files)"  class="form-input" />
+                </div>     
             </div>
+            
             <div *ngIf="review==true" >
                     <label for={{field.id}}>{{field.label}}</label>   
                     <input type="text" readonly id={{field.id}}  name={{field.id}} ngModel={{field.defaultValue}} *ngIf="field.type.name=='string' && ( field.id !='password'  && field.id !='wayOfPaying1' && field.id!='scientificAreas1' && field.id!='editors') || (field.type.name=='boolean' && field.id =='isOpenAccess1') " >
