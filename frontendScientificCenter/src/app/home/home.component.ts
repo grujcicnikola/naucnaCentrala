@@ -107,9 +107,13 @@ export class HomeComponent implements OnInit {
 
   }
 
-  startTask(task){
+  startTask(task, taskName){
     console.log(task);
-    window.location.href="https://localhost:4202/task/".concat(task);
+    if(taskName !="Selecting recenzents"){
+      window.location.href="https://localhost:4202/task/".concat(task);
+    }else{
+      window.location.href="https://localhost:4202/task/selectRecenzents/".concat(task);
+    }
   }
 
   startRegister(){
@@ -132,7 +136,6 @@ export class HomeComponent implements OnInit {
   }
 
   seeList(){
-    console.log("ivana");
     this.journalService.getAll().subscribe(
       data=>{
         this.journals=data;

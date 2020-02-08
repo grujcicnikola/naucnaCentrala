@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormFields } from 'src/app/model/FormFields';
 import { Journal } from 'src/app/model/Journal';
+import { Observable } from 'rxjs/internal/Observable';
+import { PDF } from 'src/app/model/PDF';
+import { PDFURL } from 'src/app/model/PDFURL';
 
 @Injectable({
   providedIn: 'root'
@@ -27,4 +30,14 @@ export class PaperService {
       
   }
 
+  getPDF(link: String) {
+    console.log("servis"+link);
+    return this.http.post<PDF>(this.url + '/getPDF',new PDFURL(link));
+  }
+
+  downloadFile(link: String): Observable<Blob>{
+    const headers = new HttpHeaders({ responseType : 'blob'});
+
+		return this.http.post<Blob>(this.url + '/download',new PDFURL(link), {headers: headers, responseType: 'blob' as 'json'});
+  }
 }

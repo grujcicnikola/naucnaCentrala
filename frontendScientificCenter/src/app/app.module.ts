@@ -19,6 +19,7 @@ import { TestPageComponent } from './test-page/test-page.component';
 import { UserTransactionsComponent } from './user-transactions/user-transactions.component';
 import { MatTableModule } from '@angular/material';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { SelectingRecenzentsComponent } from './selecting-recenzents/selecting-recenzents.component';
 
 const appRoutes: Routes = [
   {path: 'register', component : RegistrationComponent},
@@ -30,7 +31,8 @@ const appRoutes: Routes = [
   {path: 'error', component : PaymentErrorComponent},
   {path: 'success', component : PaymentSuccessComponent},
   {path: 'failed', component : PaymentFailedComponent},
-  {path: 'myTransactions', component : UserTransactionsComponent}
+  {path: 'myTransactions', component : UserTransactionsComponent},
+  {path: 'task/selectRecenzents/:taskId', component : SelectingRecenzentsComponent},
   ]
 
 @NgModule({
@@ -45,7 +47,8 @@ const appRoutes: Routes = [
     PaymentSuccessComponent,
     PaymentFailedComponent,
     TestPageComponent,
-    UserTransactionsComponent
+    UserTransactionsComponent,
+    SelectingRecenzentsComponent
   ],
   imports: [
     BrowserModule,

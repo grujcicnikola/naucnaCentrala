@@ -46,4 +46,9 @@ public class UserService {
 		return repository.findByEmail(email);
 	}
 
+	public Optional<User> findById(Long id) {
+		// TODO Auto-generated method stub
+		return repository.findById(id);
+	}
+
 }

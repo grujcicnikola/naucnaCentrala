@@ -6,6 +6,15 @@
     
 </head>
 <body>
+        <div class="container">
+                <div class="row">
+                        
+                    <button  (click) = "filterByArea()" class="btn btn-info" >Filter by sceintific area</button>
+                    <button  (click) = "filterMoreLikeThis()" class="btn btn-info" >Filter - more like this</button>
+                    <button  (click) = "filterGeo()" class="btn btn-info" >Filter - geo</button>    
+                    <button  (click) = "refresh()" class="btn btn-info" >Refresh</button>    
+                </div>
+        </div>               
 <div>
     <form #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate>
     <h1>Task form</h1>
@@ -19,25 +28,18 @@
                 <input type="number" [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}  *ngIf="field.type.name=='long'">
                 <!--<select class="form-control" name={{field.id}}  id={{field.id}}  multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id!='recenzents' || ( field.type.name=='string' && field.id=='scientificAreas')">
                     <option *ngFor="let area of areas" [value]="area.id" >{{area.name}}</option>
-                </select>--> 
-                <select name={{field.id}} id={{field.id}}   ngModel={{ways}} *ngIf=" field.id =='wayOfPaying'">
-                    <option *ngFor="let method of methods" [value]="method.id">{{method.name}}</option>
                 </select>
-                <select name={{field.id}}  id={{field.id}} ngModel *ngIf="field.type.name=='string' && field.id=='editors'">
-                    <option *ngFor="let editor of editors" [value]="editor.id">{{editor.username}}</option>
-                </select>
-                <select name={{field.id}}  id={{field.id}} multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id=='recenzents'">
-                    <option *ngFor="let recenzent of recenzents" [value]="recenzent.id">{{recenzent.username}}</option>
-                </select> 
-                <select class="form-control" name={{field.id}}  id={{field.id}}  multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id!='recenzents' || ( field.type.name=='string' && field.id=='scientificAreas')">
-                    <option *ngFor="let area of areas" [value]="area.id" >{{area.name}}</option>
-                </select>  
-                <!--<div *ngIf=" field.type.name =='enum'">
+                
+                <select name={{field.id}}  id={{field.id}} multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id=='recenzent'">
+                    <option *ngFor="let enum of dropdownList" [value]="enum">{{enumNames[i]}}</option>
+                </select> -->
+                 
+                <div *ngIf=" field.type.name =='enum'">
                     <div class="form-label-group" *ngFor="let enum of dropdownList;  index as i">
                         
                         <ng-multiselect-dropdown  [disabled]="false" [name]="enumNames[i]" [data]="enum" [(ngModel)]="selectedItems[i]" [settings]="dropdownSettings"></ng-multiselect-dropdown>
                     </div>
-                </div> --> 
+                </div>
                 <div class="form-group" *ngIf="field.type.name=='string' && (field.id=='pdf' || field.id=='pdf3')">
                     <input type="file"  accept="application/pdf,application/vnd.ms-excel"  (change)="handleFileInput($event.target.files)"  class="form-input" />
                 </div>     

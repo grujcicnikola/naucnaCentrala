@@ -88,5 +88,10 @@ public class JournalService {
 		return journalRepository.findById(journalId);
 	}
 
+	public List<Recenzent> findAllRecenzentsByJournal(Journal journal) {
+		// TODO Auto-generated method stub
+		return this.recenzentRepository.findAllByJournalId(journal.getId());
+	}
+
 }
 

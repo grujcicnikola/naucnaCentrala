@@ -185,6 +185,8 @@ public class TaskController {
 			coauthor.setPapers(papers);
 			this.coauthorService.save(coauthor);
 			map = this.mapListToDto(fieldsDTO);
+		}else if(task.getName().equals("Selecting recenzents")) {
+			runtimeService.setVariable(processInstanceId, "recenzentsSelected", fieldsDTO);
 		}
 		try {
 			formService.submitTaskForm(taskId, map);

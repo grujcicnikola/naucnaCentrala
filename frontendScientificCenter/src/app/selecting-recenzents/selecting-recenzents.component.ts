@@ -15,14 +15,13 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PDF } from '../model/PDF';
 
 @Component({
-  selector: 'app-task',
-  templateUrl: './task.component.html',
-  styleUrls: ['./task.component.css']
+  selector: 'app-selecting-recenzents',
+  templateUrl: './selecting-recenzents.component.html',
+  styleUrls: ['./selecting-recenzents.component.css']
 })
+export class SelectingRecenzentsComponent implements OnInit {
 
-
-export class TaskComponent implements OnInit {
-
+  
   private repeated_password = "";
   private categories = [];
   private formFieldsDto = new FormFields();
@@ -47,10 +46,15 @@ export class TaskComponent implements OnInit {
   fileToUpload: File;
   hasPDF : boolean;
   selectedItems = [];
+  selectedItemsHelp = [];
   dropdownList = [];
+  dropdownListHelp = [];
   enumLabels = [];
+  enumLabelsHelp = [];
   enumNames = [];
+  enumNamesHelp = [];
   enumSingleSelectValues = {};
+  enumSingleSelectValuesHelp = {};
   dropdownSettings: IDropdownSettings = {};
  /* private scarea11: any;
   private sss: any;*/
@@ -203,7 +207,11 @@ export class TaskComponent implements OnInit {
       console.log(property);
       console.log(value[property]);
 
-      if(property !="scientificAreas" && property !="recenzents"){
+      if(property =="recenzent"){
+        o.push({fieldId : property, areas : value[property]});
+        this.valid=true;
+      }
+      else if(property !="scientificAreas" && property !="recenzents"){
         if(property =="wayOfPaying1"){
           o.push({fieldId : property, fieldValue : this.helpVariableForWay});
         
@@ -288,7 +296,7 @@ export class TaskComponent implements OnInit {
     
     console.log(o);
     console.log("validno"+this.valid);
-    if(this.valid==true){
+    /*if(this.valid==true){
       
       if(this.hasPDF){
             this.paperService.postFile(this.fileToUpload).subscribe(data=>{
@@ -323,7 +331,29 @@ export class TaskComponent implements OnInit {
            }
          );
       }
-    }
+    }*/
+    
+      const submitedData = [];
+      const values = Object.entries(form.value);
+      console.log(form.value);
+  
+      for (const property of values) {
+        submitedData.push({ fieldId: property[0], areas: property[1] });
+      }
+      console.log(o);
+      let x = this.taskService.registerUser(submitedData, this.formFieldsDto.taskId);
+        x.subscribe(
+          res => {
+            console.log(res);
+            alert("You registered successfully!")
+            window.location.href = "https://localhost:4202";
+          },
+          err => {
+             this.handleError(err)
+           }
+         );
+      
+  
   }
 
   handleError(err: HttpErrorResponse) {
@@ -372,18 +402,19 @@ export class TaskComponent implements OnInit {
   pdf: PDF;
   url: string;
   imageUrl: string;
+
   fieldsFormat() {
     console.log(this.formFields);
     this.formFields.forEach((field) => {
     if (field.type.name === 'enum') {
-        if (field.id == "scientificAreas__") {
+        if (field.id == "recenzent") {
           const array = [];
           const enumValues = Object.entries(field.type.values);
 
           for (const value of enumValues) {
             console.log(value[0]);
             console.log(value[1]);
-            array.push({ item_id: value[0], item_text: value[1] });
+            array.push(value[0]);
           }
           this.enumLabels.push(field.label);
           this.enumNames.push(field.id);
@@ -391,34 +422,40 @@ export class TaskComponent implements OnInit {
           this.selectedItems.push([]);
           console.log(this.dropdownList);
         }
-      }
-      if(field.id =="pdf" || field.id=="pdf3"){
-        this.hasPDF = true;
         
-      }
-      if(field.id =="pdf1" || field.id=="pdf3"){
-        //this.url =this.sanitizer.bypassSecurityTrustResourceUrl(field.value.value);
-        this.url=field.value.value;
-        /*this.paperService.getPDF(field.value.value).subscribe(data=>{
-          this.imageUrl = "data:application/pdf;base64," + data.data;
-          var file3 = new Blob([data.data], {type: 'application/pdf'});
-          //console.log(data.data); 
-          //this.dataLocalUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(file3));
-          this.dataLocalUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(file3));
-          var a = document.createElement("a");
-            document.body.appendChild(a);
-           
-            var fileURL =window.URL.createObjectURL(file3);
-                a.href = fileURL;
-                a.download = "name";
-                a.click();
-        })
-        
-        */
+        this.enumLabelsHelp = this.enumLabels;
+        this.enumNamesHelp = this.enumNames;
+        this.dropdownListHelp=this.dropdownList;
       }
     });
+
   }
 
+  refresh(){
+    this.enumLabels = this.enumLabelsHelp;
+    this.enumNames = this.enumNamesHelp;
+    this.dropdownList=this.dropdownListHelp;
+  }
+
+  filterByArea(){
+    /*this.pronadjeniFilter =[];
+    this.pronadjeniFilter= this.pronadjeni
+                              .filter((p: any ) => p.aviokompanija.naziv === this.nazivAviokompanije);
+    console.log("FILTER");
+    console.log(this.pronadjeniFilter);
+    this.filterAktiviran= true;
+    this.prikazani = this.pronadjeniFilter;
+*/
+  }
+  filterMoreLikeThis(){
+
+
+  }
+
+
+  filterGeo(){
+
+  }
   handleFileInput(file:FileList){
     this.fileToUpload =file.item(0);
     var reader = new FileReader();
@@ -460,4 +497,5 @@ export class TaskComponent implements OnInit {
     }
     
 }
+
 

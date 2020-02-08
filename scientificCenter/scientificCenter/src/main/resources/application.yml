@@ -36,6 +36,8 @@ spring:
                 smtp:
                     starttls:
                         enable: true
+                    ssl:
+                       trust: smtp.gmail.com
         username: petarperic23252@gmail.com
 
 elasticsearch:
