@@ -10,6 +10,8 @@ import com.example.scientificCenter.domain.ReviewData;
 @Repository
 public interface ReviewDataRepository extends JpaRepository<ReviewData, Long> {
 
+	ReviewData findByPaperId(Long id);
+
 
 
 }

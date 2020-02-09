@@ -18,6 +18,19 @@ public class Comment {
 	@Column
 	private String comment;
 
+	
+	@Column
+	private boolean recenzentCommentToAuthor;
+	
+	@Column
+	private boolean recenzentCommentToEditor;
+	
+	@Column
+	private String decision;
+	
+	@Column
+	private Long paperId;
+	
 	public Comment() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -42,6 +55,38 @@ public class Comment {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public boolean isRecenzentCommentToAuthor() {
+		return recenzentCommentToAuthor;
+	}
+
+	public void setRecenzentCommentToAuthor(boolean recenzentCommentToAuthor) {
+		this.recenzentCommentToAuthor = recenzentCommentToAuthor;
+	}
+
+	public boolean isRecenzentCommentToEditor() {
+		return recenzentCommentToEditor;
+	}
+
+	public void setRecenzentCommentToEditor(boolean recenzentCommentToEditor) {
+		this.recenzentCommentToEditor = recenzentCommentToEditor;
+	}
+
+	public String getDecision() {
+		return decision;
+	}
+
+	public void setDecision(String decision) {
+		this.decision = decision;
+	}
+
+	public Long getPaperId() {
+		return paperId;
+	}
+
+	public void setPaperId(Long paperId) {
+		this.paperId = paperId;
 	}
 	
 	

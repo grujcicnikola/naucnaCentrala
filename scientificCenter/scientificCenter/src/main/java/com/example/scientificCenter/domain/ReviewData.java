@@ -24,8 +24,7 @@ public class ReviewData {
 	private Set<Comment> commentsFromEditor = new HashSet<Comment>();
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
-	private Set<Comment> commentsFromReviewer = new HashSet<Comment>();
+   
 
 	public Long getId() {
 		return id;
@@ -53,14 +52,7 @@ public class ReviewData {
 		this.commentsFromEditor = commentsFromEditor;
 	}
 
-	public Set<Comment> getCommentsFromReviewer() {
-		return commentsFromReviewer;
-	}
-
-	public void setCommentsFromReviewer(Set<Comment> commentsFromReviewer) {
-		this.commentsFromReviewer = commentsFromReviewer;
-	}
-
+	
 	public ReviewData() {
 		super();
 		// TODO Auto-generated constructor stub

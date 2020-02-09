@@ -392,11 +392,27 @@ export class TaskComponent implements OnInit {
           console.log(this.dropdownList);
         }
       }
-      if(field.id =="pdf" || field.id=="pdf3"){
+      if (field.id == "decision") {
+        const array = [];
+        const enumValues = Object.entries(field.type.values);
+
+        for (const value of enumValues) {
+          console.log(value[0]);
+          console.log(value[1]);
+          this.dropdownList.push(value[0]);
+        }
+        this.enumLabels.push(field.label);
+        this.enumNames.push(field.id);
+        //this.dropdownList.push(array);
+        this.selectedItems.push([]);
+        console.log(this.dropdownList);
+      }
+    
+      if(field.id =="pdf" || field.id=="pdf3" ){
         this.hasPDF = true;
         
       }
-      if(field.id =="pdf1" || field.id=="pdf3"){
+      if(field.id =="pdf1" || field.id=="pdf3" || field.id=="pdf4"){
         //this.url =this.sanitizer.bypassSecurityTrustResourceUrl(field.value.value);
         this.url=field.value.value;
         /*this.paperService.getPDF(field.value.value).subscribe(data=>{

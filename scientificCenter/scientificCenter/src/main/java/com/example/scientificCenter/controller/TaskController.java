@@ -187,6 +187,8 @@ public class TaskController {
 			map = this.mapListToDto(fieldsDTO);
 		}else if(task.getName().equals("Selecting recenzents")) {
 			runtimeService.setVariable(processInstanceId, "recenzentsSelected", fieldsDTO);
+		}else if(task.getName().equals("Add new recenzents")) {
+			runtimeService.setVariable(processInstanceId, "recenzentNewSelected", fieldsDTO);
 		}
 		try {
 			formService.submitTaskForm(taskId, map);

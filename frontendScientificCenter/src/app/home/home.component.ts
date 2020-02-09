@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit {
     this.tokenStorage.signOut();
     this.someoneLogged = false;
     this.userServ.logout(this.email).subscribe(data =>{
-      window.location.href="https://localhost:4202";
+      //window.location.href="https://localhost:4202"
     });
     
   }
@@ -109,10 +109,11 @@ export class HomeComponent implements OnInit {
 
   startTask(task, taskName){
     console.log(task);
-    if(taskName !="Selecting recenzents"){
-      window.location.href="https://localhost:4202/task/".concat(task);
-    }else{
+    if(taskName =="Selecting recenzents" || taskName =="Add new recenzents"){
       window.location.href="https://localhost:4202/task/selectRecenzents/".concat(task);
+      
+    }else{
+      window.location.href="https://localhost:4202/task/".concat(task);
     }
   }
 
