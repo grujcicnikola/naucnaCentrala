@@ -70,12 +70,15 @@ public class SavingDataAboutReview implements JavaDelegate{
 		comm1.setRecenzentCommentToAuthor(true);
 		comm1.setPaperId(paper.getId());
 		Comment comm2 =new Comment(execution.getVariable("comentToEditors4").toString());
-		//comm2.setDecision(execution.getVariable("decision").toString());
+		comm2.setDecision(execution.getVariable("decision").toString());
 		comm2.setRecenzentCommentToEditor(true);
 		comm2.setPaperId(paper.getId());
 		
 		Comment savedComm1 = this.commentRep.save(comm1);
 		Comment savedComm2 = this.commentRep.save(comm2);
+		
+		execution.setVariable("commentToAuthor4", "");
+		execution.setVariable("comentToEditors4", "");
 		//Set<Comment> commentsToAuthors =review.getCommentsFromReviewer();
 		//commentsToAuthors.add(savedComm1);
 		//review.setCommentsFromReviewer(commentsToAuthors);

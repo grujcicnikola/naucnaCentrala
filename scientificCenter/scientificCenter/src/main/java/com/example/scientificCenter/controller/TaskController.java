@@ -189,6 +189,10 @@ public class TaskController {
 			runtimeService.setVariable(processInstanceId, "recenzentsSelected", fieldsDTO);
 		}else if(task.getName().equals("Add new recenzents")) {
 			runtimeService.setVariable(processInstanceId, "recenzentNewSelected", fieldsDTO);
+		}else if(task.getName().equals("Correction of paper")) {
+			runtimeService.setVariable(processInstanceId, "updatedData", fieldsDTO);
+		}else if(task.getName().equals("Entering corrections")){
+			runtimeService.setVariable(processInstanceId, "correctedData", fieldsDTO);
 		}
 		try {
 			formService.submitTaskForm(taskId, map);

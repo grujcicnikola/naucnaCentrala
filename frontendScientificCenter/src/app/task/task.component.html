@@ -12,7 +12,7 @@
       <div *ngFor="let field of formFields" >
             <div *ngIf="review==false" >
                 <label for={{field.id}}>{{field.label}}</label>   
-                <input  type="text"  [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}}  name={{field.id}} ngModel={{field.value.value}} *ngIf="field.type.name=='string' && ( field.id !='password' && field.id!='pdf4' && field.id !='wayOfPaying' && field.id !='pdf' && field.id!='pdf1' && field.id!='pdf3' && field.id!='scientificAreas' && field.id!='editors') " >
+                <input  type="text"  [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}}  name={{field.id}} ngModel={{field.value.value}} *ngIf="field.type.name=='string' && ( field.id !='password' && field.id!='pdf4' && field.id!='pdf6' && field.id !='wayOfPaying' && field.id !='pdf' && field.id!='pdf1' && field.id!='pdf3' && field.id!='pdf5' && field.id!='scientificAreas' && field.id!='editors') " >
                 <input type="password" [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}   *ngIf="field.id =='password'" >
                 <input type="checkbox" [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}} name={{field.id}} ngModel  *ngIf="field.type.name=='boolean' && field.id !='isOpenAccess1'">
                     
@@ -29,10 +29,10 @@
                 <select name={{field.id}}  id={{field.id}} multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id=='recenzents'">
                     <option *ngFor="let recenzent of recenzents" [value]="recenzent.id">{{recenzent.username}}</option>
                 </select> 
-                <select class="form-control" name={{field.id}}  id={{field.id}}  multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id!='decision' && field.id!='recenzents' || ( field.type.name=='string' && field.id=='scientificAreas')">
+                <select class="form-control" name={{field.id}}  id={{field.id}}  multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id!='decision' && field.id!='decision6' && field.id!='recenzents' || ( field.type.name=='string' && field.id=='scientificAreas')">
                     <option *ngFor="let area of areas" [value]="area.id" >{{area.name}}</option>
                 </select> 
-                <select class="form-control" name={{field.id}}  id={{field.id}}   size="3" ngModel *ngIf=" field.type.name =='enum' && field.id=='decision'">
+                <select class="form-control" name={{field.id}}  id={{field.id}}   size="3" ngModel *ngIf=" field.type.name =='enum' && (field.id=='decision' || field.id=='decision6')">
                     <option *ngFor="let area of dropdownList" [value]="area" >{{area}}</option>
                 </select>  
                 <!--<div *ngIf=" field.type.name =='enum' && field.id=='decision'">
@@ -41,11 +41,11 @@
                         <ng-multiselect-dropdown  [disabled]="false" [name]="enumNames[i]" [data]="enum" [(ngModel)]="selectedItems[i]" [settings]="dropdownSettings"></ng-multiselect-dropdown>
                     </div>
                 </div>-->  
-                <div class="form-group" *ngIf="field.type.name=='string' && (field.id=='pdf' || field.id=='pdf3')">
+                <div class="form-group" *ngIf="field.type.name=='string' && (field.id=='pdf' || field.id=='pdf3' || field.id=='pdf5' )">
                     <input type="file"  accept="application/pdf,application/vnd.ms-excel"  (change)="handleFileInput($event.target.files)"  class="form-input" />
                 </div>     
             </div>
-            <div *ngIf="field.type.name=='string' && ( field.id=='pdf1' || field.id=='pdf3' || field.id=='pdf4')">
+            <div *ngIf="field.type.name=='string' && ( field.id=='pdf1' || field.id=='pdf3' || field.id=='pdf4' || field.id=='pdf5'|| field.id=='pdf6')">
                 <!--<h5>iframe whit local url {{field.value.value}}</h5>
                 <iframe width="500" height="600" [attr.src]="dataLocalUrl" type="application/pdf"></iframe>
                 <h5>object whit local url</h5>

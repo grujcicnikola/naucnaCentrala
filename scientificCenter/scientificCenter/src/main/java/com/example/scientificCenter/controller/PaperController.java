@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,15 +35,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.scientificCenter.domain.Comment;
 import com.example.scientificCenter.domain.Journal;
 import com.example.scientificCenter.domain.PDF;
+import com.example.scientificCenter.domain.Paper;
+import com.example.scientificCenter.domain.ScientificArea;
+import com.example.scientificCenter.dto.CommentDTO;
 import com.example.scientificCenter.dto.FormSubmissionDTO;
 import com.example.scientificCenter.dto.JournalDTO;
 import com.example.scientificCenter.dto.PDFDTO;
 import com.example.scientificCenter.dto.PDFURL;
+import com.example.scientificCenter.dto.ScientificAreaDTO;
 import com.example.scientificCenter.dto.TaskDTO;
+import com.example.scientificCenter.repository.CommentRepository;
 import com.example.scientificCenter.repository.PDFRepository;
 import com.example.scientificCenter.service.JournalService;
+import com.example.scientificCenter.service.PaperService;
 import com.example.scientificCenter.service.ScientificAreaService;
 import com.example.scientificCenter.service.UserRoleService;
 import com.example.scientificCenter.service.UserService;
@@ -71,6 +79,12 @@ public class PaperController {
 	private JournalService journalService;
 	
 	@Autowired
+	private CommentRepository commRep;
+	
+	@Autowired
+	private PaperService paperService;
+	
+	@Autowired
 	TaskService taskService;
 	
 	@Autowired
@@ -94,6 +108,27 @@ public class PaperController {
 		System.out.println("ZAPOCET TASK: " + task.getName()+ task.getAssignee() );
 		
 		return new ResponseEntity<>(new TaskDTO(task.getId(), task.getName(),task.getAssignee()), HttpStatus.OK);
+	}
+	
+	
+	//commentsRecenzentsToEditor
+	
+	@RequestMapping(value = "/commentsRecenzentsToEditor/{title}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getCommentsRecenzentsToEditor(@PathVariable String title){
+		Paper paper = this.paperService.findByTitle(title);
+		if(paper!=null) {
+			List<Comment> comments = this.commRep.findAllByPaperId(paper.getId());
+			List<CommentDTO> commentsDTO = new ArrayList<CommentDTO>();
+			for(int i =0; i<comments.size();i++) {
+				if(comments.get(i).isRecenzentCommentToEditor()) {
+					commentsDTO.add(new CommentDTO(comments.get(i).getComment(),comments.get(i).getDecision()));
+				}
+			}
+			return new ResponseEntity<>(commentsDTO,HttpStatus.OK);
+		}
+		
+		
+		return new ResponseEntity<>(null,HttpStatus.OK);
 	}
 	/*
 	@RequestMapping(value = "/getPDF", method = RequestMethod.POST)

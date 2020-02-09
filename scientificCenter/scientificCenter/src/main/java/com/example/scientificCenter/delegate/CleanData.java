@@ -15,17 +15,22 @@ import com.example.scientificCenter.service.JournalService;
 import com.example.scientificCenter.service.ScientificAreaService;
 import com.example.scientificCenter.service.UserService;
 
-
 @Service
-public class SendingRejectionEmailForTechnicalReasons implements JavaDelegate{
+public class CleanData implements JavaDelegate{
 
 	@Autowired
 	IdentityService identityService;
-	
+	@Autowired
+	private RuntimeService runtimeService;
 
 	@Autowired
 	private JavaMailSender javaMailSender;
 	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private ScientificAreaService areaService;
 	
 	@Autowired
 	private JournalService journalService;
@@ -33,22 +38,8 @@ public class SendingRejectionEmailForTechnicalReasons implements JavaDelegate{
 	
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
-		Journal journal = this.journalService.findByIssn(execution.getVariable("issn").toString());
-		//sendConfirmationEmail(execution, execution.getVariable("initiator").toString(),journal.getTitle());
-		
+		System.out.println("clean data");
 	}
 
-	public void sendConfirmationEmail(DelegateExecution execution ,String email, String title)throws MailException, InterruptedException{
-		System.out.println("mejl za "+email);
-		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo(email);
-		mail.setFrom("petarperic23252@gmail.com");
-		mail.setSubject("Scientific central - confirm registration");
-		mail.setText("Hello,\n Your paper submitted to magazine "+title+" is rejected for technical reasons!");
-		
-		javaMailSender.send(mail);
-		System.out.println("Email poslat!");
-		
-		
-	}
+	
 }

@@ -23,6 +23,10 @@ export class PaperService {
     return this.http.get<FormFields>(this.url+'/confirmForm/'.concat(id));
    }
 
+   getCommentsFromRecenzentsToEditor(id: string){
+    return this.http.get<Comment[]>(this.url+'/commentsRecenzentsToEditor/'+id);
+   }
+
    postFile( fileToUpload: File) {
     const formData: FormData = new FormData();  
     formData.append("File", fileToUpload);

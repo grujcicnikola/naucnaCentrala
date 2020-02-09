@@ -109,7 +109,10 @@ export class HomeComponent implements OnInit {
 
   startTask(task, taskName){
     console.log(task);
-    if(taskName =="Selecting recenzents" || taskName =="Add new recenzents"){
+    if(taskName == "Analysis of review"){
+      window.location.href="https://localhost:4202/task/analysis/".concat(task);
+    }
+    else if(taskName =="Selecting recenzents" || taskName =="Add new recenzents"){
       window.location.href="https://localhost:4202/task/selectRecenzents/".concat(task);
       
     }else{

@@ -17,15 +17,21 @@ import com.example.scientificCenter.service.UserService;
 
 
 @Service
-public class SendingRejectionEmailForTechnicalReasons implements JavaDelegate{
+public class SendingNotificationLate implements JavaDelegate{
 
 	@Autowired
 	IdentityService identityService;
-	
+	@Autowired
+	private RuntimeService runtimeService;
 
 	@Autowired
 	private JavaMailSender javaMailSender;
 	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private ScientificAreaService areaService;
 	
 	@Autowired
 	private JournalService journalService;
@@ -34,6 +40,7 @@ public class SendingRejectionEmailForTechnicalReasons implements JavaDelegate{
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		Journal journal = this.journalService.findByIssn(execution.getVariable("issn").toString());
+		
 		//sendConfirmationEmail(execution, execution.getVariable("initiator").toString(),journal.getTitle());
 		
 	}
@@ -44,7 +51,7 @@ public class SendingRejectionEmailForTechnicalReasons implements JavaDelegate{
 		mail.setTo(email);
 		mail.setFrom("petarperic23252@gmail.com");
 		mail.setSubject("Scientific central - confirm registration");
-		mail.setText("Hello,\n Your paper submitted to magazine "+title+" is rejected for technical reasons!");
+		mail.setText("Hello,\n Your paper of magazine "+title+" is rejected, because you did not corrected it on time!");
 		
 		javaMailSender.send(mail);
 		System.out.println("Email poslat!");

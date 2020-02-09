@@ -47,6 +47,9 @@ public class Paper {
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Journal journal;
+    
+    @Column
+	private String doi;
 
 	public Paper() {
 		super();
@@ -131,6 +134,14 @@ public class Paper {
 
 	public void setKeywords(String keywords) {
 		this.keywords = keywords;
+	}
+
+	public String getDoi() {
+		return doi;
+	}
+
+	public void setDoi(String doi) {
+		this.doi = doi;
 	}
 
 	

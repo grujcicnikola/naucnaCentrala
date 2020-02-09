@@ -15,13 +15,13 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PDF } from '../model/PDF';
 
 @Component({
-  selector: 'app-task',
-  templateUrl: './task.component.html',
-  styleUrls: ['./task.component.css']
+  selector: 'app-analysis-of-review',
+  templateUrl: './analysis-of-review.component.html',
+  styleUrls: ['./analysis-of-review.component.css']
 })
 
 
-export class TaskComponent implements OnInit {
+export class AnalysisOfReviewComponent implements OnInit {
 
   private repeated_password = "";
   private categories = [];
@@ -52,6 +52,7 @@ export class TaskComponent implements OnInit {
   enumNames = [];
   enumSingleSelectValues = {};
   dropdownSettings: IDropdownSettings = {};
+  commentsFromRecenzents: Comment[];
  /* private scarea11: any;
   private sss: any;*/
 
@@ -219,14 +220,8 @@ export class TaskComponent implements OnInit {
               
               if(property=="editors"){
                 this.message = "You must select at least one editor!"
-              }else if(property=="day"||property=="hours"||property=="minutes"||
-                property=="day1"||property=="hours1"||property=="minutes1"||
-               property=="day2"||property=="hours2"||property=="minutes2" ||
-               property=="day3"||property=="hours3"||property=="minutes3"){
-
-              }else{ 
-                this.valid = false;
-              }
+              }else 
+              this.valid = false;
               console.log("validacija "+this.valid);
             }
           }
@@ -398,7 +393,7 @@ export class TaskComponent implements OnInit {
           console.log(this.dropdownList);
         }
       }
-      if (field.id == "decision" || field.id=="decision6") {
+      if (field.id == "editorsDecision") {
         const array = [];
         const enumValues = Object.entries(field.type.values);
 
@@ -414,11 +409,19 @@ export class TaskComponent implements OnInit {
         console.log(this.dropdownList);
       }
     
-      if(field.id =="pdf" || field.id=="pdf3"  || field.id=="pdf5"){
+      if(field.id =="pdf" || field.id=="pdf3" ){
         this.hasPDF = true;
         
       }
-      if(field.id =="pdf1" || field.id=="pdf3" || field.id=="pdf4" || field.id=="pdf5" || field.id=="pdf6"){
+      if(field.id == "titleOfPaper"){
+        this.paperService.getCommentsFromRecenzentsToEditor(field.value.value).subscribe(
+          data=>{
+            this.commentsFromRecenzents=data;
+            console.log("KOMENTARI "+this.commentsFromRecenzents);
+          }
+        )
+      }
+      if(field.id =="pdf1" || field.id=="pdf3" || field.id=="pdf4"){
         //this.url =this.sanitizer.bypassSecurityTrustResourceUrl(field.value.value);
         this.url=field.value.value;
         /*this.paperService.getPDF(field.value.value).subscribe(data=>{
