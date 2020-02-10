@@ -14,7 +14,7 @@
       <bpmn:outgoing>SequenceFlow_08tgrst</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1bjke0w</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="UserTask_14fwwgu" name="Input data about paper" camunda:assignee="${initiator}">
+    <bpmn:userTask id="UserTask_14fwwgu" name="Input data about paper" camunda:assignee="${initiator}" camunda:candidateGroups="author">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="title" label="Title" type="string" />
@@ -56,7 +56,7 @@
       <bpmn:incoming>SequenceFlow_1jum7ku</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0hxzunz</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="UserTask_0gouxw3" name="Checking PDF document" camunda:assignee="${editorinchief}">
+    <bpmn:userTask id="UserTask_0gouxw3" name="Checking PDF document" camunda:assignee="${editorinchief}" camunda:candidateGroups="editor">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="pdf1" label="PDF" type="string" defaultValue="${pdf}" />
@@ -76,7 +76,7 @@
       <bpmn:incoming>SequenceFlow_1rz51bz</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_11d9eq9</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="UserTask_0d0fao3" name="Correction of paper" camunda:assignee="${initiator}">
+    <bpmn:userTask id="UserTask_0d0fao3" name="Correction of paper" camunda:assignee="${initiator}" camunda:candidateGroups="author">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="title3" label="Title" type="string" defaultValue="${title}" />
@@ -103,7 +103,7 @@
     <bpmn:endEvent id="EndEvent_1sdd5wp">
       <bpmn:incoming>SequenceFlow_0x3u0za</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="UserTask_11pr9o9" name="Analysis of review" camunda:assignee="${editorOfScienceArea}">
+    <bpmn:userTask id="UserTask_11pr9o9" name="Analysis of review" camunda:assignee="${editorOfScienceArea}" camunda:candidateGroups="editor">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="comentFromRecenzent" label="Comment from recenzent" type="string" defaultValue="${comentToEditors4}" />
@@ -113,11 +113,13 @@
             <camunda:value id="acceptWithMinorRefinement" name="Accept with minor refinement" />
             <camunda:value id="conditionallyAcceptWithMajorCorrections" name="Conditionally accept with major corrections" />
             <camunda:value id="reject" name="Reject" />
+            <camunda:value id="addition" name="Addition" />
           </camunda:formField>
           <camunda:formField id="titleOfPaper" type="string" defaultValue="${title}" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_143ccj0</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1a0ybb3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1dw3dah</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_1q8qt22">
@@ -125,6 +127,7 @@
       <bpmn:outgoing>SequenceFlow_0m0lwao</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0513v5b</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_05tf902</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_156p7uw</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:serviceTask id="ServiceTask_04n5vnj" name="Sending notification with comments to author" camunda:class="com.example.scientificCenter.delegate.SendingCommentToAuthor">
       <bpmn:incoming>SequenceFlow_1e7zxt6</bpmn:incoming>
@@ -153,7 +156,7 @@
     <bpmn:endEvent id="EndEvent_1s5a2kb">
       <bpmn:incoming>SequenceFlow_0icfo78</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="UserTask_16484gj" name="Entering corrections" camunda:assignee="${initiator}">
+    <bpmn:userTask id="UserTask_16484gj" name="Entering corrections" camunda:assignee="${initiator}" camunda:candidateGroups="author">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="title5" label="Title" type="string" defaultValue="${title}" />
@@ -267,7 +270,7 @@
       <bpmn:incoming>SequenceFlow_0bm6zbh</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0t1xais</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="UserTask_0k9y4ik" name="Selecting recenzents" camunda:assignee="${editorOfScienceArea}">
+    <bpmn:userTask id="UserTask_0k9y4ik" name="Selecting recenzents" camunda:assignee="${editorOfScienceArea}" camunda:candidateGroups="editor">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="recenzent" label="Recenzents" type="enum" />
@@ -277,7 +280,7 @@
       <bpmn:incoming>SequenceFlow_0hpf2nu</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0bm6zbh</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_1v4gpiq" name="Set time" camunda:assignee="${editorOfScienceArea}">
+    <bpmn:userTask id="Task_1v4gpiq" name="Set time" camunda:assignee="${editorOfScienceArea}" camunda:candidateGroups="editor">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="day" label="Day" type="long" />
@@ -323,7 +326,7 @@
     <bpmn:endEvent id="EndEvent_0wdxz42">
       <bpmn:incoming>SequenceFlow_00ns0n3</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="UserTask_0dcvbb4" name="Input coauthors" camunda:assignee="${initiator}">
+    <bpmn:userTask id="UserTask_0dcvbb4" name="Input coauthors" camunda:assignee="${initiator}" camunda:candidateGroups="author">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="nameCoauthor" label="Name" type="string" />
@@ -338,7 +341,7 @@
         <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">${numberOfCoauthors}</bpmn:loopCardinality>
       </bpmn:multiInstanceLoopCharacteristics>
     </bpmn:userTask>
-    <bpmn:userTask id="UserTask_1ykg9lo" name="Checking paper data" camunda:assignee="${editorinchief}">
+    <bpmn:userTask id="UserTask_1ykg9lo" name="Checking paper data" camunda:assignee="${editorinchief}" camunda:candidateGroups="editor">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="title1" label="Title" type="string" defaultValue="${title}">
@@ -422,7 +425,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${editorsDecision=="reject"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0513v5b" name="the paper is accepted with minor refinement or conditionally" sourceRef="ExclusiveGateway_1q8qt22" targetRef="UserTask_1dveel9">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${editorsDecision!="accept" &amp;&amp; editorsDecision!="reject"}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${editorsDecision!="accept" &amp;&amp; editorsDecision!="reject" &amp;&amp; editorsDecision!="addition"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0m0lwao" name="the paper is accepted" sourceRef="ExclusiveGateway_1q8qt22" targetRef="ServiceTask_1y1gx8u">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${editorsDecision=="accept"}</bpmn:conditionExpression>
@@ -472,7 +475,7 @@
       <bpmn:startEvent id="StartEvent_017zjcz">
         <bpmn:outgoing>SequenceFlow_1xy0wyk</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:userTask id="UserTask_1n8s96f" name="Review" camunda:assignee="${OneRecenzentId}">
+      <bpmn:userTask id="UserTask_1n8s96f" name="Review" camunda:assignee="${OneRecenzentId}" camunda:candidateGroups="recenzent">
         <bpmn:extensionElements>
           <camunda:formData>
             <camunda:formField id="title4" label="Title" type="string" defaultValue="${title}">
@@ -544,7 +547,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_16rsgv5" sourceRef="ExclusiveGateway_1h7mpcm" targetRef="Task_1v4gpiq">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${editorsDecision!="acceptWithMinorRefinement"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="UserTask_1dveel9" name="Set time" camunda:assignee="${editorOfScienceArea}">
+    <bpmn:userTask id="UserTask_1dveel9" name="Set time" camunda:assignee="${editorOfScienceArea}" camunda:candidateGroups="editor">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="day1" label="Day" type="long" />
@@ -568,7 +571,7 @@
       <bpmn:outgoing>SequenceFlow_04luf17</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_04luf17" sourceRef="UserTask_1x983ug" targetRef="ServiceTask_1p7q27j" />
-    <bpmn:userTask id="UserTask_0peci1e" name="Set time" camunda:assignee="${editorinchief}">
+    <bpmn:userTask id="UserTask_0peci1e" name="Set time" camunda:assignee="${editorinchief}" camunda:candidateGroups="editor">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="day3" label="Day" type="long" />
@@ -597,6 +600,58 @@
       <bpmn:sequenceFlow id="SequenceFlow_0rhajp0" sourceRef="StartEvent_0cg1sz5" targetRef="Task_03qe2o1" />
       <bpmn:sequenceFlow id="SequenceFlow_1gathzc" sourceRef="Task_03qe2o1" targetRef="EndEvent_0w1coek" />
     </bpmn:subProcess>
+    <bpmn:userTask id="UserTask_1eqbn6e" name="Add new recenzents" camunda:assignee="${editorOfScienceArea}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="recenzent" label="Recenzents" type="enum" />
+        </camunda:formData>
+        <camunda:taskListener delegateExpression="${createSelectingRecenzentFormListener}" event="create" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_156p7uw</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_02fmeda</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_156p7uw" sourceRef="ExclusiveGateway_1q8qt22" targetRef="UserTask_1eqbn6e">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${editorsDecision=="addition"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="ServiceTask_1pxxta3" name="Set new recenzent" camunda:class="com.example.scientificCenter.delegate.SavingDataSelectedNewRecenzents">
+      <bpmn:incoming>SequenceFlow_02fmeda</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1edw0f4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_02fmeda" sourceRef="UserTask_1eqbn6e" targetRef="ServiceTask_1pxxta3" />
+    <bpmn:userTask id="UserTask_09m91lr" name="Review" camunda:assignee="${OneRecenzentId}" camunda:candidateGroups="recenzent">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="title4" label="Title" type="string" defaultValue="${title}">
+            <camunda:properties>
+              <camunda:property id="readonly" value="readonly" />
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="keywords4" label="Keywords" type="string" defaultValue="${keywords}">
+            <camunda:properties>
+              <camunda:property id="readonly" value="readonly" />
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="pdf4" label="PDF" type="string" defaultValue="${pdf}" />
+          <camunda:formField id="commentToAuthor4" label="Comment to author" type="string" />
+          <camunda:formField id="comentToEditors4" label="Comment ro editors" type="string" />
+          <camunda:formField id="decision" label="Decison" type="enum">
+            <camunda:value id="accept" name="Accept" />
+            <camunda:value id="acceptWithMinorRefinement" name="Accept with minor refinement" />
+            <camunda:value id="conditionallyAcceptWithMajorCorrections" name="Conditionally accept with major corrections" />
+            <camunda:value id="reject" name="Reject" />
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1edw0f4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_02g8tcl</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1edw0f4" sourceRef="ServiceTask_1pxxta3" targetRef="UserTask_09m91lr" />
+    <bpmn:sequenceFlow id="SequenceFlow_02g8tcl" sourceRef="UserTask_09m91lr" targetRef="ServiceTask_1xk3af0" />
+    <bpmn:serviceTask id="ServiceTask_1xk3af0" name="Saving data" camunda:class="com.example.scientificCenter.delegate.SavingDataAboutReview">
+      <bpmn:incoming>SequenceFlow_02g8tcl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1a0ybb3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1a0ybb3" sourceRef="ServiceTask_1xk3af0" targetRef="UserTask_11pr9o9" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="SubmittingPaper">
@@ -1174,6 +1229,39 @@
       <bpmndi:BPMNShape id="SubProcess_0u7hphw_di" bpmnElement="SubProcess_1hl97da" isExpanded="true">
         <dc:Bounds x="160" y="780" width="350" height="200" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1eqbn6e_di" bpmnElement="UserTask_1eqbn6e">
+        <dc:Bounds x="4430" y="870" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_156p7uw_di" bpmnElement="SequenceFlow_156p7uw">
+        <di:waypoint x="4630" y="745" />
+        <di:waypoint x="4630" y="880" />
+        <di:waypoint x="4530" y="880" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1pxxta3_di" bpmnElement="ServiceTask_1pxxta3">
+        <dc:Bounds x="4430" y="1000" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_02fmeda_di" bpmnElement="SequenceFlow_02fmeda">
+        <di:waypoint x="4480" y="950" />
+        <di:waypoint x="4480" y="1000" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_09m91lr_di" bpmnElement="UserTask_09m91lr">
+        <dc:Bounds x="4250" y="1000" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1edw0f4_di" bpmnElement="SequenceFlow_1edw0f4">
+        <di:waypoint x="4430" y="1040" />
+        <di:waypoint x="4350" y="1040" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_02g8tcl_di" bpmnElement="SequenceFlow_02g8tcl">
+        <di:waypoint x="4300" y="1000" />
+        <di:waypoint x="4300" y="950" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1xk3af0_di" bpmnElement="ServiceTask_1xk3af0">
+        <dc:Bounds x="4250" y="870" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1a0ybb3_di" bpmnElement="SequenceFlow_1a0ybb3">
+        <di:waypoint x="4300" y="870" />
+        <di:waypoint x="4300" y="760" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

@@ -14,6 +14,7 @@ import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.form.FormField;
 import org.camunda.bpm.engine.form.TaskFormData;
+import org.camunda.bpm.engine.identity.Group;
 import org.camunda.bpm.engine.impl.form.validator.FormFieldValidationException;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,13 @@ public class TaskController {
 	@Autowired
 	FormService formService;
 	
+	
+	private final static String RECENZENT_GROUP_ID = "recenzent";
+	
+	private final static String AUTHOR_GROUP_ID = "author";
+	
+	private final static String EDITOR_GROUP_ID = "editor";
+	
 	@GetMapping(path = "/getTaskForm/{taskId}", produces = "application/json")
     public @ResponseBody FormFieldsDTO get(@PathVariable String taskId) {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -100,6 +108,10 @@ public class TaskController {
 		if(task.getName().equals("Confirmation of recenzent status")) {
 			runtimeService.setVariable(processInstanceId, "confirmation", fieldsDTO);
 		}else if(task.getName().equals("Review data and activate journal")) {
+			boolean authorized = authorize(this.EDITOR_GROUP_ID);
+			if(!authorized) {
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
+			}
 			boolean needDelete= false;
 			String issn = "";
 			for(int i = 0; i < fieldsDTO.size(); i++) {
@@ -126,6 +138,7 @@ public class TaskController {
 			runtimeService.setVariable(processInstanceId, "activationOfJournal", fieldsDTO);
 			
 		}else if(task.getName().equals("Input data for journal")) {
+			
 			for(int i = 0; i < fieldsDTO.size(); i++) {
 				if(fieldsDTO.get(i).getFieldId().equals("name") ||fieldsDTO.get(i).getFieldId().equals("issnNumber") ||
 						fieldsDTO.get(i).getFieldId().equals("wayOfPaying")) {
@@ -159,6 +172,7 @@ public class TaskController {
 		}else if(task.getName().equals("Membership payment")) {
 			runtimeService.setVariable(processInstanceId, "confirmation", fieldsDTO);
 		}else if(task.getName().equals("Input data about paper")) {
+			
 			runtimeService.setVariable(processInstanceId, "paper", fieldsDTO);
 		}else if(task.getName().equals("Input coauthors")) {
 			String title =runtimeService.getVariable(processInstanceId, "title").toString();
@@ -224,6 +238,23 @@ public class TaskController {
 		}
 		
 		return map;
+	}
+	
+	private boolean authorize(String requestedGroupId) {
+		String username = "";
+		try {
+		   username = identityService.getCurrentAuthentication().getUserId();
+		} catch (Exception e) {
+			return false;
+		}
+		
+		Group group = identityService.createGroupQuery().groupMember(username).groupId(requestedGroupId).singleResult();
+		
+		if(group != null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

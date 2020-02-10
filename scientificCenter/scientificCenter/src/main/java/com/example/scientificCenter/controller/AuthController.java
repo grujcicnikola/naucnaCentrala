@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
+import org.camunda.bpm.engine.IdentityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,9 @@ public class AuthController {
 	@Autowired
     private JwtProvider jwtProvider;
 	
+	@Autowired
+	IdentityService identityService;
+	
 
 	
 	@PostMapping(value = "/login")
@@ -92,6 +96,7 @@ public class AuthController {
 		        if(user.isPresent()) {
 		        	
 		        }
+		        identityService.setAuthenticatedUserId(userDetails.getUsername());
 		        return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
 		        //return new ResponseEntity<>(new JwtResponse(jwt,thisUser.get().getRoles()), HttpStatus.OK);
 		        

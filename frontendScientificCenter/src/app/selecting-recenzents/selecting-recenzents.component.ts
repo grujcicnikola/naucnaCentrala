@@ -452,13 +452,31 @@ export class SelectingRecenzentsComponent implements OnInit {
 
   }
   filterMoreLikeThis(){
-
+    this.dropdownListHelp=this.dropdownList;
+    this.paperService.choosingReviewersFilteredByScientificArea(this.taskId).subscribe(
+      data=>{
+          this.formFieldsDto = data;
+          console.log(data);
+          this.formFields = this.formFieldsDto.formFields;
+          this.fieldsFormat();
+          //this.processInstance = this.formFieldsDto.processInstanceId;
+      }
+    )   
 
   }
 
 
   filterGeo(){
-
+    this.dropdownListHelp=this.dropdownList;
+    this.paperService.choosingReviewersFilteredByScientificArea(this.taskId).subscribe(
+      data=>{
+          this.formFieldsDto = data;
+          console.log(data);
+          this.formFields = this.formFieldsDto.formFields;
+          this.fieldsFormat();
+          //this.processInstance = this.formFieldsDto.processInstanceId;
+      }
+    )   
   }
   handleFileInput(file:FileList){
     this.fileToUpload =file.item(0);

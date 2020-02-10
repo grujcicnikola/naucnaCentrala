@@ -18,6 +18,7 @@ import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.form.FormField;
 import org.camunda.bpm.engine.form.TaskFormData;
+import org.camunda.bpm.engine.identity.Group;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +104,9 @@ public class PaperController {
 	
 	@Value("${camunda.submittingPaperProcessKey}")
 	private String submittingPaperProcessKey;
+	
+	
+	
 	
 	@RequestMapping(value = "/create/{email}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getRegistrationForm(@PathVariable String email,@RequestBody JournalDTO journalDTO)  {
@@ -327,4 +331,7 @@ public class PaperController {
         return bytesArray;
 
     }
+
+	
+
 }
