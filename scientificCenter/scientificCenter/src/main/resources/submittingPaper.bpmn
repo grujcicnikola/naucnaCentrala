@@ -81,8 +81,16 @@
         <camunda:formData>
           <camunda:formField id="title3" label="Title" type="string" defaultValue="${title}" />
           <camunda:formField id="pdf3" label="PDF" type="string" defaultValue="${pdf}" />
-          <camunda:formField id="comment3" label="Comment about relevance" type="string" defaultValue="${comment1}" />
-          <camunda:formField id="comment4" label="Comment about formatting" type="string" defaultValue="${comment2}" />
+          <camunda:formField id="comment3" label="Comment about relevance" type="string" defaultValue="${comment1}">
+            <camunda:properties>
+              <camunda:property id="readonly" value="readonly" />
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="comment4" label="Comment about formatting" type="string" defaultValue="${comment2}">
+            <camunda:properties>
+              <camunda:property id="readonly" value="readonly" />
+            </camunda:properties>
+          </camunda:formField>
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_11d9eq9</bpmn:incoming>
@@ -1163,7 +1171,7 @@
       <bpmndi:BPMNShape id="ServiceTask_0y9115f_di" bpmnElement="Task_03qe2o1">
         <dc:Bounds x="290" y="840" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="SubProcess_1dx4be8_di" bpmnElement="SubProcess_1hl97da" isExpanded="true">
+      <bpmndi:BPMNShape id="SubProcess_0u7hphw_di" bpmnElement="SubProcess_1hl97da" isExpanded="true">
         <dc:Bounds x="160" y="780" width="350" height="200" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>

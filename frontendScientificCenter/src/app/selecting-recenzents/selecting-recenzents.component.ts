@@ -404,6 +404,7 @@ export class SelectingRecenzentsComponent implements OnInit {
   imageUrl: string;
 
   fieldsFormat() {
+    this.dropdownList =[];
     console.log(this.formFields);
     this.formFields.forEach((field) => {
     if (field.type.name === 'enum') {
@@ -425,7 +426,7 @@ export class SelectingRecenzentsComponent implements OnInit {
         
         this.enumLabelsHelp = this.enumLabels;
         this.enumNamesHelp = this.enumNames;
-        this.dropdownListHelp=this.dropdownList;
+        //this.dropdownListHelp=this.dropdownList;
       }
     });
 
@@ -438,14 +439,17 @@ export class SelectingRecenzentsComponent implements OnInit {
   }
 
   filterByArea(){
-    /*this.pronadjeniFilter =[];
-    this.pronadjeniFilter= this.pronadjeni
-                              .filter((p: any ) => p.aviokompanija.naziv === this.nazivAviokompanije);
-    console.log("FILTER");
-    console.log(this.pronadjeniFilter);
-    this.filterAktiviran= true;
-    this.prikazani = this.pronadjeniFilter;
-*/
+    this.dropdownListHelp=this.dropdownList;
+    this.paperService.choosingReviewersFilteredByScientificArea(this.taskId).subscribe(
+      data=>{
+          this.formFieldsDto = data;
+          console.log(data);
+          this.formFields = this.formFieldsDto.formFields;
+          this.fieldsFormat();
+          //this.processInstance = this.formFieldsDto.processInstanceId;
+      }
+    )   
+
   }
   filterMoreLikeThis(){
 

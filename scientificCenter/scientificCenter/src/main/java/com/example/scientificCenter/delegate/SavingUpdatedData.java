@@ -76,9 +76,12 @@ public class SavingUpdatedData implements JavaDelegate{
 		String title = execution.getVariable("title").toString();
 		Paper paper = this.paperService.findByTitle(title);
 		paper.setPdf(pdf);
+		paper.setTitle(execution.getVariable("title3").toString());
 		execution.setVariable("pdf",pdf);
+		execution.setVariable("title", execution.getVariable("title3").toString());
 		
-		
+		execution.setVariable("pdf1",pdf);
+		execution.setVariable("title1", execution.getVariable("title3").toString());
 		this.paperService.save(paper);
 		
 	}

@@ -12,7 +12,7 @@
                     <button  (click) = "filterByArea()" class="btn btn-info" >Filter by sceintific area</button>
                     <button  (click) = "filterMoreLikeThis()" class="btn btn-info" >Filter - more like this</button>
                     <button  (click) = "filterGeo()" class="btn btn-info" >Filter - geo</button>    
-                    <button  (click) = "refresh()" class="btn btn-info" >Refresh</button>    
+                       
                 </div>
         </div>               
 <div>
@@ -21,7 +21,7 @@
       <div *ngFor="let field of formFields" >
             <div *ngIf="review==false" >
                 <label for={{field.id}}>{{field.label}}</label>   
-                <input  type="text"  [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}}  name={{field.id}} ngModel={{field.value.value}} *ngIf="field.type.name=='string' && ( field.id !='password'  && field.id !='wayOfPaying' && field.id !='pdf' && field.id!='pdf1' && field.id!='pdf3' && field.id!='scientificAreas' && field.id!='editors') " >
+                <input  type="text" [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}}  name={{field.id}} ngModel={{field.value.value}} *ngIf="field.type.name=='string' && ( field.id !='password'  && field.id !='wayOfPaying' && field.id !='pdf' && field.id!='pdf1' && field.id!='pdf3' && field.id!='scientificAreas' && field.id!='editors') " >
                 <input type="password" [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}   *ngIf="field.id =='password'" >
                 <input type="checkbox" [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}} name={{field.id}} ngModel  *ngIf="field.type.name=='boolean' && field.id !='isOpenAccess1'">
                     

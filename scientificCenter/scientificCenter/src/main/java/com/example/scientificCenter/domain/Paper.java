@@ -27,8 +27,7 @@ public class Paper {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Author author;
 	
-	@Column
-    private String coauthors;
+	
 	
 	@Column
     private String _abstract;
@@ -80,13 +79,7 @@ public class Paper {
 		this.author = author;
 	}
 
-	public String getCoauthors() {
-		return coauthors;
-	}
-
-	public void setCoauthors(String coauthors) {
-		this.coauthors = coauthors;
-	}
+	
 
 	public String get_abstract() {
 		return _abstract;

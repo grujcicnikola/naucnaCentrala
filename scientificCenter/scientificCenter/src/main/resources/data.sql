@@ -70,7 +70,7 @@ INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('4', '1');
 INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('4', '2');
 INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('9', '1');
 INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('9', '4');
-INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('10', '1');
+INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('10', '2');
 INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('10', '4');
 INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('11', '2');
 INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('11', '4');
@@ -91,12 +91,14 @@ INSERT INTO `journal_areas` (`journal_id`, `areas_id`) VALUES ('3', '2');
 INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('1', '2');
 INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('1', '3');
 INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('1', '4');
+INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('1', '9');
+INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('1', '10');
 INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('2', '2');
 INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('2', '3');
 INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('2', '4');
+INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('2', '9');
+INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('2', '10');
 INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('3', '2');
-INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('3', '3');
-INSERT INTO `recenzent_journal` (`journal_id`, `recenzent_id`) VALUES ('3', '4');
 
 
 INSERT INTO `membership` (`active`,`author_id`,`journal_id`) VALUES (true,8,2);

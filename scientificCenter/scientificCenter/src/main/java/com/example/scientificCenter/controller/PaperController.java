@@ -16,6 +16,8 @@ import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
+import org.camunda.bpm.engine.form.FormField;
+import org.camunda.bpm.engine.form.TaskFormData;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +28,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,8 +43,10 @@ import com.example.scientificCenter.domain.Comment;
 import com.example.scientificCenter.domain.Journal;
 import com.example.scientificCenter.domain.PDF;
 import com.example.scientificCenter.domain.Paper;
+import com.example.scientificCenter.domain.Recenzent;
 import com.example.scientificCenter.domain.ScientificArea;
 import com.example.scientificCenter.dto.CommentDTO;
+import com.example.scientificCenter.dto.FormFieldsDTO;
 import com.example.scientificCenter.dto.FormSubmissionDTO;
 import com.example.scientificCenter.dto.JournalDTO;
 import com.example.scientificCenter.dto.PDFDTO;
@@ -49,6 +55,7 @@ import com.example.scientificCenter.dto.ScientificAreaDTO;
 import com.example.scientificCenter.dto.TaskDTO;
 import com.example.scientificCenter.repository.CommentRepository;
 import com.example.scientificCenter.repository.PDFRepository;
+import com.example.scientificCenter.repository.RecenzentRepository;
 import com.example.scientificCenter.service.JournalService;
 import com.example.scientificCenter.service.PaperService;
 import com.example.scientificCenter.service.ScientificAreaService;
@@ -90,6 +97,10 @@ public class PaperController {
 	@Autowired
 	FormService formService;
 	
+	@Autowired
+	private RecenzentRepository recRepository;
+	
+	
 	@Value("${camunda.submittingPaperProcessKey}")
 	private String submittingPaperProcessKey;
 	
@@ -130,6 +141,74 @@ public class PaperController {
 		
 		return new ResponseEntity<>(null,HttpStatus.OK);
 	}
+	
+	@GetMapping(path = "/getTaskForm/{taskId}", produces = "application/json")
+    public @ResponseBody FormFieldsDTO get(@PathVariable String taskId) {
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String processInstanceId = task.getProcessInstanceId();
+		TaskFormData tfd = formService.getTaskFormData(task.getId());
+		List<FormField> properties = tfd.getFormFields();
+		
+        return new FormFieldsDTO(task.getId(), properties,processInstanceId);
+		
+        //return new ResponseEntity(dtos,  HttpStatus.OK);
+    }
+	
+	
+	@GetMapping(path = "/choosingReviewersFilteredByScientificArea/{taskId}", produces = "application/json")
+    public @ResponseBody FormFieldsDTO getTaskFormChoosingReviewersFiltered(@PathVariable String taskId) {
+
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String processInstanceId = task.getProcessInstanceId();
+		TaskFormData tfd = formService.getTaskFormData(task.getId());
+		List<FormField> properties = tfd.getFormFields();
+		List<Recenzent> recenzents = filteredByScientificArea(runtimeService.getVariable(processInstanceId, "title").toString(),
+				runtimeService.getVariable(processInstanceId, "issn").toString());
+		
+		
+		if (properties != null) {
+
+			for (FormField field : properties) {
+				System.out.println(field.getId());
+				if (field.getId().equals("recenzent")) {
+					@SuppressWarnings("unchecked")
+					HashMap<String, String> items = (HashMap<String, String>) field.getType().getInformation("values");
+					items.clear();
+					for (Recenzent recenzent : recenzents) {
+						items.put(recenzent.getEmail().toString(), recenzent.getName());
+					}
+				}
+			}
+		}
+        return new FormFieldsDTO(task.getId(), properties, processInstanceId);
+    }
+	
+	private List<Recenzent> filteredByScientificArea(String title, String issn) {
+		// TODO Auto-generated method stub
+		Journal journal = this.journalService.findByIssn(issn);
+		Paper  paper = this.paperService.findByTitle(title);
+		ScientificArea  sa = paper.getArea();
+		System.out.println("casopis "+journal.getIssn());
+		System.out.println("paper "+paper.getTitle());
+		System.out.println("sa "+sa.getName());
+		List<Recenzent> recenzents = this.recRepository.findAll();
+		List<Recenzent> recenzentsOfJournal = new ArrayList<Recenzent>();
+		for (Recenzent recenzent : recenzents) {
+			if(recenzent.getJournal().contains(journal)) {
+				recenzentsOfJournal.add(recenzent);
+			}
+		}
+		List<Recenzent> recenzentsOfArea = new ArrayList<Recenzent>();
+		for (Recenzent recenzent : recenzentsOfJournal) {
+			if(recenzent.getAreas().contains(sa)) {
+				recenzentsOfArea.add(recenzent);
+			}
+		}
+		
+		return recenzentsOfArea;
+	}
+
+
 	/*
 	@RequestMapping(value = "/getPDF", method = RequestMethod.POST)
 	public ResponseEntity<PDFDTO> getFile(@RequestBody PDFURL link) {

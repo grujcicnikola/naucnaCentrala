@@ -78,6 +78,7 @@ public class SavingCorrections implements JavaDelegate{
 		execution.setVariable("keywords",paper.getKeywords());
 		
 		execution.setVariable("title4",paper.getTitle());
+		execution.setVariable("titleOfPaper",paper.getTitle());
 		execution.setVariable("pdf4",pdf);
 		execution.setVariable("keywords4",paper.getKeywords());
 		execution.setVariable("commentToAuthor4","");

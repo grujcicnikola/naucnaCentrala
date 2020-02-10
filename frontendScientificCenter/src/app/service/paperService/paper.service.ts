@@ -23,6 +23,9 @@ export class PaperService {
     return this.http.get<FormFields>(this.url+'/confirmForm/'.concat(id));
    }
 
+   choosingReviewersFilteredByScientificArea(id: string){
+    return this.http.get<FormFields>(this.url+'/choosingReviewersFilteredByScientificArea/'.concat(id));
+   }
    getCommentsFromRecenzentsToEditor(id: string){
     return this.http.get<Comment[]>(this.url+'/commentsRecenzentsToEditor/'+id);
    }

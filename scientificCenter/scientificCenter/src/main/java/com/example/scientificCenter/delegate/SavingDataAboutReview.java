@@ -63,7 +63,7 @@ public class SavingDataAboutReview implements JavaDelegate{
 		
 		String title = execution.getVariable("title").toString();
 		Paper paper = this.paperService.findByTitle(title);
-		ReviewData review = this.reviewRep.findByPaperId(paper.getId());
+		
 		//Set<Comment> comments = new HashSet<Comment>();
 		Comment comm1 = new Comment(execution.getVariable("commentToAuthor4").toString());
 		comm1.setDecision(execution.getVariable("decision").toString());

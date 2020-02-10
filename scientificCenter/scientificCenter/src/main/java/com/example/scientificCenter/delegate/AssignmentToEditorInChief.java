@@ -1,5 +1,7 @@
 package com.example.scientificCenter.delegate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.camunda.bpm.engine.IdentityService;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.example.scientificCenter.domain.Journal;
 import com.example.scientificCenter.domain.Membership;
 import com.example.scientificCenter.domain.User;
+import com.example.scientificCenter.dto.FormSubmissionDTO;
 import com.example.scientificCenter.service.JournalService;
 import com.example.scientificCenter.service.MembershipService;
 import com.example.scientificCenter.service.ScientificAreaService;
@@ -44,19 +47,14 @@ public class AssignmentToEditorInChief implements JavaDelegate{
 	
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
+		System.out.println("Start save data, SavingDataSelectedRecenzents ");
 		System.out.println("membership check");
 		System.out.println(execution.getVariable("initiator").toString());
 		System.out.println(execution.getVariable("issn").toString());
 		Journal journal = this.journalService.findByIssn(execution.getVariable("issn").toString());
-		Optional<User> user = this.userService.getByEmail(execution.getVariable("initiator").toString());
-		if(user.isPresent()) {
-			Membership membership = this.memberService.findByJournalIdAndAuthorId(journal.getId(), user.get().getId());
-			if(membership == null || membership.getActive()==false) {
-				execution.setVariable("membership", false);
-			}else {
-				execution.setVariable("membership", true);
-			}
-		}
+		List<String> field=new ArrayList<String>();
+		field.add(journal.getEditorInChief().getEmail());
+		execution.setVariable("recenzentList", field);
 	}
 	
 }
