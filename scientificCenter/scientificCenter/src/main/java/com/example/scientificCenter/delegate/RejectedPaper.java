@@ -41,7 +41,7 @@ public class RejectedPaper implements JavaDelegate{
 	public void execute(DelegateExecution execution) throws Exception {
 		Journal journal = this.journalService.findByIssn(execution.getVariable("issn").toString());
 		
-		sendConfirmationEmail(execution, execution.getVariable("initiator").toString(),journal.getTitle());
+		//sendConfirmationEmail(execution, execution.getVariable("initiator").toString(),journal.getTitle());
 	}
 
 	public void sendConfirmationEmail(DelegateExecution execution ,String email, String title)throws MailException, InterruptedException{

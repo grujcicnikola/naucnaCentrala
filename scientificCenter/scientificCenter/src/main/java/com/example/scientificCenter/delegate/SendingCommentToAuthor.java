@@ -73,7 +73,7 @@ public class SendingCommentToAuthor implements JavaDelegate{
 			}
 			
 		}
-		sendConfirmationEmail(execution, execution.getVariable("initiator").toString(),journal.getTitle(), message);
+		//sendConfirmationEmail(execution, execution.getVariable("initiator").toString(),journal.getTitle(), message);
 		
 	}
 
