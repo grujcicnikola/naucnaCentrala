@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit {
     this.tokenStorage.signOut();
     this.someoneLogged = false;
     this.userServ.logout(this.email).subscribe(data =>{
-      //window.location.href="https://localhost:4202"
+      window.location.href="https://localhost:4202"
     });
     
   }
