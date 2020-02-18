@@ -1,0 +1,221 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">Scientific central</a>
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+        <li class="nav-item">
+            <a class="nav-link" id="home" href="#">Home <span class="sr-only"></span></a>
+        </li>       
+      </ul>
+      
+    </div>
+    
+  </div>
+ 
+</nav>
+
+<header>
+	<div class="overlay">
+  <h1>SCIENTIFIC CENTRAL</h1>
+  <p class="card-text"></p>
+  </div>
+    
+</header>
+
+<body>
+    <table id="mainPanel"><tbody>
+        <tr>
+            <td>
+                <div class="rf-p " id="searchPanel">
+                <div class="rf-p-b " id="searchPanel_body">
+                 
+                    <table id="searchTableForm:searchTableFormPanel" width="100%">
+                        
+                        <tbody>
+                            <tr>
+                                
+                                <td>
+                                    Search:        
+                                </td>
+                                <td>
+                                    <form class="form-search form-inline">
+                                                <input type="text" class="search-query"  id ="firstQ" name="firstQ" placeholder="Search..." [(ngModel)]="firstQuery.query"/>
+                                  </form>  
+                                </td>
+                                <td>
+                                    in
+                                </td>
+                                <td>
+                                    <select  class="form-control"   name="firstA"  id="firstA"    [(ngModel)]="firstQuery.area">
+                                        <option *ngFor="let t of types" [value]="t.value">
+                                            {{t.name}}
+                                          </option>
+                                      </select>
+                                  
+                                </td>
+                                <td>
+                                    is phraze
+                                </td>
+                                <td>
+                                    <input type="checkbox" class="form-control" name="firstP"  id="firstP"  [(ngModel)]="firstQuery.isPhraze"/>
+                                </td>
+                            </tr>
+                            <tr *ngFor ='let m of searchFields.booleanQueryies; let i = index'>
+                                    <td>
+                                        <select class="form-control" id="operator{{i}}"  name="operator{{i}}"    [(ngModel)]="m.operator">
+                                            <option *ngFor="let t of operators" [value]="t">
+                                                {{t}}
+                                            </option>
+                                        </select>        
+                                    </td>
+                                    <td>
+                                            <form class="form-search form-inline">
+                                                    <input type="text" class="search-query" id="query{{i}}"  name="query{{i}}" [(ngModel)]="m.query" placeholder="Search..." />
+                                               </form>
+                                    </td>
+                                    <td>
+                                        in
+                                    </td>
+                                    <td>
+                                        
+                                        <select  class="form-control"   id="area{{i}}"  name="area{{i}}"    [(ngModel)]="m.area">
+                                            <option *ngFor="let t of types" [value]="t.value">
+                                                {{t.name}}
+                                              </option>
+                                          </select>
+                                    </td>
+                                    <td>
+                                        is phraze
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" class="form-control" name="isPhraze{{i}}"  id="isPhraze{{i}}"  [(ngModel)]="m.isPhraze"/>
+                                    </td>
+                                    <td id="searchTableForm:queryTable:j_id1840598516_6db54892" class="rf-dt-ftr-c" colspan="1"><button (click)="delete(i)" id="searchTableForm:queryTable:j_id1840598516_6db54890" name="searchTableForm:queryTable:j_id1840598516_6db54890" ><img height="30" width="30"  src="https://thumbs.dreamstime.com/b/red-cross-symbol-icon-as-delete-remove-fail-failure-incorr-incorrect-answer-89999776.jpg"></button></td>
+                         
+                                </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td id="searchTableForm:queryTable:j_id1840598516_6db54892" class="rf-dt-ftr-c" colspan="1"><button (click)="add()" id="searchTableForm:queryTable:j_id1840598516_6db54890" name="searchTableForm:queryTable:j_id1840598516_6db54890" ><img height="30" width="30" src="https://banner2.cleanpng.com/20180514/usq/kisspng-computer-icons-plus-sign-clip-art-5af97b2328bf59.1562244915262994271669.jpg"></button></td>
+                            </tr>
+                            <tr>
+                              <td></td>
+                              <td></td>
+                              <td>
+                                <button id="Btn1"  (click) = "search()" class="btn btn-success btn-block" >Search</button>
+                              </td>
+                              <td></td>
+                            </tr>
+                        </tbody>
+                      
+                    </table>
+                
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>   
+                                
+  <!--<div class="container" data-ng-app="myApp" data-ng-controller="myCtrl">
+        <div class="row">
+          <div class="col-1-20">
+            Search:
+          </div>
+          <div class="col-3-20">
+            <input type="text" class="search" data-ng-model="table" />
+          </div>
+          <div class="col-5-20">
+                in
+            </div>
+            <div class="col-7-20">
+                    <select class="form-control" name="izbor"  id="izbor"    ngModel>
+                            <option  [value]="journalName" >name of journal</option>
+                            <option  [value]="title" >title</option>
+                            <option  [value]="nameOfAuthor" >name of author</option>
+                            <option  [value]="keywords" >keywords</option>
+                            <option  [value]="content" >content</option>
+                            <option  [value]="scientificAreas" >scientifica areas</option>
+                        </select>
+            </div>
+        </div>
+        <br/>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>Country</th>
+          </tr>
+          <tr data-ng-repeat="customer in customers ">
+            <td>customer.Name</td>
+            <td>customer.City</td>
+            <td>customer.Country</td>
+          </tr>
+        </table>
+        <div data-pagination="" data-num-pages="numPages()" data-current-page="currentPage" data-max-size="maxSize" data-boundary-links="true"></div>
+      </div>-->
+      <div class="container py-5 mt-5">
+          <h1>Results</h1>
+          
+          <div class="row mt-5">
+            <div class="col-lg-3 col-sm-6 mb-5" *ngFor="let paper of response; let i = index">
+              <div class="card shadow border-0 h-200">
+                <h4 class="card-title">{{paper.paper.title}}</h4>
+                <p class="card-text">{{paper.paper.author}}</p>
+                <p class="card-text">scientific area: {{paper.paper.area}}</p>
+                <p class="card-text"></p>
+                <div [innerHTML]="paper.highlights"></div>
+                <div class="row"  *ngIf="paper.paper.status == true">
+                    <div class="col" >
+                       <button id="Btn0"  (click)="download(journal)" class="btn btn-success btn-block">Download</button>
+                    </div>
+                  </div>
+                  <div class="row"  *ngIf="paper.paper.status == false">
+                      <div class="col" >
+                         <button  id="Btn1" (click)="buy(journal)" class="btn btn-success btn-block">Buy</button>
+                      </div>
+                    </div>
+                <!--div class="row">
+                  <div class="col" *ngIf="paper.isOpenAccess == true">
+                     <p class="card-text">open-access</p>
+                  </div>
+                  <div class="col" *ngIf="journal.isOpenAccess == false">
+                    <p class="card-text">not open-access</p>
+                 </div>
+                </div>
+                <div class="row" *ngIf="authorLogged == true">
+                  <div class="col" >
+                     <a id="hrefButton"  (click)="submitPaper(journal)" class="btn btn-success btn-block">Submit paper</a>
+                  </div>
+                </div> 
+                <div class="row"  *ngIf="userLogged == true">
+                   <div class="col" *ngIf="journal.isOpenAccess == false">
+                      <a id="hrefButton"  (click)="buyJournal(journal)" class="btn btn-success btn-block">Buy</a>
+                   </div>
+                 </div>
+                 <div class="row"  *ngIf="userLogged == true">
+                  <div class="col">
+                     <a id="subButton"  (click)="subscribe(journal)" class="btn btn-success btn-block"  *ngIf=" journal.canSubscribe == true && userLogged == true">Subscribe</a>
+                  </div>
+                </div>
+                <div class="row"  *ngIf="userLogged == true">
+                  <div class="col">
+                     <a id="unSubButton"  (click)="unsubscribe(journal)" class="btn btn-success btn-block" *ngIf="journal.canUnsubscribe == true && userLogged == true">Unsubscribe</a>
+                  </div>
+                </div> -->   
+              </div>
+            </div>
+          </div>
+        </div>
+</body>

@@ -21,6 +21,8 @@ import { MatTableModule } from '@angular/material';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { SelectingRecenzentsComponent } from './selecting-recenzents/selecting-recenzents.component';
 import { AnalysisOfReviewComponent } from './analysis-of-review/analysis-of-review.component';
+import { SearchComponent } from './search/search.component';
+import { SearchPageComponent } from './search-page/search-page.component';
 
 const appRoutes: Routes = [
   {path: 'register', component : RegistrationComponent},
@@ -35,6 +37,8 @@ const appRoutes: Routes = [
   {path: 'myTransactions', component : UserTransactionsComponent},
   {path: 'task/selectRecenzents/:taskId', component : SelectingRecenzentsComponent},
   {path: 'task/analysis/:taskId', component : AnalysisOfReviewComponent},
+  {path: 'search', component : SearchComponent},
+  {path: 'searchPage', component : SearchPageComponent},
   ]
 
 @NgModule({
@@ -51,7 +55,9 @@ const appRoutes: Routes = [
     TestPageComponent,
     UserTransactionsComponent,
     SelectingRecenzentsComponent,
-    AnalysisOfReviewComponent
+    AnalysisOfReviewComponent,
+    SearchComponent,
+    SearchPageComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +65,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    
     MatTableModule,
     MultiSelectAllModule,
     RouterModule.forRoot(

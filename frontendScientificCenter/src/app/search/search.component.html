@@ -1,0 +1,105 @@
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">Scientific central</a>
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+        <li class="nav-item">
+            <a class="nav-link" id="home" href="#">Home <span class="sr-only"></span></a>
+        </li>       
+      </ul>
+      
+    </div>
+    
+  </div>
+ 
+</nav>
+
+<header>
+	<div class="overlay">
+  <h1>SCIENTIFIC CENTRAL</h1>
+  <p class="card-text"></p>
+  </div>
+    
+</header>
+
+<body>
+
+<p>Animated search form:</p>
+
+    
+    <form class="form-search form-inline">
+         <input type="text" class="search-query" placeholder="Search..." />
+    </form>
+    <table id="mainPanel"><tbody>
+        <tr>
+            <td>
+                <div class="rf-p " id="searchPanel">
+                <div class="rf-p-hdr " id="searchPanel_header">Претрага</div>
+                <div class="rf-p-b " id="searchPanel_body"><form id="searchTableForm" name="searchTableForm" method="post" action="/search.jsf" enctype="application/x-www-form-urlencoded">
+                    <table id="searchTableForm:searchTableFormPanel" width="100%">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span id="searchTableForm:j_id1840598516_6db54c76">
+                                        <span class="rf-msg " id="searchTableForm:j_id1840598516_6db54c54"></span>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="searchTableForm:j_id1840598516_6db54c5f" class="rf-tbp">
+                                        <input id="searchTableForm:j_id1840598516_6db54c5f-value" name="searchTableForm:j_id1840598516_6db54c5f-value" type="hidden" value="publicationTab">
+                                    </div>
+                                </td>
+                                <td>
+                                       <!--- <table id="searchTableForm:panelPublication" width="100%"><tbody>
+                                                <tr><td><table id="searchTableForm:queryTable" class="rf-dt">
+                                                    <colgroup span="5"></colgroup>
+                                                    <tfoot id="searchTableForm:queryTable:tf" class="rf-dt-tft"><tr id="searchTableForm:queryTable:0" class="rf-dt-ftr rf-dt-ftr-fst"><td id="searchTableForm:queryTable:j_id1840598516_6db548d3" class="rf-dt-ftr-c" style="text-align:left;" colspan="4">Приближна претрага<input id="searchTableForm:queryTable:j_id1840598516_6db548bc" type="checkbox" name="searchTableForm:queryTable:j_id1840598516_6db548bc" value="true"></td><td id="searchTableForm:queryTable:j_id1840598516_6db54892" class="rf-dt-ftr-c" colspan="1"><a href="#" id="searchTableForm:queryTable:j_id1840598516_6db54890" name="searchTableForm:queryTable:j_id1840598516_6db54890" onclick="RichFaces.ajax(&quot;searchTableForm:queryTable:j_id1840598516_6db54890&quot;,event,{&quot;incId&quot;:&quot;1&quot;} );return false;"><img src="/javax.faces.resource/create16.png.jsf?ln=img"></a></td></tr></tfoot><tbody id="searchTableForm:queryTable:tb" class="rf-dt-b"><tr id="searchTableForm:queryTable:0" class="rf-dt-r rf-dt-fst-r"><td id="searchTableForm:queryTable:0:j_id1840598516_6db54fe7" class="rf-dt-c width10">Тражи:<input type="hidden" id="searchTableForm:queryTable:0:j_id1840598516_6db54fd0" name="searchTableForm:queryTable:0:j_id1840598516_6db54fd0" value="javax.faces.model.SelectItem@69d3e2a2"></td><td id="searchTableForm:queryTable:0:j_id1840598516_6db54f84" class="rf-dt-c width70"><input id="searchTableForm:queryTable:0:j_id1840598516_6db54f58" name="searchTableForm:queryTable:0:j_id1840598516_6db54f58" type="text" value="" style="width:98% !important"></td><td id="searchTableForm:queryTable:0:j_id1840598516_6db54e5c" class="rf-dt-c width5" style="text-align:center;">У</td><td id="searchTableForm:queryTable:0:j_id1840598516_6db54e3d" class="rf-dt-c width20" style="text-align:center;"><div class="rf-sel" id="searchTableForm:queryTable:0:j_id1840598516_6db54e1b"><span class="rf-sel-cntr"><input id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bselValue" name="searchTableForm:queryTable:0:j_id1840598516_6db54e1b" type="hidden" value="default"><input autocomplete="off" class="rf-sel-inp" id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bInput" name="searchTableForm:queryTable:0:j_id1840598516_6db54e1bInput" readonly="readonly" type="text" value="Свим пољима"><span class="rf-sel-btn" id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bButton"><span class="rf-sel-btn-arrow"></span></span></span><div class="rf-sel-lst-cord" id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bList"><div class="rf-sel-shdw"><div class="rf-sel-shdw-t"></div><div class="rf-sel-shdw-l"></div><div class="rf-sel-shdw-r"></div><div class="rf-sel-shdw-b"></div><div class="rf-sel-lst-dcrtn"><div class="rf-sel-lst-scrl" style="min-height: 20px;max-height: 100px;width: 200px"><div id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bItems"><div id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem0" class="rf-sel-opt">Свим пољима</div><div id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem1" class="rf-sel-opt">Наслову, Апстракту, Кључним речима</div><div id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem2" class="rf-sel-opt">Ауторима</div><div id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem3" class="rf-sel-opt">Првом аутору</div><div id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem4" class="rf-sel-opt">Наслову</div><div id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem5" class="rf-sel-opt">Апстракту</div><div id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem6" class="rf-sel-opt">Кључним речима</div><div id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem7" class="rf-sel-opt">Конференцијама</div><div id="searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem8" class="rf-sel-opt">Часописима</div></div></div></div></div></div><script type="text/javascript">
+                                                new RichFaces.ui.Select("searchTableForm:queryTable:0:j_id1840598516_6db54e1b", {"clientSelectItems":[{ 'id' : "searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem0" , 'label' : "\u0421\u0432\u0438\u043C \u043F\u043E\u0459\u0438\u043C\u0430", 'value' : "default"},{ 'id' : "searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem1" , 'label' : "\u041D\u0430\u0441\u043B\u043E\u0432\u0443, \u0410\u043F\u0441\u0442\u0440\u0430\u043A\u0442\u0443, \u041A\u0459\u0443\u0447\u043D\u0438\u043C \u0440\u0435\u0447\u0438\u043C\u0430", 'value' : "choice1"},{ 'id' : "searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem2" , 'label' : "\u0410\u0443\u0442\u043E\u0440\u0438\u043C\u0430", 'value' : "choice2"},{ 'id' : "searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem3" , 'label' : "\u041F\u0440\u0432\u043E\u043C \u0430\u0443\u0442\u043E\u0440\u0443", 'value' : "choice3"},{ 'id' : "searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem4" , 'label' : "\u041D\u0430\u0441\u043B\u043E\u0432\u0443", 'value' : "choice4"},{ 'id' : "searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem5" , 'label' : "\u0410\u043F\u0441\u0442\u0440\u0430\u043A\u0442\u0443", 'value' : "choice5"},{ 'id' : "searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem6" , 'label' : "\u041A\u0459\u0443\u0447\u043D\u0438\u043C \u0440\u0435\u0447\u0438\u043C\u0430", 'value' : "choice6"},{ 'id' : "searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem7" , 'label' : "\u041A\u043E\u043D\u0444\u0435\u0440\u0435\u043D\u0446\u0438\u0458\u0430\u043C\u0430", 'value' : "choice7"},{ 'id' : "searchTableForm:queryTable:0:j_id1840598516_6db54e1bItem8" , 'label' : "\u0427\u0430\u0441\u043E\u043F\u0438\u0441\u0438\u043C\u0430", 'value' : "choice8"}] ,"itemCss":"rf\u002Dsel\u002Dopt","selectItemCss":"rf\u002Dsel\u002Dsel","onselectitem":function(event){jsfSelectItemGlupaFunkcija()}} );
+                                                </script></div><span id="searchTableForm:queryTable:0:j_id1840598516_6db5498c" style="display: none;"><script type="text/javascript"><!--
+                                                jsfSelectItemGlupaFunkcija=function(){RichFaces.ajax("searchTableForm:queryTable:0:j_id1840598516_6db5498c",null,{"incId":"1"} )};
+                                                </script></span></td><td id="searchTableForm:queryTable:0:j_id1840598516_6db54962" class="rf-dt-c width5" style="text-align:center;"><img src="/javax.faces.resource/spacer.gif.jsf?ln=img" alt="" height="20" width="1"></td></tr></tbody><tbody id="searchTableForm:queryTable:sc"><tr><td style="display: none"><script type="text/javascript"><!--
+                                                new RichFaces.ui.DataTable("searchTableForm:queryTable",{"ajaxEventOptions":{} } )
+                                                </script></td></tr></tbody></table></td></tr>
+                                                </tbody>
+                                                </table>-->
+                                </td>
+                                </tr>
+                                </tbody>
+                                </table></form></div></div></td></tr></tbody></table>   
+                                
+  <div class="container" data-ng-app="myApp" data-ng-controller="myCtrl">
+        <div class="row">
+          <div class="col-md-2">
+            Search:
+          </div>
+          <div class="col-md-10">
+            <input type="text" class="search" data-ng-model="table" />
+          </div>
+        </div>
+        <br/>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>Country</th>
+          </tr>
+          <tr data-ng-repeat="customer in customers ">
+            <td>customer.Name</td>
+            <td>customer.City</td>
+            <td>customer.Country</td>
+          </tr>
+        </table>
+        <div data-pagination="" data-num-pages="numPages()" data-current-page="currentPage" data-max-size="maxSize" data-boundary-links="true"></div>
+      </div>
+</body>

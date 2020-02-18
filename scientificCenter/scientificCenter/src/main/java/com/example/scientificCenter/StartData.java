@@ -5,6 +5,7 @@ import javax.annotation.PostConstruct;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.identity.Group;
 import org.camunda.bpm.engine.identity.User;
+import org.elasticsearch.client.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,10 @@ public class StartData {
 	
 	private final static String EDITOR_GROUP_ID = "editor";
 
+	
+	@Autowired
+    private Client nodeClient;
+	
 	@PostConstruct
 	private void init() throws Exception {
 		saveCamundaUser("petarperic23252@gmail.com", "petar", "pera++5++", "peric", "petarperic");
