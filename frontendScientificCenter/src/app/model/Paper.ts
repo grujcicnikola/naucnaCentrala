@@ -1,5 +1,6 @@
 export class Paper{
     id: number;
+    idPaper: number;
     title: String;
     journaltitle: String;
     author: String;
@@ -8,5 +9,4 @@ export class Paper{
     area: String;
     status: Boolean;
     content: String;
-    recenzents: String;
 }

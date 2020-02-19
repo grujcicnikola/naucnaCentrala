@@ -24,15 +24,13 @@ public class Paper {
 	@Column(nullable = false)
     private String title;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Author author;
-	
-	
 	
 	@Column
     private String _abstract;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private ScientificArea area;
 	
     @Column
@@ -44,7 +42,7 @@ public class Paper {
     @Column(nullable = false)
     private String keywords;
     
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
 	private Journal journal;
     
     @Column
@@ -54,6 +52,24 @@ public class Paper {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
+	
+	
+	public Paper(String title, Author author, String _abstract, ScientificArea area, Boolean status,
+			String pdf, String keywords, Journal journal, String doi) {
+		super();
+		this.title = title;
+		this.author = author;
+		this._abstract = _abstract;
+		this.area = area;
+		this.status = status;
+		this.pdf = pdf;
+		this.keywords = keywords;
+		this.journal = journal;
+		this.doi = doi;
+	}
+
+
 
 	public Long getId() {
 		return id;

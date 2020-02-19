@@ -2,6 +2,7 @@ package com.example.scientificCenter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 public class ScientificCenterApplication {
@@ -16,7 +17,9 @@ public class ScientificCenterApplication {
 		System.setProperty("KEY_STORE_TRUST_PASSWORD", "password");
 		System.setProperty("KEY_STORE_ALIAS", "scs");
 		SpringApplication.run(ScientificCenterApplication.class, args);
+		//ConfigurableApplicationContext context = SpringApplication.run(ScientificCenterApplication.class, args);
 		System.out.println("Started app");
+        //context.getBean(StartData.class).fillWithTestdata();
 	}
 
 }

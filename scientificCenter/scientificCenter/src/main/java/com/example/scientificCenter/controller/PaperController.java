@@ -10,7 +10,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.pdfbox.cos.COSDocument;
+import org.apache.pdfbox.io.*;
+import org.apache.pdfbox.pdfparser.PDFParser;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.RepositoryService;
@@ -40,6 +47,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.scientificCenter.domain.Coauthor;
 import com.example.scientificCenter.domain.Comment;
 import com.example.scientificCenter.domain.Journal;
 import com.example.scientificCenter.domain.PDF;
@@ -54,14 +62,17 @@ import com.example.scientificCenter.dto.PDFDTO;
 import com.example.scientificCenter.dto.PDFURL;
 import com.example.scientificCenter.dto.ScientificAreaDTO;
 import com.example.scientificCenter.dto.TaskDTO;
+import com.example.scientificCenter.model.PaperDoc;
 import com.example.scientificCenter.repository.CommentRepository;
 import com.example.scientificCenter.repository.PDFRepository;
 import com.example.scientificCenter.repository.RecenzentRepository;
+import com.example.scientificCenter.service.CoauthorService;
 import com.example.scientificCenter.service.JournalService;
 import com.example.scientificCenter.service.PaperService;
 import com.example.scientificCenter.service.ScientificAreaService;
 import com.example.scientificCenter.service.UserRoleService;
 import com.example.scientificCenter.service.UserService;
+import com.example.scientificCenter.serviceInterface.PaperDocDAO;
 
 
 @RestController
@@ -101,11 +112,14 @@ public class PaperController {
 	@Autowired
 	private RecenzentRepository recRepository;
 	
+	@Autowired
+	private CoauthorService coauthorService;
 	
 	@Value("${camunda.submittingPaperProcessKey}")
 	private String submittingPaperProcessKey;
 	
-	
+	@Autowired
+	private PaperDocDAO resultRetriever;
 	
 	
 	@RequestMapping(value = "/create/{email}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -158,6 +172,16 @@ public class PaperController {
         //return new ResponseEntity(dtos,  HttpStatus.OK);
     }
 	
+	@GetMapping(path = "/paper/{id}", produces = "application/json")
+    public ResponseEntity<?> getPaperURL(@PathVariable Long id) {
+		Optional<Paper> paper = this.paperService.findById(id);
+		if(paper.isPresent()) {
+			PDFURL pdf = new PDFURL(paper.get().getPdf());
+			return new ResponseEntity(pdf, HttpStatus.OK);
+		}
+		return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+       
+    }
 	
 	@GetMapping(path = "/choosingReviewersFilteredByScientificArea/{taskId}", produces = "application/json")
     public @ResponseBody FormFieldsDTO getTaskFormChoosingReviewersFiltered(@PathVariable String taskId) {
@@ -226,6 +250,64 @@ public class PaperController {
 		//return new ResponseEntity<>(null, HttpStatus.OK);
 
 	}*/
+	
+	@GetMapping(value = "/index/{id}", produces = "application/json")
+    public ResponseEntity<?> index(@PathVariable Long id){
+		Optional<Paper> paper = this.paperService.findById(id);
+		
+		if(paper.isPresent()) {
+			indexPaper(paper.get());
+			return new ResponseEntity(  HttpStatus.OK); 
+		}
+		return new ResponseEntity(  HttpStatus.BAD_REQUEST);
+    }
+	
+	
+	public void indexPaper(Paper paper) {
+		ClassLoader classLoader = getClass().getClassLoader();
+		if (paper != null) {
+			PDFTextStripper pdfStripper = null;
+			PDDocument pdDoc = null;
+			COSDocument cosDoc = null;
+			System.out.println(paper.getPdf());
+			// URL url;
+
+			// url = new URL(paper.getPdf());
+
+			File file = new File(paper.getPdf());
+			String parsedText = "";
+			try {
+				// PDFBox 2.0.8 require org.apache.pdfbox.io.RandomAccessRead
+				RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
+				PDFParser parser = new PDFParser(randomAccessFile);
+				parser.parse();
+				cosDoc = parser.getDocument();
+				pdfStripper = new PDFTextStripper();
+				pdDoc = new PDDocument(cosDoc);
+				pdfStripper.setStartPage(1);
+				pdfStripper.setEndPage(5);
+				parsedText = pdfStripper.getText(pdDoc);
+				pdDoc.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			}
+			PaperDoc paperDoc = new PaperDoc();
+			paperDoc.setArea(paper.getArea().getName());
+			paperDoc.setAuthor(paper.getAuthor().getName() + " " + paper.getAuthor().getSurname());
+			paperDoc.setIdPaper(paper.getId());
+			paperDoc.setJournaltitle(paper.getJournal().getTitle());
+			paperDoc.setKeywords(paper.getKeywords());
+			paperDoc.setTitle(paper.getTitle());
+			paperDoc.setStatus(paper.getStatus());
+			paperDoc.setContent(parsedText);
+			//System.out.println(parsedText);
+			this.resultRetriever.add(paperDoc);
+
+		}
+
+	}
 
 	@RequestMapping(value = "/getPDF", method = RequestMethod.POST)
 	public ResponseEntity<PDFDTO> getPDF(@RequestBody PDFURL link) {
@@ -238,12 +320,15 @@ public class PaperController {
 
 	}
 	
+	
+	
 	@PostMapping(path="/download", produces = MediaType.APPLICATION_PDF_VALUE) // //new annotation since 4.3
     public ResponseEntity<?> download(@RequestBody PDFURL link) {
 		
 		System.out.print("pogodio image get " +link.getUrl());
 		PDF pdf = new PDF();
 		//pdf = this.pdfRep.findByName(link.getUrl());
+		
 		byte[] bFile = readBytesFromFile(link.getUrl());
 		PDFDTO pdfDTO = new PDFDTO(pdf);
 		String fileName = "employees.pdf";
@@ -259,6 +344,29 @@ public class PaperController {
 				.contentType(MediaType.APPLICATION_PDF)
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
 				.body(bFile);
+
+    }
+	
+	@PostMapping(path="/downloadPDF/{id}", produces = MediaType.APPLICATION_PDF_VALUE) // //new annotation since 4.3
+    public ResponseEntity<?> downloadPDF(@PathVariable Long id) {
+		System.out.println("download file");
+		Optional<Paper> paper = this.paperService.findById(id);
+		if(paper.isPresent()) {
+			PDF pdf = new PDF();
+			//pdf = this.pdfRep.findByName(link.getUrl());
+			System.out.println(paper.get().getPdf());
+			//byte[] bFile = readBytesFromFile("D://naucnacentrala-upp-novi//naucnaCentrala//scientificCenter//scientificCenter//files//astronomija.pdf");
+			byte[] bFile = readBytesFromFile(paper.get().getPdf());
+					
+			PDFDTO pdfDTO = new PDFDTO(pdf);
+			String fileName = "employees.pdf";
+			return ResponseEntity.ok()
+					.contentType(MediaType.APPLICATION_PDF)
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+					.body(bFile);
+		}
+		return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		
 
     }
 

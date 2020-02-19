@@ -10,6 +10,7 @@ import { PDFURL } from 'src/app/model/PDFURL';
   providedIn: 'root'
 })
 export class PaperService {
+  
 
   
   url ="https://localhost:8088/paper"
@@ -42,9 +43,19 @@ export class PaperService {
     return this.http.post<PDF>(this.url + '/getPDF',new PDFURL(link));
   }
 
+  getURI(id: number){
+    return this.http.get<PDFURL>(this.url+'/paper/'+id);
+   }
+
   downloadFile(link: String): Observable<Blob>{
     const headers = new HttpHeaders({ responseType : 'blob'});
 
 		return this.http.post<Blob>(this.url + '/download',new PDFURL(link), {headers: headers, responseType: 'blob' as 'json'});
+  }
+
+  downloadPDF(idPaper: number): Observable<Blob>{
+    const headers = new HttpHeaders({ responseType : 'blob'});
+    console.log("downloadFILE"+idPaper);
+		return this.http.post<Blob>(this.url + '/downloadPDF/'+idPaper, {headers: headers, responseType: 'blob' as 'json'});
   }
 }

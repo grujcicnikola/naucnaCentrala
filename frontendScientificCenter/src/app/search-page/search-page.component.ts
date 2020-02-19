@@ -3,6 +3,8 @@ import { CombineQuery } from '../model/CombineQuery';
 import { BooleanQuery } from '../model/BooleanQuery';
 import { SearchService } from '../service/searchService/search.service';
 import { PaperResponse } from '../model/PaperResponse';
+import { Paper } from '../model/Paper';
+import { PaperService } from '../service/paperService/paper.service';
 
 @Component({
   selector: 'app-search-page',
@@ -21,7 +23,7 @@ export class SearchPageComponent implements OnInit {
                   {"name":"area","value":"scientific area"},
                   {"name":"everything","value":"everything"}];
   private operators=["AND","OR"];
-  constructor(private searchService: SearchService) { }
+  constructor(private searchService: SearchService, private paperService: PaperService) { }
 
   ngOnInit() {
   }
@@ -53,5 +55,65 @@ export class SearchPageComponent implements OnInit {
     //this.searchFields.booleanQueryies = [];
     //this.firstQuery = new BooleanQuery();
     this.searchFields.booleanQueryies.shift();
+  }
+
+  download(paper: Paper){
+    console.log(paper.idPaper);
+    this.paperService.getURI(paper.idPaper).subscribe(
+      data=>{
+        console.log(data.url);
+        this.paperService.downloadFile(data.url).subscribe( (data: Blob )=> {
+          //let blob:any = new Blob([response.blob()], { type: 'text/json; charset=utf-8' });
+          //const url= window.URL.createObjectURL(blob);
+          //window.open(url);
+    
+          
+          console.log(data);
+          var file = new Blob([data], { type: 'application/pdf' })
+          var fileURL  = URL.createObjectURL(file);
+    
+          console.log(fileURL);
+          //window.location.href = data.type;
+    
+          window.open(fileURL); 
+          var a         = document.createElement('a');
+          a.href        = fileURL; 
+          a.target      = '_blank';
+          a.download    = 'paper.pdf';
+          document.body.appendChild(a);
+          a.click();
+          
+          //fileSaver.saveAs(blob, 'employees.json');
+        }, error =>  {
+          console.log('Error downloading the file');
+        });  
+      }
+    )
+      
+    /*this.paperService.downloadPDF("D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\astronomija.pdf").subscribe( (data: Blob )=> {
+      //let blob:any = new Blob([response.blob()], { type: 'text/json; charset=utf-8' });
+      //const url= window.URL.createObjectURL(blob);
+      //window.open(url);
+
+      
+      console.log(data);
+      var file = new Blob([data], { type: 'application/pdf' })
+      var fileURL  = URL.createObjectURL(file);
+
+      console.log(fileURL);
+      //window.location.href = data.type;
+
+      window.open(fileURL); 
+      var a         = document.createElement('a');
+      a.href        = fileURL; 
+      a.target      = '_blank';
+      a.download    = 'paper.pdf';
+      document.body.appendChild(a);
+      a.click();
+      
+      //fileSaver.saveAs(blob, 'employees.json');
+    }, error =>  {
+      console.log('Error downloading the file');
+    });*/  
   }
 }

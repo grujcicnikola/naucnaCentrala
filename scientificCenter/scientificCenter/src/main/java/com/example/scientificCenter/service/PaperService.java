@@ -1,5 +1,7 @@
 package com.example.scientificCenter.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,13 +14,18 @@ public class PaperService {
 	@Autowired
     private PaperRepository paperRepository;
 
-	public void save(Paper paper) {
-		this.paperRepository.save(paper);
+	public Paper save(Paper paper) {
+		return this.paperRepository.save(paper);
 		
 	}
 
 	public Paper findByTitle(String title) {
 		// TODO Auto-generated method stub
 		return this.paperRepository.findByTitle(title);
+	}
+
+	public Optional<Paper> findById(Long id) {
+		// TODO Auto-generated method stub
+		return this.paperRepository.findById(id);
 	}
 }

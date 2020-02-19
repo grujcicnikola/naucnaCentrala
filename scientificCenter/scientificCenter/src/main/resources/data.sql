@@ -25,6 +25,13 @@ INSERT INTO `user` (`activated`, `city`, `country`, `email`, `is_recenzent`, `na
 INSERT INTO `user` (`activated`, `city`, `country`, `email`, `is_recenzent`, `name`, `password`, `surname`, `username`) VALUES (true, 'Novi Sad', 'Srbija', 'recenzent1@gmail.com', true, 'recenzent1', '$2y$12$rVk/Jg8Ze917CJnC9/cYLuKXoDmWy8kU/R8CVa7i4jsKIsBJikWUi', 'recenzent1', 'recenzent1');
 INSERT INTO `user` (`activated`, `city`, `country`, `email`, `is_recenzent`, `name`, `password`, `surname`, `username`) VALUES (true, 'Novi Sad', 'Srbija', 'recenzent2@gmail.com', true, 'recenzent2', '$2y$12$rVk/Jg8Ze917CJnC9/cYLuKXoDmWy8kU/R8CVa7i4jsKIsBJikWUi', 'recenzent2', 'recenzent2');
 INSERT INTO `user` (`activated`, `city`, `country`, `email`, `is_recenzent`, `name`, `password`, `surname`, `username`) VALUES (true, 'Novi Sad', 'Srbija', 'recenzent3@gmail.com', true, 'recenzent3', '$2y$12$rVk/Jg8Ze917CJnC9/cYLuKXoDmWy8kU/R8CVa7i4jsKIsBJikWUi', 'recenzent3', 'recenzent3');
+INSERT INTO `user` (`activated`, `city`, `country`, `email`, `is_recenzent`, `name`, `password`, `surname`, `username`) VALUES (true, 'Zrenjanin', 'Srbija', 'author1@gmail.com', false, 'miroslav', '$2y$12$rVk/Jg8Ze917CJnC9/cYLuKXoDmWy8kU/R8CVa7i4jsKIsBJikWUi', 'milosavljevic', 'author1');
+INSERT INTO `user` (`activated`, `city`, `country`, `email`, `is_recenzent`, `name`, `password`, `surname`, `username`) VALUES (true, 'Zrenjanin', 'Srbija', 'author2@gmail.com', false, 'miodrag', '$2y$12$rVk/Jg8Ze917CJnC9/cYLuKXoDmWy8kU/R8CVa7i4jsKIsBJikWUi', 'subic', 'author2');
+INSERT INTO `user` (`activated`, `city`, `country`, `email`, `is_recenzent`, `name`, `password`, `surname`, `username`) VALUES (true, 'Zrenjanin', 'Srbija', 'author3@gmail.com', false, 'zeljana', '$2y$12$rVk/Jg8Ze917CJnC9/cYLuKXoDmWy8kU/R8CVa7i4jsKIsBJikWUi', 'zeljanic', 'author3');
+INSERT INTO `user` (`activated`, `city`, `country`, `email`, `is_recenzent`, `name`, `password`, `surname`, `username`) VALUES (true, 'Zrenjanin', 'Srbija', 'author4@gmail.com', false, 'sanja', '$2y$12$rVk/Jg8Ze917CJnC9/cYLuKXoDmWy8kU/R8CVa7i4jsKIsBJikWUi', 'sanjic', 'author4');
+INSERT INTO `user` (`activated`, `city`, `country`, `email`, `is_recenzent`, `name`, `password`, `surname`, `username`) VALUES (true, 'Zrenjanin', 'Srbija', 'author5@gmail.com', false, 'jova', '$2y$12$rVk/Jg8Ze917CJnC9/cYLuKXoDmWy8kU/R8CVa7i4jsKIsBJikWUi', 'jovic', 'author5');
+
+
 
 
 insert into user_roles(user_id,role_id) values (1,1);
@@ -39,6 +46,11 @@ insert into user_roles(user_id,role_id) values (8,5);
 insert into user_roles(user_id,role_id) values (9,2);
 insert into user_roles(user_id,role_id) values (10,2);
 insert into user_roles(user_id,role_id) values (11,2);
+insert into user_roles(user_id,role_id) values (12,5);
+insert into user_roles(user_id,role_id) values (13,5);
+insert into user_roles(user_id,role_id) values (14,5);
+insert into user_roles(user_id,role_id) values (15,5);
+insert into user_roles(user_id,role_id) values (16,5);
 
 INSERT INTO `admin` (`id`) VALUES ('1');
 
@@ -53,6 +65,11 @@ INSERT INTO `editor` (`id`,`journal_id`) VALUES ('5','2');
 INSERT INTO `editor` (`id`,`journal_id`) VALUES ('6','3');
 INSERT INTO `editor` (`id`,`journal_id`) VALUES ('7','1');
 
+INSERT INTO `author` (`id`) VALUES ('12');
+INSERT INTO `author` (`id`) VALUES ('13');
+INSERT INTO `author` (`id`) VALUES ('14');
+INSERT INTO `author` (`id`) VALUES ('15');
+INSERT INTO `author` (`id`) VALUES ('16');
 INSERT INTO `author` (`id`) VALUES ('8');
 
 INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('5', '1');
@@ -75,8 +92,8 @@ INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('10', '4');
 INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('11', '2');
 INSERT INTO `user_areas` (`user_id`, `areas_id`) VALUES ('11', '4');
 
-INSERT INTO `journal` (`is_activated`, `is_open_access`, `issn`, `title`, `editor_in_chief_id`, `price`, subscription_num) VALUES (true, false, '1111-2222', 'Time', '5','2.5', 1);
-INSERT INTO `journal` (`is_activated`, `is_open_access`, `issn`, `title`, `editor_in_chief_id`, `price`, subscription_num) VALUES (true, true, '2222-2222', 'Architectural digest', '6','1.5', 0);
+INSERT INTO `journal` (`is_activated`, `is_open_access`, `issn`, `title`, `editor_in_chief_id`, `price`, subscription_num) VALUES (true, false, '1111-2222', 'Astrology', '5','2.5', 1);
+INSERT INTO `journal` (`is_activated`, `is_open_access`, `issn`, `title`, `editor_in_chief_id`, `price`, subscription_num) VALUES (true, true, '2222-2222', 'Interest', '6','1.5', 0);
 INSERT INTO `journal` (`is_activated`, `is_open_access`, `issn`, `title`, `editor_in_chief_id`, `price`, subscription_num) VALUES (true, true, '3333-2222', 'National geographic', '7','2.0', 0);
 
 

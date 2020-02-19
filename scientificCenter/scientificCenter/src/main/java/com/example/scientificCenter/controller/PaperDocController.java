@@ -43,6 +43,6 @@ public class PaperDocController {
 	        return resultRetriever.findAll();
 
 	    }
-
+	 
 	 
 }

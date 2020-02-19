@@ -1,5 +1,8 @@
 package com.example.scientificCenter.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
@@ -30,6 +33,9 @@ public class PaperDoc {
 	@Field(type = FieldType.Text, store = true)
     private Long id;
 
+	@Field(type = FieldType.Text, store = true)
+    private Long idPaper;
+
 	@Field(type = FieldType.Text, analyzer="serbian",store = true)
     private String title;
 
@@ -39,8 +45,12 @@ public class PaperDoc {
 	@Field(type = FieldType.Text, analyzer="serbian", store = true)
 	private String author;
 	
-	@Field(type = FieldType.Text,analyzer="serbian", store = true)
-    private String coauthors;
+	/*@Field(type = FieldType.Text, analyzer="serbian", store = true)
+	private List<String> coauthors = new ArrayList<String>();
+	*/
+	
+	@Field(type = FieldType.Text, analyzer="serbian", store = true)
+	private String coauthors;
 	
 	@Field(type = FieldType.Text, analyzer="serbian",store = true)
     private String keywords;
@@ -54,8 +64,7 @@ public class PaperDoc {
 	@Field(type = FieldType.Text, analyzer="serbian", store = true)
     private String content;
 	
-	@Field(type = FieldType.Text, store = true)
-    private String recenzents;
+	
 
 	public Long getId() {
 		return id;
@@ -73,6 +82,19 @@ public class PaperDoc {
 		this.title = title;
 	}
 
+	
+	
+	public Long getIdPaper() {
+		return idPaper;
+	}
+
+	public void setIdPaper(Long idPaper) {
+		this.idPaper = idPaper;
+	}
+
+	
+	
+
 	public String getAuthor() {
 		return author;
 	}
@@ -88,8 +110,6 @@ public class PaperDoc {
 	public void setCoauthors(String coauthors) {
 		this.coauthors = coauthors;
 	}
-
-	
 
 	public String getJournaltitle() {
 		return journaltitle;
@@ -143,20 +163,14 @@ public class PaperDoc {
 		this.content = content;
 	}
 
-	public String getRecenzents() {
-		return recenzents;
-	}
-
-	public void setRecenzents(String recenzents) {
-		this.recenzents = recenzents;
-	}
-
 	@Override
 	public String toString() {
-		return "PaperDoc [id=" + id + ", title=" + title + ", journaltitle=" + journaltitle + ", author=" + author
-				+ ", coauthors=" + coauthors + ", keywords=" + keywords + ", area=" + area + ", status=" + status
-				+ ", content=" + content + ", recenzents=" + recenzents + "]";
+		return "PaperDoc [id=" + id + ", idPaper=" + idPaper + ", title=" + title + ", journaltitle=" + journaltitle
+				+ ", author=" + author + ", keywords=" + keywords + ", area=" + area
+				+ ", status=" + status + ", content=" + content + "]";
 	}
+
+	
 	
 	
 	

@@ -10,6 +10,11 @@ public class PDFURL {
 		// TODO Auto-generated constructor stub
 	}
 
+	public PDFURL(String url) {
+		super();
+		this.url = url;
+	}
+
 	public String getUrl() {
 		return url;
 	}

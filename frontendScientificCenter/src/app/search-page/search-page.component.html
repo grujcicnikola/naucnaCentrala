@@ -178,12 +178,12 @@
                 <div [innerHTML]="paper.highlights"></div>
                 <div class="row"  *ngIf="paper.paper.status == true">
                     <div class="col" >
-                       <button id="Btn0"  (click)="download(journal)" class="btn btn-success btn-block">Download</button>
+                       <button id="Btn0"  (click)="download(paper.paper)" class="btn btn-success btn-block">Download</button>
                     </div>
                   </div>
                   <div class="row"  *ngIf="paper.paper.status == false">
                       <div class="col" >
-                         <button  id="Btn1" (click)="buy(journal)" class="btn btn-success btn-block">Buy</button>
+                         <button  id="Btn1" (click)="buy(paper)" class="btn btn-success btn-block">Buy</button>
                       </div>
                     </div>
                 <!--div class="row">
