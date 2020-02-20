@@ -60,9 +60,12 @@ import com.example.scientificCenter.dto.FormSubmissionDTO;
 import com.example.scientificCenter.dto.JournalDTO;
 import com.example.scientificCenter.dto.PDFDTO;
 import com.example.scientificCenter.dto.PDFURL;
+import com.example.scientificCenter.dto.PaperDTO;
+import com.example.scientificCenter.dto.RecenzentDTO;
 import com.example.scientificCenter.dto.ScientificAreaDTO;
 import com.example.scientificCenter.dto.TaskDTO;
 import com.example.scientificCenter.model.PaperDoc;
+import com.example.scientificCenter.model.PaperDocRejected;
 import com.example.scientificCenter.repository.CommentRepository;
 import com.example.scientificCenter.repository.PDFRepository;
 import com.example.scientificCenter.repository.RecenzentRepository;
@@ -73,7 +76,7 @@ import com.example.scientificCenter.service.ScientificAreaService;
 import com.example.scientificCenter.service.UserRoleService;
 import com.example.scientificCenter.service.UserService;
 import com.example.scientificCenter.serviceInterface.PaperDocDAO;
-
+import com.example.scientificCenter.serviceInterface.PaperDocRejectedDAO;
 
 @RestController
 @RequestMapping("paper")
@@ -81,119 +84,184 @@ import com.example.scientificCenter.serviceInterface.PaperDocDAO;
 public class PaperController {
 	@Autowired
 	IdentityService identityService;
-	
+
 	@Autowired
 	private RuntimeService runtimeService;
-	
+
 	@Autowired
 	private RepositoryService repositoryService;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private ScientificAreaService areaService;
-	
+
 	@Autowired
 	private JournalService journalService;
-	
+
 	@Autowired
 	private CommentRepository commRep;
-	
+
 	@Autowired
 	private PaperService paperService;
-	
+
 	@Autowired
 	TaskService taskService;
-	
+
 	@Autowired
 	FormService formService;
-	
+
 	@Autowired
 	private RecenzentRepository recRepository;
-	
+
 	@Autowired
 	private CoauthorService coauthorService;
-	
+
 	@Value("${camunda.submittingPaperProcessKey}")
 	private String submittingPaperProcessKey;
-	
+
 	@Autowired
 	private PaperDocDAO resultRetriever;
-	
-	
+
+	@Autowired
+	private PaperDocRejectedDAO resultRetrieverRejected;
+
 	@RequestMapping(value = "/create/{email}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getRegistrationForm(@PathVariable String email,@RequestBody JournalDTO journalDTO)  {
+	public ResponseEntity<?> getRegistrationForm(@PathVariable String email, @RequestBody JournalDTO journalDTO) {
 		System.out.println("ZAPOCINJE PROCES Submitting paper");
 		Map<String, Object> variables = new HashMap<String, Object>();
 		String openAccess = journalDTO.getIsOpenAccess().toString();
-		variables.put("openAccess",openAccess);
+		variables.put("openAccess", openAccess);
 		variables.put("initiator", email);
 		variables.put("issn", journalDTO.getIssn());
-		ProcessInstance pi = runtimeService.startProcessInstanceByKey(submittingPaperProcessKey,variables);
-		
+		ProcessInstance pi = runtimeService.startProcessInstanceByKey(submittingPaperProcessKey, variables);
+
 		Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
 		this.taskService.saveTask(task);
-		System.out.println("ZAPOCET TASK: " + task.getName()+ task.getAssignee() );
-		
-		return new ResponseEntity<>(new TaskDTO(task.getId(), task.getName(),task.getAssignee()), HttpStatus.OK);
+		System.out.println("ZAPOCET TASK: " + task.getName() + task.getAssignee());
+
+		return new ResponseEntity<>(new TaskDTO(task.getId(), task.getName(), task.getAssignee()), HttpStatus.OK);
 	}
-	
-	
-	//commentsRecenzentsToEditor
-	
+
+	// commentsRecenzentsToEditor
+
 	@RequestMapping(value = "/commentsRecenzentsToEditor/{title}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getCommentsRecenzentsToEditor(@PathVariable String title){
+	public ResponseEntity<?> getCommentsRecenzentsToEditor(@PathVariable String title) {
 		Paper paper = this.paperService.findByTitle(title);
-		if(paper!=null) {
+		if (paper != null) {
 			List<Comment> comments = this.commRep.findAllByPaperId(paper.getId());
 			List<CommentDTO> commentsDTO = new ArrayList<CommentDTO>();
-			for(int i =0; i<comments.size();i++) {
-				if(comments.get(i).isRecenzentCommentToEditor()) {
-					commentsDTO.add(new CommentDTO(comments.get(i).getComment(),comments.get(i).getDecision()));
+			for (int i = 0; i < comments.size(); i++) {
+				if (comments.get(i).isRecenzentCommentToEditor()) {
+					commentsDTO.add(new CommentDTO(comments.get(i).getComment(), comments.get(i).getDecision()));
 				}
 			}
-			return new ResponseEntity<>(commentsDTO,HttpStatus.OK);
+			return new ResponseEntity<>(commentsDTO, HttpStatus.OK);
 		}
-		
-		
-		return new ResponseEntity<>(null,HttpStatus.OK);
+
+		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(path = "/getTaskForm/{taskId}", produces = "application/json")
-    public @ResponseBody FormFieldsDTO get(@PathVariable String taskId) {
+	public @ResponseBody FormFieldsDTO get(@PathVariable String taskId) {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		String processInstanceId = task.getProcessInstanceId();
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();
-		
-        return new FormFieldsDTO(task.getId(), properties,processInstanceId);
-		
-        //return new ResponseEntity(dtos,  HttpStatus.OK);
-    }
-	
-	@GetMapping(path = "/paper/{id}", produces = "application/json")
-    public ResponseEntity<?> getPaperURL(@PathVariable Long id) {
+
+		return new FormFieldsDTO(task.getId(), properties, processInstanceId);
+
+		// return new ResponseEntity(dtos, HttpStatus.OK);
+	}
+
+	@GetMapping(path = "/findById/{id}", produces = "application/json")
+	public ResponseEntity<?> getPaperById(@PathVariable Long id) {
 		Optional<Paper> paper = this.paperService.findById(id);
-		if(paper.isPresent()) {
+		if (paper.isPresent()) {
+			PaperDTO paperDTO = new PaperDTO(paper.get());
+			return new ResponseEntity(paperDTO, HttpStatus.OK);
+		}
+		return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+	}
+
+	@GetMapping(path = "/findRecenzentsByPaperId/{id}", produces = "application/json")
+	public ResponseEntity<?> findRecenzentsByPaperId(@PathVariable Long id) {
+		Optional<Paper> paper = this.paperService.findById(id);
+		if (paper.isPresent()) {
+			Journal journal = this.journalService.findByIssn(paper.get().getJournal().getIssn());
+			List<Recenzent> recenzents = this.journalService.findAllRecenzentsByJournal(journal);
+			List<RecenzentDTO> recenzentsDTO = new ArrayList<RecenzentDTO>();
+			for (int i = 0; i < recenzents.size(); i++) {
+				recenzentsDTO.add(new RecenzentDTO(recenzents.get(i)));
+			}
+			return new ResponseEntity(recenzentsDTO, HttpStatus.OK);
+		}
+		return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+	}
+
+	// findRecenzentsByScientificArea
+	@GetMapping(path = "/findRecenzentsByScientificArea/{id}", produces = "application/json")
+	public ResponseEntity<?> findRecenzentsByScientificArea(@PathVariable Long id) {
+		Optional<Paper> paper = this.paperService.findById(id);
+		if (paper.isPresent()) {
+			List<Recenzent> recenzents = filteredByScientificArea(paper.get().getJournal(), paper.get());
+			List<RecenzentDTO> recenzentsDTO = new ArrayList<RecenzentDTO>();
+			for (int i = 0; i < recenzents.size(); i++) {
+				recenzentsDTO.add(new RecenzentDTO(recenzents.get(i)));
+			}
+			return new ResponseEntity(recenzentsDTO, HttpStatus.OK);
+		}
+		return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+	}
+
+	private List<Recenzent> filteredByScientificArea(Journal journal, Paper paper) {
+		// TODO Auto-generated method stub
+		ScientificArea sa = paper.getArea();
+		System.out.println("casopis " + journal.getIssn());
+		System.out.println("paper " + paper.getTitle());
+		System.out.println("sa " + sa.getName());
+		List<Recenzent> recenzents = this.recRepository.findAll();
+		List<Recenzent> recenzentsOfJournal = new ArrayList<Recenzent>();
+		for (Recenzent recenzent : recenzents) {
+			if (recenzent.getJournal().contains(journal)) {
+				recenzentsOfJournal.add(recenzent);
+			}
+		}
+		List<Recenzent> recenzentsOfArea = new ArrayList<Recenzent>();
+		for (Recenzent recenzent : recenzentsOfJournal) {
+			if (recenzent.getAreas().contains(sa)) {
+				recenzentsOfArea.add(recenzent);
+			}
+		}
+
+		return recenzentsOfArea;
+	}
+
+	@GetMapping(path = "/paper/{id}", produces = "application/json")
+	public ResponseEntity<?> getPaperURL(@PathVariable Long id) {
+		Optional<Paper> paper = this.paperService.findById(id);
+		if (paper.isPresent()) {
 			PDFURL pdf = new PDFURL(paper.get().getPdf());
 			return new ResponseEntity(pdf, HttpStatus.OK);
 		}
 		return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-       
-    }
-	
+
+	}
+
 	@GetMapping(path = "/choosingReviewersFilteredByScientificArea/{taskId}", produces = "application/json")
-    public @ResponseBody FormFieldsDTO getTaskFormChoosingReviewersFiltered(@PathVariable String taskId) {
+	public @ResponseBody FormFieldsDTO getTaskFormChoosingReviewersFiltered(@PathVariable String taskId) {
 
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		String processInstanceId = task.getProcessInstanceId();
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();
-		List<Recenzent> recenzents = filteredByScientificArea(runtimeService.getVariable(processInstanceId, "title").toString(),
+		List<Recenzent> recenzents = filteredByScientificArea(
+				runtimeService.getVariable(processInstanceId, "title").toString(),
 				runtimeService.getVariable(processInstanceId, "issn").toString());
-		
-		
+
 		if (properties != null) {
 
 			for (FormField field : properties) {
@@ -208,63 +276,104 @@ public class PaperController {
 				}
 			}
 		}
-        return new FormFieldsDTO(task.getId(), properties, processInstanceId);
-    }
-	
+		return new FormFieldsDTO(task.getId(), properties, processInstanceId);
+	}
+
 	private List<Recenzent> filteredByScientificArea(String title, String issn) {
 		// TODO Auto-generated method stub
 		Journal journal = this.journalService.findByIssn(issn);
-		Paper  paper = this.paperService.findByTitle(title);
-		ScientificArea  sa = paper.getArea();
-		System.out.println("casopis "+journal.getIssn());
-		System.out.println("paper "+paper.getTitle());
-		System.out.println("sa "+sa.getName());
+		Paper paper = this.paperService.findByTitle(title);
+		ScientificArea sa = paper.getArea();
+		System.out.println("casopis " + journal.getIssn());
+		System.out.println("paper " + paper.getTitle());
+		System.out.println("sa " + sa.getName());
 		List<Recenzent> recenzents = this.recRepository.findAll();
 		List<Recenzent> recenzentsOfJournal = new ArrayList<Recenzent>();
 		for (Recenzent recenzent : recenzents) {
-			if(recenzent.getJournal().contains(journal)) {
+			if (recenzent.getJournal().contains(journal)) {
 				recenzentsOfJournal.add(recenzent);
 			}
 		}
 		List<Recenzent> recenzentsOfArea = new ArrayList<Recenzent>();
 		for (Recenzent recenzent : recenzentsOfJournal) {
-			if(recenzent.getAreas().contains(sa)) {
+			if (recenzent.getAreas().contains(sa)) {
 				recenzentsOfArea.add(recenzent);
 			}
 		}
-		
+
 		return recenzentsOfArea;
 	}
 
-
 	/*
-	@RequestMapping(value = "/getPDF", method = RequestMethod.POST)
-	public ResponseEntity<PDFDTO> getFile(@RequestBody PDFURL link) {
-		System.out.print("pogodio pdf get "+link.getUrl());
-		;
-		byte[] bFile = readBytesFromFile(link.getUrl());
-		//byte[] array = Files.readAllBytes(Paths.get(link.getUrl()));
-		PDFDTO pdf = new PDFDTO(bFile);
-		return new ResponseEntity<>(pdf, HttpStatus.OK);
-		
-		//return new ResponseEntity<>(null, HttpStatus.OK);
+	 * @RequestMapping(value = "/getPDF", method = RequestMethod.POST) public
+	 * ResponseEntity<PDFDTO> getFile(@RequestBody PDFURL link) {
+	 * System.out.print("pogodio pdf get "+link.getUrl()); ; byte[] bFile =
+	 * readBytesFromFile(link.getUrl()); //byte[] array =
+	 * Files.readAllBytes(Paths.get(link.getUrl())); PDFDTO pdf = new PDFDTO(bFile);
+	 * return new ResponseEntity<>(pdf, HttpStatus.OK);
+	 * 
+	 * //return new ResponseEntity<>(null, HttpStatus.OK);
+	 * 
+	 * }
+	 */
 
-	}*/
-	
 	@GetMapping(value = "/index/{id}", produces = "application/json")
-    public ResponseEntity<?> index(@PathVariable Long id){
+	public ResponseEntity<?> index(@PathVariable Long id) {
+		Optional<Paper> paper = this.paperService.findById(id);
+
+		if (paper.isPresent()) {
+			indexPaper(paper.get());
+			return new ResponseEntity(HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.BAD_REQUEST);
+	}
+
+	@GetMapping(value = "/indexRejected/{id}", produces = "application/json")
+    public ResponseEntity<?> indexRejected(@PathVariable Long id){
 		Optional<Paper> paper = this.paperService.findById(id);
 		
 		if(paper.isPresent()) {
-			indexPaper(paper.get());
-			return new ResponseEntity(  HttpStatus.OK); 
+			PDFTextStripper pdfStripper = null;
+			PDDocument pdDoc = null;
+			COSDocument cosDoc = null;
+			System.out.println(paper.get().getPdf());
+			File file = new File(paper.get().getPdf());
+			String parsedText = "";
+			try {
+				// PDFBox 2.0.8 require org.apache.pdfbox.io.RandomAccessRead
+				RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
+				PDFParser parser = new PDFParser(randomAccessFile);
+				parser.parse();
+				cosDoc = parser.getDocument();
+				pdfStripper = new PDFTextStripper();
+				pdDoc = new PDDocument(cosDoc);
+				pdfStripper.setStartPage(1);
+				pdfStripper.setEndPage(5);
+				parsedText = pdfStripper.getText(pdDoc);
+				pdDoc.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return new ResponseEntity(  HttpStatus.BAD_REQUEST);
+			}
+			PaperDocRejected paperDoc = new PaperDocRejected();
+			paperDoc.setArea(paper.get().getArea().getName());
+			paperDoc.setAuthor(paper.get().getAuthor().getName() + " " + paper.get().getAuthor().getSurname());
+			paperDoc.setIdPaper(paper.get().getId());
+			paperDoc.setJournaltitle(paper.get().getJournal().getTitle());
+			paperDoc.setKeywords(paper.get().getKeywords());
+			paperDoc.setTitle(paper.get().getTitle());
+			paperDoc.setStatus(paper.get().getStatus());
+			paperDoc.setContent(parsedText);
+			//System.out.println(parsedText);
+			this.resultRetrieverRejected.add(paperDoc);
+
 		}
-		return new ResponseEntity(  HttpStatus.BAD_REQUEST);
-    }
-	
-	
+		return new ResponseEntity(  HttpStatus.OK); 
+
+	}
+
 	public void indexPaper(Paper paper) {
-		ClassLoader classLoader = getClass().getClassLoader();
 		if (paper != null) {
 			PDFTextStripper pdfStripper = null;
 			PDDocument pdDoc = null;
@@ -319,9 +428,7 @@ public class PaperController {
 		return new ResponseEntity<>(pdfDTO, HttpStatus.OK);
 
 	}
-	
-	
-	
+
 	@PostMapping(path="/download", produces = MediaType.APPLICATION_PDF_VALUE) // //new annotation since 4.3
     public ResponseEntity<?> download(@RequestBody PDFURL link) {
 		
@@ -344,29 +451,6 @@ public class PaperController {
 				.contentType(MediaType.APPLICATION_PDF)
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
 				.body(bFile);
-
-    }
-	
-	@PostMapping(path="/downloadPDF/{id}", produces = MediaType.APPLICATION_PDF_VALUE) // //new annotation since 4.3
-    public ResponseEntity<?> downloadPDF(@PathVariable Long id) {
-		System.out.println("download file");
-		Optional<Paper> paper = this.paperService.findById(id);
-		if(paper.isPresent()) {
-			PDF pdf = new PDF();
-			//pdf = this.pdfRep.findByName(link.getUrl());
-			System.out.println(paper.get().getPdf());
-			//byte[] bFile = readBytesFromFile("D://naucnacentrala-upp-novi//naucnaCentrala//scientificCenter//scientificCenter//files//astronomija.pdf");
-			byte[] bFile = readBytesFromFile(paper.get().getPdf());
-					
-			PDFDTO pdfDTO = new PDFDTO(pdf);
-			String fileName = "employees.pdf";
-			return ResponseEntity.ok()
-					.contentType(MediaType.APPLICATION_PDF)
-					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-					.body(bFile);
-		}
-		return new ResponseEntity(HttpStatus.BAD_REQUEST);
-		
 
     }
 
@@ -407,39 +491,36 @@ public class PaperController {
 		//PDF saved=pdfRep.save(blackImage);
 		return path.toAbsolutePath().toString();
 	}
-	
-	
+
 	private static byte[] readBytesFromFile(String filePath) {
 
-        FileInputStream fileInputStream = null;
-        byte[] bytesArray = null;
+		FileInputStream fileInputStream = null;
+		byte[] bytesArray = null;
 
-        try {
+		try {
 
-            File file = new File(filePath);
-            bytesArray = new byte[(int) file.length()];
+			File file = new File(filePath);
+			bytesArray = new byte[(int) file.length()];
 
-            //read file into bytes[]
-            fileInputStream = new FileInputStream(file);
-            fileInputStream.read(bytesArray);
+			// read file into bytes[]
+			fileInputStream = new FileInputStream(file);
+			fileInputStream.read(bytesArray);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (fileInputStream != null) {
+				try {
+					fileInputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 
-        }
+		}
 
-        return bytesArray;
+		return bytesArray;
 
-    }
-
-	
+	}
 
 }

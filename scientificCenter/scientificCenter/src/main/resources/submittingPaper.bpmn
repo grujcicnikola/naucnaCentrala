@@ -143,7 +143,7 @@
       <bpmn:outgoing>SequenceFlow_0j3ezai</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:endEvent id="EndEvent_1t3pk8u">
-      <bpmn:incoming>SequenceFlow_0j3ezai</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1canmpi</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:serviceTask id="ServiceTask_0235j1r" name="Preparation for indexing" camunda:class="com.example.scientificCenter.delegate.PrepareIndexing">
       <bpmn:incoming>SequenceFlow_0febxic</bpmn:incoming>
@@ -419,7 +419,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1es4uf5" sourceRef="ServiceTask_04n5vnj" targetRef="UserTask_16484gj" />
     <bpmn:sequenceFlow id="SequenceFlow_0icfo78" sourceRef="ServiceTask_0noy93t" targetRef="EndEvent_1s5a2kb" />
     <bpmn:sequenceFlow id="SequenceFlow_1ris3zv" sourceRef="ServiceTask_0235j1r" targetRef="ServiceTask_0noy93t" />
-    <bpmn:sequenceFlow id="SequenceFlow_0j3ezai" sourceRef="ServiceTask_1vtev69" targetRef="EndEvent_1t3pk8u" />
+    <bpmn:sequenceFlow id="SequenceFlow_0j3ezai" sourceRef="ServiceTask_1vtev69" targetRef="Task_0jtswr9" />
     <bpmn:sequenceFlow id="SequenceFlow_0febxic" sourceRef="ServiceTask_1y1gx8u" targetRef="ServiceTask_0235j1r" />
     <bpmn:sequenceFlow id="SequenceFlow_05tf902" name="the paper is rejected" sourceRef="ExclusiveGateway_1q8qt22" targetRef="ServiceTask_1vtev69">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${editorsDecision=="reject"}</bpmn:conditionExpression>
@@ -652,6 +652,11 @@
       <bpmn:outgoing>SequenceFlow_1a0ybb3</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1a0ybb3" sourceRef="ServiceTask_1xk3af0" targetRef="UserTask_11pr9o9" />
+    <bpmn:sequenceFlow id="SequenceFlow_1canmpi" sourceRef="Task_0jtswr9" targetRef="EndEvent_1t3pk8u" />
+    <bpmn:serviceTask id="Task_0jtswr9" name="Indexing rejected" camunda:class="com.example.scientificCenter.delegate.PrepareIndexingRejected">
+      <bpmn:incoming>SequenceFlow_0j3ezai</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1canmpi</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="SubmittingPaper">
@@ -817,7 +822,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0j3ezai_di" bpmnElement="SequenceFlow_0j3ezai">
         <di:waypoint x="4680" y="530" />
-        <di:waypoint x="4828" y="530" />
+        <di:waypoint x="4750" y="530" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0febxic_di" bpmnElement="SequenceFlow_0febxic">
         <di:waypoint x="4810" y="1060" />
@@ -1027,7 +1032,7 @@
         <dc:Bounds x="4580" y="490" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_1t3pk8u_di" bpmnElement="EndEvent_1t3pk8u">
-        <dc:Bounds x="4828" y="512" width="36" height="36" />
+        <dc:Bounds x="4902" y="512" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_0235j1r_di" bpmnElement="ServiceTask_0235j1r">
         <dc:Bounds x="4880" y="1020" width="100" height="80" />
@@ -1262,6 +1267,13 @@
         <di:waypoint x="4300" y="870" />
         <di:waypoint x="4300" y="760" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1canmpi_di" bpmnElement="SequenceFlow_1canmpi">
+        <di:waypoint x="4850" y="530" />
+        <di:waypoint x="4902" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0ykj9rb_di" bpmnElement="Task_0jtswr9">
+        <dc:Bounds x="4750" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

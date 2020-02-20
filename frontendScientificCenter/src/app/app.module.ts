@@ -23,6 +23,7 @@ import { SelectingRecenzentsComponent } from './selecting-recenzents/selecting-r
 import { AnalysisOfReviewComponent } from './analysis-of-review/analysis-of-review.component';
 
 import { SearchPageComponent } from './search-page/search-page.component';
+import { FilterPageComponent } from './filter-page/filter-page.component';
 
 const appRoutes: Routes = [
   {path: 'register', component : RegistrationComponent},
@@ -38,6 +39,7 @@ const appRoutes: Routes = [
   {path: 'task/selectRecenzents/:taskId', component : SelectingRecenzentsComponent},
   {path: 'task/analysis/:taskId', component : AnalysisOfReviewComponent},
   {path: 'searchPage', component : SearchPageComponent},
+  {path: 'filterPage/:id', component : FilterPageComponent},
   ]
 
 @NgModule({
@@ -56,6 +58,7 @@ const appRoutes: Routes = [
     SelectingRecenzentsComponent,
     AnalysisOfReviewComponent,
     SearchPageComponent,
+    FilterPageComponent,
     
   ],
   imports: [

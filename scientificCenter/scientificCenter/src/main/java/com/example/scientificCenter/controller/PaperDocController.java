@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.scientificCenter.model.PaperDoc;
+import com.example.scientificCenter.model.PaperDocRejected;
 import com.example.scientificCenter.serviceInterface.PaperDocDAO;
+import com.example.scientificCenter.serviceInterface.PaperDocRejectedDAO;
 
 
 
@@ -27,6 +29,8 @@ public class PaperDocController {
 	@Autowired
 	private PaperDocDAO resultRetriever;
 
+	@Autowired
+	private PaperDocRejectedDAO resultRetrieverRejected;
 	
 	 @PostMapping("/savePaper")
 	    public ResponseEntity<String> savePaper(@RequestBody PaperDoc model) {
@@ -41,6 +45,14 @@ public class PaperDocController {
 
 		 	System.out.println("get paper");
 	        return resultRetriever.findAll();
+
+	    }
+	 
+	 @GetMapping("/getPapersRejected")
+	    public Iterable<PaperDocRejected> getPaperRejected() {
+
+		 	System.out.println("get paper");
+	        return resultRetrieverRejected.findAll();
 
 	    }
 	 

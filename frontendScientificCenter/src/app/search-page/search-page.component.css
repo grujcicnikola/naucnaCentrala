@@ -39,10 +39,14 @@
     }
     button#Btn0 {
         background-color:#007bff;
+        width: 100%;
+        position:relative;
       }
       
       button#Btn1 {
         background-color:#007bff;
+        width: 100%;
+        position:relative;
       }
 
   input[type="password"],
@@ -301,3 +305,12 @@
       html {
         font-size: 16px;
       }
+      .card {
+        min-height: 350px;
+        max-height: 350px;
+    }
+    .push-to-bottom {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+    }

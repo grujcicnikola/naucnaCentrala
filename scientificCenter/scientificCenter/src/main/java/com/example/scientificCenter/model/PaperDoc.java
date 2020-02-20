@@ -64,6 +64,9 @@ public class PaperDoc {
 	@Field(type = FieldType.Text, analyzer="serbian", store = true)
     private String content;
 	
+	@Field(type = FieldType.Long,  store = true)
+    private List<Long> recenzentsId= new ArrayList<Long>();
+	
 	
 
 	public Long getId() {
@@ -161,6 +164,16 @@ public class PaperDoc {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	
+	
+	public List<Long> getRecenzentsId() {
+		return recenzentsId;
+	}
+
+	public void setRecenzentsId(List<Long> recenzentsId) {
+		this.recenzentsId = recenzentsId;
 	}
 
 	@Override

@@ -5,14 +5,13 @@ import { Journal } from 'src/app/model/Journal';
 import { Observable } from 'rxjs/internal/Observable';
 import { PDF } from 'src/app/model/PDF';
 import { PDFURL } from 'src/app/model/PDFURL';
+import { Paper } from 'src/app/model/Paper';
+import { Recenzent } from 'src/app/model/Recenzent';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaperService {
-  
-
-  
   url ="https://localhost:8088/paper"
   constructor(private http:HttpClient) { }
   
@@ -58,4 +57,17 @@ export class PaperService {
     console.log("downloadFILE"+idPaper);
 		return this.http.post<Blob>(this.url + '/downloadPDF/'+idPaper, {headers: headers, responseType: 'blob' as 'json'});
   }
+
+  findById(idPaper: number) {
+    return this.http.get<Paper>(this.url+'/findById/'+idPaper);
+  }
+  findRecenzentsByPaperId(idPaper: number) {
+    return this.http.get<Recenzent[]>(this.url+'/findRecenzentsByPaperId/'+idPaper);
+  }
+
+  choosingReviewersFilteredByScientificAreaPaper(idPaper: number) {
+    return this.http.get<Recenzent[]>(this.url+'/findRecenzentsByScientificArea/'+idPaper);
+  }
+
+ 
 }

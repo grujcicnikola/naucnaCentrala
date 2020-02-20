@@ -1,0 +1,49 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Form</title> 
+    <link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+    
+</head>
+<body>
+        <div class="container">
+                <div class="row">
+                        
+                    <button  (click) = "filterByArea()" class="btn btn-info" >Filter by sceintific area</button>
+                    <button  (click) = "filterMoreLikeThis()" class="btn btn-info" >Filter - more like this</button>
+                    <button  (click) = "filterGeo()" class="btn btn-info" >Filter - geo</button>    
+                    <button  (click) = "refresh()" class="btn btn-info" >Refresh</button>   
+                </div>
+        </div>               
+<div>
+    
+    <form #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate>
+            <div *ngIf="paper">
+                    <h1 >{{paper.title}}</h1>
+                    <h3>author: {{paper.author}}</h3>
+                    <h3>area: {{paper.area}}</h3>
+                </div>
+    <h1>Selecting recenzents</h1>
+      <div >
+            <div >
+                
+                <div >
+                    <!--<div class="form-label-group" *ngFor="let enum of dropdownList;  index as i">
+                        
+                        <ng-multiselect-dropdown   [disabled]="false" [name]="enumNames[i]" [data]="enum"  [(ngModel)]="selectedItems[i]" [settings]="dropdownSettings"></ng-multiselect-dropdown>
+                    </div>-->
+                    <ng-multiselect-dropdown  name="recenzentsList" [placeholder]="'Select recenzents'" [data]="recenzentsList" [(ngModel)]="selectedItems[i]"
+                         [disabled]="disabled" [settings]="dropdownSettings1" (onSelect)="onItemSelect($event)">
+                    </ng-multiselect-dropdown>
+                </div>
+                    
+            </div>
+            
+            
+           
+        </div>
+      <button type="submit">Sign Up</button>
+    </form>
+</div>
+</body>
+
