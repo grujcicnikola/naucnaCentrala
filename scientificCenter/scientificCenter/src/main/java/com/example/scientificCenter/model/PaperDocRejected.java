@@ -46,12 +46,9 @@ public class PaperDocRejected {
 	@Field(type = FieldType.Text, analyzer="serbian", store = true)
 	private String author;
 	
-	/*@Field(type = FieldType.Text, analyzer="serbian", store = true)
-	private List<String> coauthors = new ArrayList<String>();
-	*/
-	
 	@Field(type = FieldType.Text, analyzer="serbian", store = true)
-	private String coauthors;
+	private List<String> coauthors = new ArrayList<String>();
+	
 	
 	@Field(type = FieldType.Text, analyzer="serbian",store = true)
     private String keywords;
@@ -107,11 +104,13 @@ public class PaperDocRejected {
 		this.author = author;
 	}
 
-	public String getCoauthors() {
+	
+
+	public List<String> getCoauthors() {
 		return coauthors;
 	}
 
-	public void setCoauthors(String coauthors) {
+	public void setCoauthors(List<String> coauthors) {
 		this.coauthors = coauthors;
 	}
 

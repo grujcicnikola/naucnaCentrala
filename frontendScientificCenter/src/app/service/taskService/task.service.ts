@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 export class TaskService {
   
 
+
   constructor(private http : HttpClient) { }
   url ="https://localhost:8088/"
 
@@ -18,5 +19,14 @@ export class TaskService {
 
   registerUser(user, taskId) {
     return this.http.post(this.url+"task/userInput/".concat(taskId), user) as Observable<any>;
+  }
+
+  findLongitudeAndLatitude(adresa: String){
+    console.log("adresa: "+adresa);
+    return this.http.get('https://nominatim.openstreetmap.org/search?q=%20"+'+adresa+'+"%20&format=json');
+  }
+
+  registerCoauthors(user, taskId,lon,lat) {
+    return this.http.post(this.url+"task/coauthors/".concat(taskId)+"/"+lon+"/"+lat, user) as Observable<any>;
   }
 }

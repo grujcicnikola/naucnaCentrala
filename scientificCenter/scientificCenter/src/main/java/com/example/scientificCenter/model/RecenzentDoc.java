@@ -13,7 +13,19 @@ public class RecenzentDoc {
 	public static final String TYPE_NAME = "recenzent";
 	
 	public static final String DATE_PATTERN = "yyyy-MM-dd";
-	
+
+	public RecenzentDoc(Long id, String username, GeoPoint location) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.location = location;
+	}
+
+	public RecenzentDoc() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id
 	@Field(type = FieldType.Text, store = true)
     private Long id;

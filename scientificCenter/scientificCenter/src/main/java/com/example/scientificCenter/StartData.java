@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -19,6 +21,7 @@ import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.identity.Group;
 import org.camunda.bpm.engine.identity.User;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.geo.GeoPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +30,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.scientificCenter.domain.Author;
+import com.example.scientificCenter.domain.Coauthor;
 import com.example.scientificCenter.domain.Journal;
 import com.example.scientificCenter.domain.Paper;
+import com.example.scientificCenter.domain.Recenzent;
 import com.example.scientificCenter.domain.ScientificArea;
 import com.example.scientificCenter.model.PaperDoc;
+import com.example.scientificCenter.model.RecenzentDoc;
+import com.example.scientificCenter.service.CoauthorService;
 import com.example.scientificCenter.service.JournalService;
 import com.example.scientificCenter.service.PaperService;
 import com.example.scientificCenter.service.ScientificAreaService;
 import com.example.scientificCenter.service.UserService;
 import com.example.scientificCenter.serviceInterface.PaperDocDAO;
+import com.example.scientificCenter.serviceInterface.RecenzentDocDAO;
 
 @Component
 public class StartData {
@@ -66,7 +74,13 @@ public class StartData {
 
 	@Autowired
 	private PaperService paperService;
+	
+	@Autowired
+	private RecenzentDocDAO recenzentRetriever;
 
+	@Autowired
+	private CoauthorService coauthorService;
+	
 	@PostConstruct
 	private void init() throws Exception {
 		
@@ -79,9 +93,16 @@ public class StartData {
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\astronomija.pdf",
 				"astronomija, zvezde", journal1, "");
 		Paper paper1Saved = this.paperService.save(paper1);
+		Set<Paper> papers = new HashSet<Paper>();
+		papers.add(paper1Saved);
+		Coauthor coauthor = new Coauthor("Marko Markovic","marko@gmail.com","Leskovac", "Srbija",21.94419,42.9964,papers);
+		coauthor.setPapers(papers);
+		this.coauthorService.save(coauthor);
+		List<String> coauthors= new ArrayList<String>();
+		coauthors.add(coauthor.getName());
 		List<Long> recenzents1= new ArrayList<Long>();
 		recenzents1.add(Long.parseLong("2")); recenzents1.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved, recenzents1);
+		indexPaper(paper1Saved, recenzents1, coauthors);
 		
 		Optional<com.example.scientificCenter.domain.User> author2 = this.userService.getByEmail("author2@gmail.com");
 		Optional<ScientificArea> area2 = this.areaService.findById(Long.parseLong("1"));
@@ -92,11 +113,17 @@ public class StartData {
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\cokolada.pdf",
 				"čokolada, slatkiši", journal2, "");
 		Paper paper1Saved2 = this.paperService.save(paper2);
+		papers.add(paper1Saved2);
+		Coauthor coauthor2 = new Coauthor("Marko Miljkovic","miljkovic@gmail.com","Novi Sad", "Srbija",19.833549,	45.267136,papers);
+		coauthor2.setPapers(papers);
+		this.coauthorService.save(coauthor2);
+		List<String> coauthors2= new ArrayList<String>();
+		coauthors2.add(coauthor2.getName());
 		List<Long> recenzents2= new ArrayList<Long>();
 		recenzents2.add(Long.parseLong("3")); recenzents2.add(Long.parseLong("9"));	
-		indexPaper(paper1Saved2, recenzents2);
+		indexPaper(paper1Saved2, recenzents2, coauthors2);
 		
-		Optional<com.example.scientificCenter.domain.User> author3 = this.userService.getByEmail("author2@gmail.com");
+		Optional<com.example.scientificCenter.domain.User> author3 = this.userService.getByEmail("author3@gmail.com");
 		Optional<ScientificArea> area3 = this.areaService.findById(Long.parseLong("1"));
 		Journal journal3 = this.journalService.findByIssn("2222-2222");
 		Paper paper3 = new Paper("Crna čokolada", (Author) author3.get(),
@@ -105,9 +132,22 @@ public class StartData {
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\crnacokolada.pdf",
 				"čokolada, slatkiši", journal3, "");
 		Paper paper1Saved3 = this.paperService.save(paper3);
+		Set<Paper> papers3 = new HashSet<Paper>();
+		papers3.add(paper1Saved3);
+		Coauthor coauthor3 = new Coauthor("Dusan Dusanovic","dusam@gmail.com","Novi Sad", "Srbija",19.833549,	45.267136,papers3);
+		coauthor3.setPapers(papers3);
+		this.coauthorService.save(coauthor3);
+		Set<Paper> papers3a = new HashSet<Paper>();
+		papers3a.add(paper1Saved3);
+		Coauthor coauthor3a = new Coauthor("Milka Milivojevic","milka@gmail.com","Zrenjanin", "Srbija", 20.3686,45.3816,papers3a);
+		coauthor3a.setPapers(papers3a);
+		this.coauthorService.save(coauthor3a);
+		List<String> coauthors3= new ArrayList<String>();
+		coauthors3.add(coauthor3.getName());
+		coauthors3.add(coauthor3a.getName());
 		List<Long> recenzents3= new ArrayList<Long>();
 		recenzents3.add(Long.parseLong("4")); recenzents3.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved3, recenzents3);
+		indexPaper(paper1Saved3, recenzents3, coauthors3);
 		
 		
 		Optional<com.example.scientificCenter.domain.User> author4 = this.userService.getByEmail("author1@gmail.com");
@@ -119,9 +159,16 @@ public class StartData {
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\crnarupa.pdf",
 				"čokolada, slatkiši", journal4, "");
 		Paper paper1Saved4 = this.paperService.save(paper4);
+		Set<Paper> papers4 = new HashSet<Paper>();
+		papers4.add(paper1Saved4);
+		Coauthor coauthor4 = new Coauthor("Marija Jovanovic","jovanovic@gmail.com","Zrenjanin", "Srbija", 20.3686,45.3816,papers4);
+		coauthor4.setPapers(papers4);
+		this.coauthorService.save(coauthor4);
+		List<String> coauthors4= new ArrayList<String>();
+		coauthors4.add(coauthor4.getName());
 		List<Long> recenzents4= new ArrayList<Long>();
 		recenzents4.add(Long.parseLong("11")); recenzents4.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved4, recenzents4);
+		indexPaper(paper1Saved4, recenzents4, coauthors4);
 		
 		Optional<com.example.scientificCenter.domain.User> author5 = this.userService.getByEmail("author1@gmail.com");
 		Optional<ScientificArea> area5 = this.areaService.findById(Long.parseLong("1"));
@@ -134,7 +181,7 @@ public class StartData {
 		Paper paper1Saved5 = this.paperService.save(paper5);
 		List<Long> recenzents5= new ArrayList<Long>();
 		recenzents5.add(Long.parseLong("2")); recenzents5.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved5, recenzents5);
+		indexPaper(paper1Saved5, recenzents5, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author6 = this.userService.getByEmail("author1@gmail.com");
 		Optional<ScientificArea> area6 = this.areaService.findById(Long.parseLong("1"));
@@ -147,7 +194,7 @@ public class StartData {
 		Paper paper1Saved6 = this.paperService.save(paper6);
 		List<Long> recenzents6= new ArrayList<Long>();
 		recenzents6.add(Long.parseLong("9")); recenzents6.add(Long.parseLong("4"));	
-		indexPaper(paper1Saved6, recenzents6);
+		indexPaper(paper1Saved6, recenzents6, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author7 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area7 = this.areaService.findById(Long.parseLong("3"));
@@ -160,7 +207,7 @@ public class StartData {
 		Paper paper1Saved7 = this.paperService.save(paper7);
 		List<Long> recenzents7= new ArrayList<Long>();
 		recenzents7.add(Long.parseLong("4")); recenzents7.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved7, recenzents7);
+		indexPaper(paper1Saved7, recenzents7, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author8 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area8 = this.areaService.findById(Long.parseLong("3"));
@@ -173,7 +220,7 @@ public class StartData {
 		Paper paper1Saved8 = this.paperService.save(paper8);
 		List<Long> recenzents8= new ArrayList<Long>();
 		recenzents8.add(Long.parseLong("2")); recenzents8.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved8, recenzents8);
+		indexPaper(paper1Saved8, recenzents8, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author9 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area9 = this.areaService.findById(Long.parseLong("3"));
@@ -186,7 +233,7 @@ public class StartData {
 		Paper paper1Saved9= this.paperService.save(paper9);
 		List<Long> recenzents9= new ArrayList<Long>();
 		recenzents9.add(Long.parseLong("9")); recenzents9.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved9, recenzents9);
+		indexPaper(paper1Saved9, recenzents9, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author10 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area10 = this.areaService.findById(Long.parseLong("3"));
@@ -199,7 +246,7 @@ public class StartData {
 		Paper paper1Saved10 = this.paperService.save(paper10);
 		List<Long> recenzents10= new ArrayList<Long>();
 		recenzents10.add(Long.parseLong("2")); recenzents10.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved10, recenzents10);
+		indexPaper(paper1Saved10, recenzents10, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author11 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area11 = this.areaService.findById(Long.parseLong("1"));
@@ -212,7 +259,7 @@ public class StartData {
 		Paper paper1Saved11 = this.paperService.save(paper11);
 		List<Long> recenzents11= new ArrayList<Long>();
 		recenzents11.add(Long.parseLong("9")); recenzents11.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved11, recenzents11);
+		indexPaper(paper1Saved11, recenzents11, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author12 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area12 = this.areaService.findById(Long.parseLong("1"));
@@ -226,7 +273,7 @@ public class StartData {
 		Paper paper1Saved12 = this.paperService.save(paper12);
 		List<Long> recenzents12= new ArrayList<Long>();
 		recenzents12.add(Long.parseLong("2")); recenzents12.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved12, recenzents12);
+		indexPaper(paper1Saved12, recenzents12, null);
 		
 		
 		Optional<com.example.scientificCenter.domain.User> author13 = this.userService.getByEmail("author4@gmail.com");
@@ -242,7 +289,7 @@ public class StartData {
 		Paper paper1Saved13 = this.paperService.save(paper13);
 		List<Long> recenzents13= new ArrayList<Long>();
 		recenzents13.add(Long.parseLong("10")); recenzents13.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved13, recenzents13);
+		indexPaper(paper1Saved13, recenzents13, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author14 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area14 = this.areaService.findById(Long.parseLong("3"));
@@ -255,7 +302,7 @@ public class StartData {
 		Paper paper1Saved14 = this.paperService.save(paper14);
 		List<Long> recenzents14= new ArrayList<Long>();
 		recenzents14.add(Long.parseLong("2")); recenzents14.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved14, recenzents14);
+		indexPaper(paper1Saved14, recenzents14, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author15 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area15 = this.areaService.findById(Long.parseLong("3"));
@@ -268,7 +315,7 @@ public class StartData {
 		Paper paper1Saved15 = this.paperService.save(paper15);
 		List<Long> recenzents15= new ArrayList<Long>();
 		recenzents15.add(Long.parseLong("2")); recenzents15.add(Long.parseLong("9"));	
-		indexPaper(paper1Saved15, recenzents15);
+		indexPaper(paper1Saved15, recenzents15, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author16 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area16 = this.areaService.findById(Long.parseLong("1"));
@@ -281,7 +328,7 @@ public class StartData {
 		Paper paper1Saved16 = this.paperService.save(paper16);
 		List<Long> recenzents16= new ArrayList<Long>();
 		recenzents16.add(Long.parseLong("11")); recenzents16.add(Long.parseLong("9"));	
-		indexPaper(paper1Saved16, recenzents16);
+		indexPaper(paper1Saved16, recenzents16, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author17 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area17= this.areaService.findById(Long.parseLong("1"));
@@ -294,7 +341,7 @@ public class StartData {
 		Paper paper1Saved17 = this.paperService.save(paper17);
 		List<Long> recenzents17= new ArrayList<Long>();
 		recenzents17.add(Long.parseLong("2")); recenzents17.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved17, recenzents17);
+		indexPaper(paper1Saved17, recenzents17, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author18 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area18 = this.areaService.findById(Long.parseLong("1"));
@@ -307,7 +354,7 @@ public class StartData {
 		Paper paper1Saved18 = this.paperService.save(paper18);
 		List<Long> recenzents18= new ArrayList<Long>();
 		recenzents18.add(Long.parseLong("9")); recenzents18.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved18, recenzents18);
+		indexPaper(paper1Saved18, recenzents18, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author19 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area19 = this.areaService.findById(Long.parseLong("1"));
@@ -320,7 +367,7 @@ public class StartData {
 		Paper paper1Saved19 = this.paperService.save(paper19);
 		List<Long> recenzents19= new ArrayList<Long>();
 		recenzents19.add(Long.parseLong("2")); recenzents19.add(Long.parseLong("11"));	
-		indexPaper(paper1Saved19, recenzents19);
+		indexPaper(paper1Saved19, recenzents19, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author20 = this.userService.getByEmail("author4@gmail.com");
 		Optional<ScientificArea> area20 = this.areaService.findById(Long.parseLong("1"));
@@ -333,8 +380,13 @@ public class StartData {
 		Paper paper1Saved20 = this.paperService.save(paper20);
 		List<Long> recenzents20= new ArrayList<Long>();
 		recenzents1.add(Long.parseLong("2")); recenzents1.add(Long.parseLong("3"));	
-		indexPaper(paper1Saved20, recenzents20);
+		indexPaper(paper1Saved20, recenzents20, null);
 		
+		
+		List<Recenzent> recenzents = this.userService.findAllRecenzents();
+		for(int i =0; i< recenzents.size(); i++) {
+			indexRecenzent(recenzents.get(i));
+		}
 		// trenutno nepotrebno
 		/*
 		 * saveCamundaUser("petarperic23252@gmail.com", "petar", "pera++5++", "peric",
@@ -365,6 +417,12 @@ public class StartData {
 		 */
 	}
 
+	private void indexRecenzent(Recenzent recenzent) {
+		// TODO Auto-generated method stub
+		RecenzentDoc recDoc = new RecenzentDoc(recenzent.getId(), recenzent.getUsername(), new GeoPoint(recenzent.getLat(), recenzent.getLon()));
+		//this.recenzentRetriever.add(recDoc);
+	}
+
 	public void saveCamundaUser(String email, String name, String password, String surname, String username) {
 		if (this.identityService.getUserInfoKeys(email) == null) {
 			User newUser = identityService.newUser(email);
@@ -378,8 +436,8 @@ public class StartData {
 
 	}
 
-	public void indexPaper(Paper paper, List<Long> recenzents) {
-		///*
+	public void indexPaper(Paper paper, List<Long> recenzents, List<String> coauthors ) {
+		/*
 		if (paper != null) {
 			PDFTextStripper pdfStripper = null;
 			PDDocument pdDoc = null;
@@ -413,6 +471,7 @@ public class StartData {
 			paperDoc.setStatus(paper.getStatus());
 			paperDoc.setContent(parsedText);
 			paperDoc.setRecenzentsId(recenzents);
+			paperDoc.setCoauthors(coauthors);
 			//System.out.println(parsedText);
 			this.resultRetriever.add(paperDoc);
 

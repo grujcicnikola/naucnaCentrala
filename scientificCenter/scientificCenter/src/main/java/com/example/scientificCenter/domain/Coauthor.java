@@ -34,12 +34,28 @@ public class Coauthor {
 	@Column
 	private String state;
 	
+	@Column
+	private Double lon;
+	@Column
+	private Double lat;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<Paper> papers = new HashSet<Paper>();
 
 	public Coauthor() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public Coauthor(String name, String email, String city, String state, Double lon, Double lat, Set<Paper> papers) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.city = city;
+		this.state = state;
+		this.lon = lon;
+		this.lat = lat;
+		this.papers = papers;
 	}
 
 	public Long getId() {
@@ -88,6 +104,22 @@ public class Coauthor {
 
 	public void setPapers(Set<Paper> papers) {
 		this.papers = papers;
+	}
+
+	public Double getLon() {
+		return lon;
+	}
+
+	public void setLon(Double lon) {
+		this.lon = lon;
+	}
+
+	public Double getLat() {
+		return lat;
+	}
+
+	public void setLat(Double lat) {
+		this.lat = lat;
 	}
 	
 	

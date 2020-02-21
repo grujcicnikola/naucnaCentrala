@@ -1,0 +1,66 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Form</title> 
+    <link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+    
+</head>
+<body>
+                   
+<div>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate>
+    <h1>Task form</h1>
+      <div *ngFor="let field of formFields" >
+            <div *ngIf="review==false" >
+                <label for={{field.id}}>{{field.label}}</label>   
+                <input  type="text" [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}}  name={{field.id}} ngModel={{field.value.value}} *ngIf="field.type.name=='string' && ( field.id !='password'  && field.id !='wayOfPaying' && field.id !='pdf' && field.id!='pdf1' && field.id!='pdf3' && field.id!='scientificAreas' && field.id!='editors') " >
+                <input type="password" [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}   *ngIf="field.id =='password'" >
+                <input type="checkbox" [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}} name={{field.id}} ngModel  *ngIf="field.type.name=='boolean' && field.id !='isOpenAccess1'">
+                    
+                <input type="number" [readonly]="field.properties['readonly'] === 'readonly'" id={{field.id}} name={{field.id}} ngModel={{field.value.value}}  *ngIf="field.type.name=='long'">
+                <!--<select class="form-control" name={{field.id}}  id={{field.id}}  multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id!='recenzents' || ( field.type.name=='string' && field.id=='scientificAreas')">
+                    <option *ngFor="let area of areas" [value]="area.id" >{{area.name}}</option>
+                </select>
+                
+                <select name={{field.id}}  id={{field.id}} multiple size="3" ngModel *ngIf="field.type.name=='enum' && field.id=='recenzent'">
+                    <option *ngFor="let enum of dropdownList" [value]="enum">{{enumNames[i]}}</option>
+                </select> -->
+                 
+                <div *ngIf=" field.type.name =='enum'">
+                    <div class="form-label-group" *ngFor="let enum of dropdownList;  index as i">
+                        
+                        <ng-multiselect-dropdown  [disabled]="false" [name]="enumNames[i]" [data]="enum" [(ngModel)]="selectedItems[i]" [settings]="dropdownSettings"></ng-multiselect-dropdown>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="field.type.name=='string' && (field.id=='pdf' || field.id=='pdf3')">
+                    <input type="file"  accept="application/pdf,application/vnd.ms-excel"  (change)="handleFileInput($event.target.files)"  class="form-input" />
+                </div>     
+            </div>
+            <div *ngIf="field.type.name=='string' && ( field.id=='pdf1' || field.id=='pdf3')">
+                <!--<h5>iframe whit local url {{field.value.value}}</h5>
+                <iframe width="500" height="600" [attr.src]="dataLocalUrl" type="application/pdf"></iframe>
+                <h5>object whit local url</h5>
+                <object [attr.data]="dataLocalUrl" type="application/pdf" width="100%" height="100%"></object>
+                <h5>embed whit local url</h5>
+                <embed [attr.src]="dataLocalUrl" type="application/pdf" width="100%" height="100%">-->
+                <input type="button" (click)="download()" value="Download File"/>
+            </div>
+            
+            <div *ngIf="review==true" >
+                    <label for={{field.id}}>{{field.label}}</label>   
+                    <input type="text" readonly id={{field.id}}  name={{field.id}} ngModel={{field.defaultValue}} *ngIf="field.type.name=='string' && ( field.id !='password'  && field.id !='wayOfPaying1' && field.id!='scientificAreas1' && field.id!='editors') || (field.type.name=='boolean' && field.id =='isOpenAccess1') " >
+                    <input type="text" readonly id={{field.id}}  name={{field.id}} ngModel={{field.value.value}} *ngIf="field.type.name=='string' && (field.id =='wayOfPaying1'|| field.id=='scientificAreas1')">
+                    <input type="password"readonly id={{field.id}} name={{field.id}} ngModel={{field.defaultValue}}   *ngIf="field.id =='password'" >
+                    <input type="checkbox" id={{field.id}} name={{field.id}} ngModel  *ngIf="field.type.name=='boolean' && field.id !='isOpenAccess1'">
+                    <input type="number" readonly id={{field.id}} name={{field.id}} ngModel={{field.defaultValue}}  *ngIf="field.type.name=='long'"> 
+            </div>
+        </div>
+      <label class="label danger" *ngIf="valid==false" >{{message}}</label>
+      <button type="submit">Sign Up</button>
+    </form>
+</div>
+</body>
+<!--<select name={{field.id}} multiple size="3" *ngIf="field.type.name=='enum'">
+    <option *ngFor="let area of areas" [value]="{{area.id}}">{{area.name}}</option>
+</select>-->
+

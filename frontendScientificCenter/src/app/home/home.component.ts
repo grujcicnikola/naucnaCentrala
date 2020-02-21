@@ -114,7 +114,8 @@ export class HomeComponent implements OnInit {
     }
     else if(taskName =="Selecting recenzents" || taskName =="Add new recenzents"){
       window.location.href="https://localhost:4202/task/selectRecenzents/".concat(task);
-      
+    }else if(taskName =="Input coauthors"){
+        window.location.href="https://localhost:4202/task/coauthors/".concat(task);  
     }else{
       window.location.href="https://localhost:4202/task/".concat(task);
     }

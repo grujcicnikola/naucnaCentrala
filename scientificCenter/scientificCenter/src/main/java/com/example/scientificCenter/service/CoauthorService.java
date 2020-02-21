@@ -23,4 +23,13 @@ public class CoauthorService {
 		public Coauthor save(Coauthor user) {
 			return repository.save(user);
 		}
+		
+		public Coauthor findById(Long user) {
+			return repository.findById(user).get();
+		}
+
+		public List<Coauthor> findAllByPaper(Long paperId) {
+			// TODO Auto-generated method stub
+			return repository.findByPapers_Id(paperId);
+		}
 }

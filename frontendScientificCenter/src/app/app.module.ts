@@ -24,6 +24,7 @@ import { AnalysisOfReviewComponent } from './analysis-of-review/analysis-of-revi
 
 import { SearchPageComponent } from './search-page/search-page.component';
 import { FilterPageComponent } from './filter-page/filter-page.component';
+import { CoauthorsComponent } from './coauthors/coauthors.component';
 
 const appRoutes: Routes = [
   {path: 'register', component : RegistrationComponent},
@@ -40,6 +41,7 @@ const appRoutes: Routes = [
   {path: 'task/analysis/:taskId', component : AnalysisOfReviewComponent},
   {path: 'searchPage', component : SearchPageComponent},
   {path: 'filterPage/:id', component : FilterPageComponent},
+  {path: 'task/coauthors/:taskId', component : CoauthorsComponent},
   ]
 
 @NgModule({
@@ -59,6 +61,7 @@ const appRoutes: Routes = [
     AnalysisOfReviewComponent,
     SearchPageComponent,
     FilterPageComponent,
+    CoauthorsComponent,
     
   ],
   imports: [

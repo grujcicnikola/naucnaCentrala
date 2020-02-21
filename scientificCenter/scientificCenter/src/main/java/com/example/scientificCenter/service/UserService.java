@@ -60,5 +60,10 @@ public class UserService {
 		// TODO Auto-generated method stub
 		return this.recRepository.findById(id).get();
 	}
+	
+	public List<Recenzent> findAllRecenzents() {
+		// TODO Auto-generated method stub
+		return this.recRepository.findAll();
+	}
 
 }

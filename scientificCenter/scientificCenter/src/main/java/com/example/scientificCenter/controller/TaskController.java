@@ -230,6 +230,59 @@ public class TaskController {
 		return new ResponseEntity(HttpStatus.OK);
 	}
 	
+	
+	@RequestMapping(value = "/coauthors/{taskId}/{lon}/{lat}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity coauthors(@RequestBody List<FormSubmissionDTO> fieldsDTO, @PathVariable String taskId,
+			@PathVariable Double lon, @PathVariable Double lat) {
+		HashMap<String, Object> map = this.mapListToDto(fieldsDTO);
+		System.out.println("**********************");
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String processInstanceId = task.getProcessInstanceId();
+		System.out.println("naziv taska "+task.getName());
+		System.out.println("lon "+lon);
+		System.out.println("lat "+lat);
+		if(task.getName().equals("Input coauthors")) {
+			String title =runtimeService.getVariable(processInstanceId, "title").toString();
+			System.out.println("dodajem koatore za paper "+title);
+			Coauthor coauthor = new Coauthor();
+			for(int i = 0; i < fieldsDTO.size(); i++) {
+				if(fieldsDTO.get(i).getFieldId().equals("nameCoauthor")) {
+					coauthor.setName(fieldsDTO.get(i).getFieldValue());
+					fieldsDTO.get(i).setFieldValue("");
+				}else if(fieldsDTO.get(i).getFieldId().equals("emailCoauthor")) {
+					coauthor.setEmail(fieldsDTO.get(i).getFieldValue());
+					fieldsDTO.get(i).setFieldValue("");
+				}else if(fieldsDTO.get(i).getFieldId().equals("cityCoauthor")) {
+					coauthor.setCity(fieldsDTO.get(i).getFieldValue());
+					fieldsDTO.get(i).setFieldValue("");
+				}else if(fieldsDTO.get(i).getFieldId().equals("stateCoauthor")) {
+					coauthor.setState(fieldsDTO.get(i).getFieldValue());
+					fieldsDTO.get(i).setFieldValue("");
+				}
+			}
+			Paper paper = this.paperService.findByTitle(title);
+			Set<Paper> papers = new HashSet<Paper>();
+			papers.add(paper);
+			coauthor.setPapers(papers);
+			coauthor.setLon(lon);
+			coauthor.setLat(lat);
+			this.coauthorService.save(coauthor);
+			map = this.mapListToDto(fieldsDTO);
+		}
+		try {
+			formService.submitTaskForm(taskId, map);
+			List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
+			for (Task t : tasks) {
+				System.out.println(t.getId() + " " + t.getName() + " " + t.getAssignee());
+			}
+		}catch(FormFieldValidationException  e) {
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+		
+		
+		return new ResponseEntity(HttpStatus.OK);
+	}
+	
 	private HashMap<String, Object> mapListToDto(List<FormSubmissionDTO> list)
 	{
 		HashMap<String, Object> map = new HashMap<String, Object>();
