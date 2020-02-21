@@ -29,6 +29,7 @@ import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.MoreLikeThisQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
@@ -197,6 +198,36 @@ public class SearchController {
 			return new ResponseEntity(retVal, HttpStatus.OK);
 		}
 
+	}
+	
+	@GetMapping(path = "/findRecenzentsByScientificArea/{id}", produces = "application/json")
+	public ResponseEntity<?> findRecenzentsByScientificArea(@PathVariable Long id) {
+		Optional<Paper> paper = this.paperService.findById(id);
+		if (paper.isPresent()) {
+			SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_RECENZENT)
+					.setTypes(TYPE_NAME_RECENZENT)
+					.setQuery(QueryBuilders.matchQuery("areas",paper.get().getArea().getName()).analyzer("serbian"))
+					.setSearchType(SearchType.DEFAULT);
+			System.out.println(request);
+			SearchResponse response = request.get();
+			System.out.println(response);
+			Set<Long> recenzents= new HashSet<Long>();
+	        for (SearchHit hit : response.getHits().getHits()) {
+				Gson gson = new Gson();
+				RecenzentDoc object = gson.fromJson(hit.getSourceAsString(), RecenzentDoc.class);
+				recenzents.add(object.getId());
+	        }
+	        
+	        
+	        List<RecenzentDTO> recenzentsDTO = new ArrayList<RecenzentDTO>();
+	        for(Long recenzent :recenzents) {
+	        	recenzentsDTO.add(new RecenzentDTO(this.userService.findRecenzentById(recenzent)));
+	        }
+	        
+	        
+	        return new ResponseEntity(recenzentsDTO, HttpStatus.OK);
+		}
+		return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 	}
 
 	@GetMapping(path = "/moreLikeThis/{id}", produces = "application/json")

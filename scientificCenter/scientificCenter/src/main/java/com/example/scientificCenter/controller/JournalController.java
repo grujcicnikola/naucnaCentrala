@@ -215,7 +215,7 @@ public class JournalController {
 			for(int i =0; i < editors.size(); i++) {
 				for(int j =0; j < editors.get(i).getAreas().size(); j++) {
 					for(int k =0; k< areas.size(); k++) {
-						if(editors.get(i).getAreas().get(j).equals(areas.get(k))) {
+						if(editors.get(i).getAreas().contains(areas.get(k))) {
 							if(!editors.get(i).getEmail().equals(email)) {
 								editorsOfInterest.add(editors.get(i));
 							}
@@ -259,7 +259,7 @@ public class JournalController {
 			for(int i =0; i < recenzents.size(); i++) {
 				for(int j =0; j <recenzents.get(i).getAreas().size(); j++) {
 					for(int k =0; k< areas.size(); k++) {
-						if(recenzents.get(i).getAreas().get(j).equals(areas.get(k))) {
+						if(recenzents.get(i).getAreas().contains(areas.get(k))) {
 							System.out.println("---dodaati recenzent u listi "+recenzents.get(i).getEmail());
 							recenzentsOfInterest.add(recenzents.get(i));
 							

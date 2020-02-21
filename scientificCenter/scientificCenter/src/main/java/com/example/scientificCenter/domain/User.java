@@ -2,6 +2,7 @@ package com.example.scientificCenter.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -57,8 +58,8 @@ public class User implements Serializable{
 	@Column
 	private String title;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	private List<ScientificArea> areas = new ArrayList<>();
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<ScientificArea> areas = new HashSet<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="user_roles", 
@@ -210,13 +211,16 @@ public class User implements Serializable{
 	
 
 
-	public List<ScientificArea> getAreas() {
+	
+
+
+	public Set<ScientificArea> getAreas() {
 		return areas;
 	}
 
 
 
-	public void setAreas(List<ScientificArea> areas) {
+	public void setAreas(Set<ScientificArea> areas) {
 		this.areas = areas;
 	}
 

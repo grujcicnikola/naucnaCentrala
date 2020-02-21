@@ -419,8 +419,12 @@ public class StartData {
 
 	private void indexRecenzent(Recenzent recenzent) {
 		// TODO Auto-generated method stub
-		RecenzentDoc recDoc = new RecenzentDoc(recenzent.getId(), recenzent.getUsername(), new GeoPoint(recenzent.getLat(), recenzent.getLon()));
-		//this.recenzentRetriever.add(recDoc);
+		List<String> areas = new ArrayList<String>();
+		for(ScientificArea sc: recenzent.getAreas()) {
+			areas.add(sc.getName());
+		}
+		RecenzentDoc recDoc = new RecenzentDoc(recenzent.getId(), recenzent.getUsername(), new GeoPoint(recenzent.getLat(), recenzent.getLon()),areas);
+		this.recenzentRetriever.add(recDoc);
 	}
 
 	public void saveCamundaUser(String email, String name, String password, String surname, String username) {
@@ -437,7 +441,7 @@ public class StartData {
 	}
 
 	public void indexPaper(Paper paper, List<Long> recenzents, List<String> coauthors ) {
-		/*
+		
 		if (paper != null) {
 			PDFTextStripper pdfStripper = null;
 			PDDocument pdDoc = null;

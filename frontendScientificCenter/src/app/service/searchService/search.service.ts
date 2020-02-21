@@ -25,4 +25,8 @@ export class SearchService {
   geoPoint(idPaper: number) {
     return this.http.get<Recenzent[]>(this.url+'/geoPoint/'+idPaper);
   }
+
+  findRecenzentsByScientificArea(idPaper: number) {
+    return this.http.get<Recenzent[]>(this.url+'/findRecenzentsByScientificArea/'+idPaper);
+  }
 }

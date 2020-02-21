@@ -94,6 +94,19 @@ export class FilterPageComponent implements OnInit {
     this.selectedItems=[]
   }
 
+  filterByAreaUDD(){
+    this.searchService.findRecenzentsByScientificArea(this.idPaper).subscribe(
+      data=>{
+        this.recenzents= data;
+        console.log(this.recenzents);
+        this.fieldsFormat();
+      }
+    )  
+    /*this.recenzentsList =[];
+    this.recenzentsList.push({item_id: 5, item_text: "bla"}); 
+    */
+    this.selectedItems=[]
+  }
   filterMoreLikeThis(){
     this.searchService.moreLikeThis(this.idPaper).subscribe(
       data=>{

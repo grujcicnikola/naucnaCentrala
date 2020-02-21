@@ -1,5 +1,8 @@
 package com.example.scientificCenter.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Id;
 
 import org.elasticsearch.common.geo.GeoPoint;
@@ -13,12 +16,15 @@ public class RecenzentDoc {
 	public static final String TYPE_NAME = "recenzent";
 	
 	public static final String DATE_PATTERN = "yyyy-MM-dd";
+	
 
-	public RecenzentDoc(Long id, String username, GeoPoint location) {
+
+	public RecenzentDoc(Long id, String username, GeoPoint location, List<String> areas) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.location = location;
+		this.areas = areas;
 	}
 
 	public RecenzentDoc() {
@@ -36,7 +42,9 @@ public class RecenzentDoc {
 	@GeoPointField
 	private GeoPoint location;
 	
-
+	@Field(type = FieldType.Text, analyzer="serbian", store = true)
+	private List<String> areas = new ArrayList<String>();
+	
 
 	public Long getId() {
 		return id;
@@ -75,6 +83,14 @@ public class RecenzentDoc {
 
 	public static String getDatePattern() {
 		return DATE_PATTERN;
+	}
+
+	public List<String> getAreas() {
+		return areas;
+	}
+
+	public void setAreas(List<String> areas) {
+		this.areas = areas;
 	}
 
 	

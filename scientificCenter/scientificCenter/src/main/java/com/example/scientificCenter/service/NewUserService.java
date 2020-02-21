@@ -3,9 +3,11 @@ package com.example.scientificCenter.service;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.RuntimeService;
@@ -67,7 +69,7 @@ public class NewUserService implements JavaDelegate{
 		}
 		@SuppressWarnings("unchecked")
 		List<FormSubmissionDTO> fieldsDTO = (List<FormSubmissionDTO>)execution.getVariable("registration");
-		List<ScientificArea> areas= new ArrayList<ScientificArea>();
+		Set<ScientificArea> areas= new HashSet<ScientificArea>();
 		for(int i = 0; i < fieldsDTO.size(); i++) {
 			if(fieldsDTO.get(i).getFieldId().equals("scientificAreas")){
 				for(int j =0; j< fieldsDTO.get(i).getAreas().size(); j++) {
