@@ -23,10 +23,19 @@ export class SearchPageComponent implements OnInit {
                   {"name":"area","value":"scientific area"},
                   {"name":"everything","value":"everything"}];
   private operators=["AND","OR"];
+
+  items = [];
+  pageOfItems: Array<any>;
   constructor(private searchService: SearchService, private paperService: PaperService) { }
 
   ngOnInit() {
+   // this.items = Array(150).fill(0).map((x, i) => ({ id: (i + 1), name: `Item ${i + 1}`}));
   }
+
+  onChangePage(pageOfItems: Array<any>) {
+    // update current page of items
+    this.pageOfItems = pageOfItems;
+}
 
   add(){
     let newM = new BooleanQuery();
@@ -49,6 +58,7 @@ export class SearchPageComponent implements OnInit {
       data =>{
         //console.log(data);
         this.response=data;
+        this.items = data;
         console.log(this.response);
       }
     )

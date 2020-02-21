@@ -114,7 +114,8 @@ public class SearchController {
 						.setTypes(TYPE_NAME_PAPER)
 						.setQuery(QueryBuilders.matchPhraseQuery(queryDTO.getBooleanQueryies().get(0).getArea(),
 								queryDTO.getBooleanQueryies().get(0).getQuery()).analyzer("serbian"))
-						.setSearchType(SearchType.DEFAULT).highlighter(highlightBuilder);
+						.setSearchType(SearchType.DEFAULT).highlighter(highlightBuilder)
+						.setSize(100);
 				SearchResponse response = request.get();
 				// System.out.println(response.toString());
 				retVal = getResponse(response);
@@ -125,7 +126,8 @@ public class SearchController {
 						.setTypes(TYPE_NAME_PAPER)
 						.setQuery(QueryBuilders.matchQuery(queryDTO.getBooleanQueryies().get(0).getArea(),
 								queryDTO.getBooleanQueryies().get(0).getQuery()).analyzer("serbian"))
-						.setSearchType(SearchType.DEFAULT).highlighter(highlightBuilder);
+						.setSearchType(SearchType.DEFAULT).highlighter(highlightBuilder)
+						.setSize(100);
 				SearchResponse response = request.get();
 				// System.out.println(response.toString());
 				retVal = getResponse(response);
@@ -186,7 +188,8 @@ public class SearchController {
 			highlightBuilder.highlightQuery(booleanQuery);
 			SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
 					.setTypes(TYPE_NAME_PAPER).setQuery(booleanQuery).setSearchType(SearchType.DEFAULT)
-					.highlighter(highlightBuilder);
+					.highlighter(highlightBuilder)
+					.setSize(100);
 			System.out.println("BQB");
 			System.out.println(booleanQuery);
 			System.out.println("REQUEST");
@@ -207,7 +210,8 @@ public class SearchController {
 			SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_RECENZENT)
 					.setTypes(TYPE_NAME_RECENZENT)
 					.setQuery(QueryBuilders.matchQuery("areas",paper.get().getArea().getName()).analyzer("serbian"))
-					.setSearchType(SearchType.DEFAULT);
+					.setSearchType(SearchType.DEFAULT)
+					.setSize(100);
 			System.out.println(request);
 			SearchResponse response = request.get();
 			System.out.println(response);
@@ -248,7 +252,8 @@ public class SearchController {
 			SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
 	                .setTypes(TYPE_NAME_PAPER)
 	                .setQuery(query)
-	                .setSearchType(SearchType.DEFAULT);
+	                .setSearchType(SearchType.DEFAULT)
+	                .setSize(100);
 	        request.setFetchSource(null, "content");;
 			System.out.println("REQUEST");
 			System.out.println(request);
@@ -264,7 +269,8 @@ public class SearchController {
 	        SearchRequestBuilder requestRejected = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER_REJECTED)
 	                .setTypes(TYPE_NAME_PAPER_REJECTED)
 	                .setQuery(query)
-	                .setSearchType(SearchType.DEFAULT);
+	                .setSearchType(SearchType.DEFAULT)
+	                .setSize(100);
 	        request.setFetchSource(null, "content");;
 			SearchResponse responseRejected = requestRejected.get();
 	        System.out.println(responseRejected.toString());
@@ -312,8 +318,9 @@ public class SearchController {
 			SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_RECENZENT)
 	                .setTypes(TYPE_NAME_RECENZENT)
 	                .setQuery(boolQueryFinal)
-	                .setSearchType(SearchType.DEFAULT);
-	        request.setFetchSource(null, "content");;
+	                .setSearchType(SearchType.DEFAULT)
+	                .setSize(100);
+	        request.setFetchSource(null, "content");
 			System.out.println("REQUEST");
 			System.out.println(request);
 			SearchResponse response = request.get();

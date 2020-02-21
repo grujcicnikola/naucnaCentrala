@@ -25,6 +25,7 @@ import { AnalysisOfReviewComponent } from './analysis-of-review/analysis-of-revi
 import { SearchPageComponent } from './search-page/search-page.component';
 import { FilterPageComponent } from './filter-page/filter-page.component';
 import { CoauthorsComponent } from './coauthors/coauthors.component';
+import { JwPaginationComponent } from 'jw-angular-pagination';
 
 const appRoutes: Routes = [
   {path: 'register', component : RegistrationComponent},
@@ -62,7 +63,7 @@ const appRoutes: Routes = [
     SearchPageComponent,
     FilterPageComponent,
     CoauthorsComponent,
-    
+    JwPaginationComponent
   ],
   imports: [
     BrowserModule,

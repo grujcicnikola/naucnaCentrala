@@ -26,6 +26,7 @@
     "angular-2-data-table": "^0.1.2",
     "angular4-material-table": "^0.8.0",
     "instantsearch.js": "^4.2.0",
+    "jw-angular-pagination": "^1.1.0",
     "ng-multiselect-dropdown": "^0.2.10",
     "rxjs": "~6.4.0",
     "searchkit": "^2.4.1-alpha.3",
