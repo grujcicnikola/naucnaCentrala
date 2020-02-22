@@ -40,15 +40,10 @@ public class PaperDoc {
     private String title;
 
 	@Field(type = FieldType.Text, analyzer="serbian", store = true)
-    private String journaltitle;
+    private String journaltitle;		
 	
 	@Field(type = FieldType.Text, analyzer="serbian", store = true)
-	private String author;
-	
-	@Field(type = FieldType.Text, analyzer="serbian", store = true)
-	private List<String> coauthors = new ArrayList<String>();
-	
-	
+	private List<String> authors = new ArrayList<String>();
 	
 	@Field(type = FieldType.Text, analyzer="serbian",store = true)
     private String keywords;
@@ -93,25 +88,13 @@ public class PaperDoc {
 		this.idPaper = idPaper;
 	}
 
-	
-	
 
-	public String getAuthor() {
-		return author;
+	public List<String> getAuthors() {
+		return authors;
 	}
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	
-
-	public List<String> getCoauthors() {
-		return coauthors;
-	}
-
-	public void setCoauthors(List<String> coauthors) {
-		this.coauthors = coauthors;
+	public void setAuthors(List<String> authors) {
+		this.authors = authors;
 	}
 
 	public String getJournaltitle() {
@@ -176,12 +159,7 @@ public class PaperDoc {
 		this.recenzentsId = recenzentsId;
 	}
 
-	@Override
-	public String toString() {
-		return "PaperDoc [id=" + id + ", idPaper=" + idPaper + ", title=" + title + ", journaltitle=" + journaltitle
-				+ ", author=" + author + ", keywords=" + keywords + ", area=" + area
-				+ ", status=" + status + ", content=" + content + "]";
-	}
+	
 
 	
 	

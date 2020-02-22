@@ -85,6 +85,9 @@ export class HomeComponent implements OnInit {
     
   }
 
+  search(){
+    window.location.href="https://localhost:4202/searchPage"
+  }
   handleAuthError(err: HttpErrorResponse) {
   
     if(err.status === 401){

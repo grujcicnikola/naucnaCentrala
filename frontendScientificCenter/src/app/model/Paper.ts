@@ -3,8 +3,7 @@ export class Paper{
     idPaper: number;
     title: String;
     journaltitle: String;
-    author: String;
-    coauthors: String;
+    authors: String;
     keywords: String;
     area: String;
     status: Boolean;

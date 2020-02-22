@@ -17,5 +17,7 @@ public interface RecenzentRepository extends JpaRepository<Recenzent, Long> {
 	List<Recenzent> findAllByJournalId(Long id);
 
 	Optional<Recenzent> findById(Long id);
+	
+	
 
 }

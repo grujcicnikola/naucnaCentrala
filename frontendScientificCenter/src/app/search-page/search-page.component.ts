@@ -5,6 +5,7 @@ import { SearchService } from '../service/searchService/search.service';
 import { PaperResponse } from '../model/PaperResponse';
 import { Paper } from '../model/Paper';
 import { PaperService } from '../service/paperService/paper.service';
+import { TokenStorageService } from '../auth/token-storage.service';
 
 @Component({
   selector: 'app-search-page',
@@ -17,19 +18,23 @@ export class SearchPageComponent implements OnInit {
   private response: Array<PaperResponse>=[];
   private types= [{"name":"title","value":"title"},
                   {"name":"journal title","value":"journaltitle"},
-                  {"name":"author","value":"author"},
+                  {"name":"authors","value":"authors"},
                   {"name":"keywords","value":"keywords"},
                   {"name":"content","value":"content"},
-                  {"name":"area","value":"scientific area"},
+                  {"name":"scientific area","value":"area"},
                   {"name":"everything","value":"everything"}];
   private operators=["AND","OR"];
+  private someoneLogged : boolean;
 
   items = [];
   pageOfItems: Array<any>;
-  constructor(private searchService: SearchService, private paperService: PaperService) { }
+  constructor(private searchService: SearchService, private paperService: PaperService, private tokenStorage : TokenStorageService) { }
 
   ngOnInit() {
    // this.items = Array(150).fill(0).map((x, i) => ({ id: (i + 1), name: `Item ${i + 1}`}));
+   if (this.tokenStorage.getToken()) {
+    this.someoneLogged = true;
+   }
   }
 
   onChangePage(pageOfItems: Array<any>) {
@@ -48,23 +53,66 @@ export class SearchPageComponent implements OnInit {
     this.searchFields.booleanQueryies.splice(newM,1);
   }
 
+  private valid = true;
+  validation(){
+    
+    if(this.firstQuery.area==undefined || this.firstQuery.query==undefined){
+      this.valid=false;
+      //console.log(this.firstQuery.area+" "+this.firstQuery.query)
+      //console.log(this.valid);
+    }
+    if(this.searchFields.booleanQueryies.length==1){
+      this.searchFields.booleanQueryies.forEach(
+        query=>{
+          //console.log(query.area+" "+query.query)
+          if(query.area==undefined|| query.query==undefined){
+            this.valid = false;
+            //console.log(this.valid);
+          }
+        }
+      )  
+    }else{
+      this.searchFields.booleanQueryies.forEach(
+        query=>{
+          //console.log(query.area+" "+query.query +" "+query.operator)
+          if(query.area==undefined|| query.query==undefined || query.operator==undefined){
+            this.valid = false;
+            //console.log(this.valid);
+          }
+        }
+      )  
+    }
+    
+    console.log(this.valid);
+    return this.valid;
+  }
+
   search(){
+    this.valid=true;
     if(this.searchFields.booleanQueryies.length>0){
       this.firstQuery.operator=this.searchFields.booleanQueryies[0].operator;//postaviti za prvi takodje onog drugog
+      
     }
-    this.searchFields.booleanQueryies.unshift(this.firstQuery);
+    this.searchFields.booleanQueryies.unshift(this.firstQuery);    
+    
     console.log(this.searchFields.booleanQueryies);
-    this.searchService.search(this.searchFields).subscribe(
-      data =>{
-        //console.log(data);
-        this.response=data;
-        this.items = data;
-        console.log(this.response);
-      }
-    )
+    if(this.validation()){
+      this.searchService.search(this.searchFields).subscribe(
+        data =>{
+          //console.log(data);
+          this.response=data;
+          this.items = data;
+          console.log(this.response);
+        }
+      )
+    }
     //this.searchFields.booleanQueryies = [];
     //this.firstQuery = new BooleanQuery();
     this.searchFields.booleanQueryies.shift();
+  }
+
+  buy(paper){
+
   }
 
   download(paper: Paper){

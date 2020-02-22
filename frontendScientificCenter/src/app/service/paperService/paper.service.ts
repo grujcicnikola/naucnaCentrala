@@ -7,11 +7,14 @@ import { PDF } from 'src/app/model/PDF';
 import { PDFURL } from 'src/app/model/PDFURL';
 import { Paper } from 'src/app/model/Paper';
 import { Recenzent } from 'src/app/model/Recenzent';
+import { PaperResponse } from 'src/app/model/PaperResponse';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaperService {
+  
+  
   url ="https://localhost:8088/paper"
   constructor(private http:HttpClient) { }
   
@@ -69,5 +72,15 @@ export class PaperService {
     return this.http.get<Recenzent[]>(this.url+'/findRecenzentsByScientificArea/'+idPaper);
   }
 
- 
+  findAllPapers() {
+    return this.http.get<Paper[]>(this.url+'/getPapers');
+  }
+
+  indexReject(id: number) {
+    return this.http.get(this.url+'/indexRejected/'+id);
+  }
+
+  indexAccept(id: number) {
+    return this.http.get(this.url+'/index/'+id);
+  }
 }

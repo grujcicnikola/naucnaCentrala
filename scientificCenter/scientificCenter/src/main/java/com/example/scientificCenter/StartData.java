@@ -109,13 +109,14 @@ public class StartData {
 		Journal journal2 = this.journalService.findByIssn("2222-2222");
 		Paper paper2 = new Paper("Čokolada", (Author) author2.get(),
 				"Ta namirnica se dobija od prepečenih zrna kakaoa",
-				area2.get(), true,
+				area2.get(), false,
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\cokolada.pdf",
 				"čokolada, slatkiši", journal2, "");
 		Paper paper1Saved2 = this.paperService.save(paper2);
-		papers.add(paper1Saved2);
+		Set<Paper> papers2 = new HashSet<Paper>();
+		papers2.add(paper1Saved2);
 		Coauthor coauthor2 = new Coauthor("Marko Miljkovic","miljkovic@gmail.com","Novi Sad", "Srbija",19.833549,	45.267136,papers);
-		coauthor2.setPapers(papers);
+		coauthor2.setPapers(papers2);
 		this.coauthorService.save(coauthor2);
 		List<String> coauthors2= new ArrayList<String>();
 		coauthors2.add(coauthor2.getName());
@@ -155,7 +156,7 @@ public class StartData {
 		Journal journal4 = this.journalService.findByIssn("1111-2222");
 		Paper paper4 = new Paper("Crna rupa", (Author) author4.get(),
 				"Crna rupa je nebesko telo.",
-				area4.get(), true,
+				area4.get(), false,
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\crnarupa.pdf",
 				"čokolada, slatkiši", journal4, "");
 		Paper paper1Saved4 = this.paperService.save(paper4);
@@ -188,7 +189,7 @@ public class StartData {
 		Journal journal6 = this.journalService.findByIssn("2222-2222");
 		Paper paper6 = new Paper("Čuovište iz Loh Nesa", (Author) author5.get(),
 				"Postoje mnogo čudovišta.",
-				area6.get(), true,
+				area6.get(), false,
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\cudoviste.pdf",
 				"čudovište, Loh Nes", journal6, "");
 		Paper paper1Saved6 = this.paperService.save(paper6);
@@ -214,7 +215,7 @@ public class StartData {
 		Journal journal8 = this.journalService.findByIssn("1111-2222");
 		Paper paper8 = new Paper("Galaksije", (Author) author8.get(),
 				"Галаксија је велики скуп од више стотина хиљада или милијарди звезда у свемиру",
-				area8.get(), true,
+				area8.get(), false,
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\galaksije.pdf",
 				"fizika, galaksije", journal8, "");
 		Paper paper1Saved8 = this.paperService.save(paper8);
@@ -240,7 +241,7 @@ public class StartData {
 		Journal journal10 = this.journalService.findByIssn("3333-2222");
 		Paper paper10 = new Paper("Mehanicka energija", (Author) author10.get(),
 				"Telo raspolaže energijom ukoliko je sposobno da vrši rad",
-				area10.get(), true,
+				area10.get(), false,
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\mehanickaenergija.pdf",
 				"fizika, energija", journal10, "");
 		Paper paper1Saved10 = this.paperService.save(paper10);
@@ -267,7 +268,7 @@ public class StartData {
 		Paper paper12 = new Paper("Mesečeve mene", (Author) author12.get(),
 				"Mesečeve mene (ili Mesečeve faze) jesu različiti oblici Meseca koji se vide sa\r\n" + 
 				"Zemlje",
-				area12.get(), true,
+				area12.get(), false,
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\mesecevemene.pdf",
 				"fizika, mesec ,mena", journal12, "");
 		Paper paper1Saved12 = this.paperService.save(paper12);
@@ -296,7 +297,7 @@ public class StartData {
 		Journal journal14 = this.journalService.findByIssn("1111-2222");
 		Paper paper14 = new Paper("Mlečni put", (Author) author14.get(),
 				"Наша галаксија, названа Млечни пут зато што личи на млаз млека на ноћном небу",
-				area14.get(), true,
+				area14.get(), false,
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\mlecniput.pdf",
 				"fizika, zvezde, galaksije", journal14, "");
 		Paper paper1Saved14 = this.paperService.save(paper14);
@@ -309,7 +310,7 @@ public class StartData {
 		Journal journal15 = this.journalService.findByIssn("3333-2222");
 		Paper paper15 = new Paper("Okean", (Author) author15.get(),
 				"Okean je ogromna jedinstvena masa slane vode",
-				area15.get(), true,
+				area15.get(), false,
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\okean.pdf",
 				"more, okean", journal15, "");
 		Paper paper1Saved15 = this.paperService.save(paper15);
@@ -348,7 +349,7 @@ public class StartData {
 		Journal journal18 = this.journalService.findByIssn("2222-2222");
 		Paper paper18 = new Paper("Voda", (Author) author18.get(),
 				"Voda je hemijsko jedinjenje kiseonika i vodonika",
-				area18.get(), true,
+				area18.get(), false,
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\voda.pdf",
 				"more, voda", journal18, "");
 		Paper paper1Saved18 = this.paperService.save(paper18);
@@ -361,7 +362,7 @@ public class StartData {
 		Journal journal19 = this.journalService.findByIssn("2222-2222");
 		Paper paper19 = new Paper("Vojvodina šume", (Author) author19.get(),
 				"Vojvodina iz Fonda za šume dodeljuje 153 miliona dinara za pošumljavanje",
-				area19.get(), true,
+				area19.get(), false,
 				"D:\\naucnacentrala-upp-novi\\naucnaCentrala\\scientificCenter\\scientificCenter\\files\\vojvodinasume.pdf",
 				"šume, vojvodina", journal19, "");
 		Paper paper1Saved19 = this.paperService.save(paper19);
@@ -467,7 +468,7 @@ public class StartData {
 			}
 			PaperDoc paperDoc = new PaperDoc();
 			paperDoc.setArea(paper.getArea().getName());
-			paperDoc.setAuthor(paper.getAuthor().getName() + " " + paper.getAuthor().getSurname());
+			//paperDoc.setAuthor(paper.getAuthor().getName() + " " + paper.getAuthor().getSurname());
 			paperDoc.setIdPaper(paper.getId());
 			paperDoc.setJournaltitle(paper.getJournal().getTitle());
 			paperDoc.setKeywords(paper.getKeywords());
@@ -475,7 +476,11 @@ public class StartData {
 			paperDoc.setStatus(paper.getStatus());
 			paperDoc.setContent(parsedText);
 			paperDoc.setRecenzentsId(recenzents);
-			paperDoc.setCoauthors(coauthors);
+			if(coauthors == null) {
+				coauthors = new ArrayList<String>();
+			}
+			coauthors.add(paper.getAuthor().getName() + " " + paper.getAuthor().getSurname());
+			paperDoc.setAuthors(coauthors);
 			//System.out.println(parsedText);
 			this.resultRetriever.add(paperDoc);
 

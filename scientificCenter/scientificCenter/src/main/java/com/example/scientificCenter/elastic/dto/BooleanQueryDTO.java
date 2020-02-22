@@ -1,9 +1,16 @@
 package com.example.scientificCenter.elastic.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class BooleanQueryDTO {
 
+	@NotNull
+	@Size(min=1, max=20)
     private String area;
     
+	@NotNull
+	@Size(min=2, max=100)
     private String query;
     
     private String operator;

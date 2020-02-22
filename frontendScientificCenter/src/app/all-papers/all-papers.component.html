@@ -1,0 +1,168 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">Scientific central</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+      aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+        <li class="nav-item">
+          <a class="nav-link" id="home" href="#">Home <span class="sr-only"></span></a>
+        </li>
+      </ul>
+
+    </div>
+
+  </div>
+
+</nav>
+
+<header>
+  <div class="overlay">
+    <h1>SCIENTIFIC CENTRAL</h1>
+    <p class="card-text"></p>
+  </div>
+
+</header>
+
+<body>
+  
+
+  <!--<div class="container" data-ng-app="myApp" data-ng-controller="myCtrl">
+        <div class="row">
+          <div class="col-1-20">
+            Search:
+          </div>
+          <div class="col-3-20">
+            <input type="text" class="search" data-ng-model="table" />
+          </div>
+          <div class="col-5-20">
+                in
+            </div>
+            <div class="col-7-20">
+                    <select class="form-control" name="izbor"  id="izbor"    ngModel>
+                            <option  [value]="journalName" >name of journal</option>
+                            <option  [value]="title" >title</option>
+                            <option  [value]="nameOfAuthor" >name of author</option>
+                            <option  [value]="keywords" >keywords</option>
+                            <option  [value]="content" >content</option>
+                            <option  [value]="scientificAreas" >scientifica areas</option>
+                        </select>
+            </div>
+        </div>
+        <br/>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>Country</th>
+          </tr>
+          <tr data-ng-repeat="customer in customers ">
+            <td>customer.Name</td>
+            <td>customer.City</td>
+            <td>customer.Country</td>
+          </tr>
+        </table>
+        <div data-pagination="" data-num-pages="numPages()" data-current-page="currentPage" data-max-size="maxSize" data-boundary-links="true"></div>
+      </div>-->
+  <div class="container py-5 mt-5">
+    <h1>All papers</h1>
+
+    <div class="row mt-5">
+      <!--<div class="col-lg-3 col-sm-6 mb-5" *ngFor="let paper of response; let i = index">///////////////
+                <div class="h-16 w-16 min-h-full">
+              <div class="card shadow border-0 ">
+                <h4 class="card-title">{{paper.paper.title}}</h4>
+                <p class="card-text">{{paper.paper.author}}</p>
+                <p class="card-text">scientific area: {{paper.paper.area}}</p>
+                <p class="card-text"></p>
+                <div [innerHTML]="paper.highlights"></div>
+                <div class="row push-to-bottom text-center"  *ngIf="paper.paper.status == true">
+                    <div class="col" >
+                       <button id="Btn0"  (click)="download(paper.paper)" class="btn btn-success btn-block text-align-center">Download</button>
+                    </div>
+                  </div>
+                  <div class="row push-to-bottom text-center"  *ngIf="paper.paper.status == false">
+                      <div class="col" >
+                         <button  id="Btn1"  (click)="buy(paper)" class="btn btn-success btn-block text=align-center">Buy</button>
+                      </div>
+                    </div>-->
+      <!--div class="row">
+                  <div class="col" *ngIf="paper.isOpenAccess == true">
+                     <p class="card-text">open-access</p>
+                  </div>
+                  <div class="col" *ngIf="journal.isOpenAccess == false">
+                    <p class="card-text">not open-access</p>
+                 </div>
+                </div>
+                <div class="row" *ngIf="authorLogged == true">
+                  <div class="col" >
+                     <a id="hrefButton"  (click)="submitPaper(journal)" class="btn btn-success btn-block">Submit paper</a>
+                  </div>
+                </div> 
+                <div class="row"  *ngIf="userLogged == true">
+                   <div class="col" *ngIf="journal.isOpenAccess == false">
+                      <a id="hrefButton"  (click)="buyJournal(journal)" class="btn btn-success btn-block">Buy</a>
+                   </div>
+                 </div>
+                 <div class="row"  *ngIf="userLogged == true">
+                  <div class="col">
+                     <a id="subButton"  (click)="subscribe(journal)" class="btn btn-success btn-block"  *ngIf=" journal.canSubscribe == true && userLogged == true">Subscribe</a>
+                  </div>
+                </div>
+                <div class="row"  *ngIf="userLogged == true">
+                  <div class="col">
+                     <a id="unSubButton"  (click)="unsubscribe(journal)" class="btn btn-success btn-block" *ngIf="journal.canUnsubscribe == true && userLogged == true">Unsubscribe</a>
+                  </div>
+                </div> -->
+      <!----</div>///////////////////////
+              </div>
+            </div>
+          </div>
+        </div>-->
+      <!-- main app container -->
+      <div class="card-body">
+        <div class="col-lg-3 col-sm-6 mb-5" *ngFor="let paper of pageOfItems; let i = index">
+          <div class="h-16 min-w-full min-h-full">
+            <div class="card min-w-full shadow border-0 ">
+              <h4 class="card-title">{{paper.title}}</h4>
+              <p class="card-text">{{paper.author}}</p>
+              <p class="card-text">scientific area: {{paper.area}}</p>
+              <p class="card-text"></p>
+              <div [innerHTML]="paper.highlights"></div>
+              <div class="row push-to-bottom text-center" >
+                <div class="col">
+                  <button *ngIf="someoneLogged == true" id="Btn0" (click)="filterRecenzents(paper)"
+                    class="btn btn-success btn-block text-align-center">Filter recenzents</button>
+                </div>
+              </div>
+              <div class="row push-to-bottom text-center" >
+                <div class="col">
+                  <button *ngIf="someoneLogged == true" id="Btn1" (click)="reject(paper)"
+                    class="btn btn-success btn-block text=align-center">Index rejected</button>
+                </div>
+              </div>
+              <div class="row push-to-bottom text-center" >
+                <div class="col">
+                  <button *ngIf="someoneLogged == true" id="Btn1" (click)="accept(paper)"
+                    class="btn btn-success btn-block text=align-center">Index accepted</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pagination">
+        <jw-pagination  [items]="items" (changePage)="onChangePage($event)"></jw-pagination>
+      </div>
+    </div>
+
+  </div>
+
+</body>

@@ -26,6 +26,7 @@ import { SearchPageComponent } from './search-page/search-page.component';
 import { FilterPageComponent } from './filter-page/filter-page.component';
 import { CoauthorsComponent } from './coauthors/coauthors.component';
 import { JwPaginationComponent } from 'jw-angular-pagination';
+import { AllPapersComponent } from './all-papers/all-papers.component';
 
 const appRoutes: Routes = [
   {path: 'register', component : RegistrationComponent},
@@ -43,6 +44,7 @@ const appRoutes: Routes = [
   {path: 'searchPage', component : SearchPageComponent},
   {path: 'filterPage/:id', component : FilterPageComponent},
   {path: 'task/coauthors/:taskId', component : CoauthorsComponent},
+  {path: 'allPapers', component : AllPapersComponent},
   ]
 
 @NgModule({
@@ -63,7 +65,8 @@ const appRoutes: Routes = [
     SearchPageComponent,
     FilterPageComponent,
     CoauthorsComponent,
-    JwPaginationComponent
+    JwPaginationComponent,
+    AllPapersComponent
   ],
   imports: [
     BrowserModule,

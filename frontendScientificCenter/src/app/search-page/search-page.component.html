@@ -15,6 +15,9 @@
         <li class="nav-item">
           <a class="nav-link" id="home" href="#">Home <span class="sr-only"></span></a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" id="home" href="allPapers">All papers <span class="sr-only"></span></a>
+        </li>
       </ul>
 
     </div>
@@ -240,19 +243,19 @@
           <div class="h-16 min-w-full min-h-full">
             <div class="card min-w-full shadow border-0 ">
               <h4 class="card-title">{{paper.paper.title}}</h4>
-              <p class="card-text">{{paper.paper.author}}</p>
+              <p class="card-text">{{paper.paper.authors}}</p>
               <p class="card-text">scientific area: {{paper.paper.area}}</p>
               <p class="card-text"></p>
               <div [innerHTML]="paper.highlights"></div>
               <div class="row push-to-bottom text-center" *ngIf="paper.paper.status == true">
                 <div class="col">
-                  <button id="Btn0" (click)="download(paper.paper)"
+                  <button *ngIf="someoneLogged == true" id="Btn0" (click)="download(paper.paper)"
                     class="btn btn-success btn-block text-align-center">Download</button>
                 </div>
               </div>
               <div class="row push-to-bottom text-center" *ngIf="paper.paper.status == false">
                 <div class="col">
-                  <button id="Btn1" (click)="buy(paper)"
+                  <button *ngIf="someoneLogged == true" id="Btn1" (click)="buy(paper)"
                     class="btn btn-success btn-block text=align-center">Buy</button>
                 </div>
               </div>

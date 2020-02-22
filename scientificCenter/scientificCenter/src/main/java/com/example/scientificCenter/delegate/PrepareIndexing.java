@@ -2,6 +2,8 @@ package com.example.scientificCenter.delegate;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.pdfbox.cos.COSDocument;
@@ -19,9 +21,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.example.scientificCenter.domain.Coauthor;
 import com.example.scientificCenter.domain.Journal;
 import com.example.scientificCenter.domain.Paper;
+import com.example.scientificCenter.domain.Recenzent;
 import com.example.scientificCenter.model.PaperDoc;
+import com.example.scientificCenter.service.CoauthorService;
 import com.example.scientificCenter.service.JournalService;
 import com.example.scientificCenter.service.PaperService;
 import com.example.scientificCenter.service.ScientificAreaService;
@@ -55,6 +60,9 @@ public class PrepareIndexing implements JavaDelegate{
 	
 	@Autowired
 	private PaperDocDAO resultRetriever;
+	
+	@Autowired
+	private CoauthorService coauthorService;
 	
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
@@ -93,9 +101,27 @@ public class PrepareIndexing implements JavaDelegate{
 				e.printStackTrace();
 				return;
 			}
+			
+			List<String> authors = new ArrayList<String>();
+			authors.add(paper.getAuthor().getName()+" "+paper.getAuthor().getSurname());
+			List<Coauthor> coauthors = this.coauthorService.findAllByPaper(paper.getId());
+			if(coauthors != null) {
+				for(int i =0; i < coauthors.size(); i++) {
+					authors.add(coauthors.get(i).getName());
+				}
+			}
+			
+			List<Long> recenzentsId = new ArrayList<Long>();
+			List<Recenzent> recenzents = this.journalService.findAllRecenzentsByJournal(paper.getJournal());
+			if(recenzents != null) {
+				for(int i =0; i < recenzents.size(); i++) {
+					recenzentsId.add(recenzents.get(i).getId());
+				}
+			}
 			PaperDoc paperDoc = new PaperDoc();
 			paperDoc.setArea(paper.getArea().getName());
-			paperDoc.setAuthor(paper.getAuthor().getName() + " " + paper.getAuthor().getSurname());
+			paperDoc.setAuthors(authors);
+			paperDoc.setRecenzentsId(recenzentsId);
 			paperDoc.setIdPaper(paper.getId());
 			paperDoc.setJournaltitle(paper.getJournal().getTitle());
 			paperDoc.setKeywords(paper.getKeywords());

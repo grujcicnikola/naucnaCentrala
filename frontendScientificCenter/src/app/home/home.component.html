@@ -26,7 +26,9 @@
         <li class="nav-item">
           <button *ngIf="someoneLogged == true" class="nav-link" [routerLink]="" (click)="logout()">Logout</button>
         </li>
-        
+        <li class="nav-item">
+          <button  class="nav-link" [routerLink]="" (click)="search()">Search</button>
+        </li>
         <li class="nav-item">
           <button *ngIf="userLogged== true"   class="nav-link" (click)="userTransactions()">My transactions</button>
         </li>

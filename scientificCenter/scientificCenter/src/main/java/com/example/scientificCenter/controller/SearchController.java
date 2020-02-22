@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdfparser.PDFParser;
@@ -29,6 +31,7 @@ import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.MoreLikeThisQueryBuilder;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -59,6 +62,7 @@ import com.example.scientificCenter.elastic.dto.ResponsePaperDTO;
 import com.example.scientificCenter.model.PaperDoc;
 import com.example.scientificCenter.model.RecenzentDoc;
 import com.example.scientificCenter.service.CoauthorService;
+import com.example.scientificCenter.service.JournalService;
 import com.example.scientificCenter.service.PaperService;
 import com.example.scientificCenter.service.UserService;
 import com.example.scientificCenter.serviceInterface.RecenzentDocDAO;
@@ -82,57 +86,92 @@ public class SearchController {
 
 	@Autowired
 	private PaperService paperService;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private CoauthorService coauthorService;
+	
+	@Autowired
+	private JournalService journalService;
 
 	private HighlightBuilder highlightBuilder = new HighlightBuilder().field("title", 50).field("journaltitle", 50)
-			.field("author", 50).field("keywords", 50).field("area", 50).field("content", 50);
+			.field("authors", 50).field("keywords", 50).field("area", 50).field("content", 50);
 
 	public static final String INDEX_NAME_PAPER = "paperlibrary";
 	public static final String TYPE_NAME_PAPER = "paper";
-	
+
 	public static final String INDEX_NAME_PAPER_REJECTED = "paperlibraryrejected";
 	public static final String TYPE_NAME_PAPER_REJECTED = "paperrejected";
-	
+
 	public static final String INDEX_NAME_RECENZENT = "recenzentlibrary";
 	public static final String TYPE_NAME_RECENZENT = "recenzent";
 
 	@PostMapping(value = "/searchQuery", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity advancedQuery(@RequestBody CombineQueryDTO queryDTO) {
+	public ResponseEntity advancedQuery(@Valid @RequestBody CombineQueryDTO queryDTO) {
 		if (queryDTO.getBooleanQueryies().size() == 1) {// basic search
-
+			System.out.println("obicna pretraga");
 			ArrayList<ResponsePaperDTO> retVal = new ArrayList<>();
 			highlightBuilder
 					.highlightQuery(QueryBuilders.queryStringQuery(queryDTO.getBooleanQueryies().get(0).getQuery()));
 			if (queryDTO.getBooleanQueryies().get(0).getIsPhraze() != null
 					&& queryDTO.getBooleanQueryies().get(0).getIsPhraze() == true) {
-				SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
-						.setTypes(TYPE_NAME_PAPER)
-						.setQuery(QueryBuilders.matchPhraseQuery(queryDTO.getBooleanQueryies().get(0).getArea(),
-								queryDTO.getBooleanQueryies().get(0).getQuery()).analyzer("serbian"))
-						.setSearchType(SearchType.DEFAULT).highlighter(highlightBuilder)
-						.setSize(100);
-				SearchResponse response = request.get();
-				// System.out.println(response.toString());
-				retVal = getResponse(response);
-				System.out.println("query: " + QueryBuilders.matchQuery(queryDTO.getBooleanQueryies().get(0).getArea(),
-						queryDTO.getBooleanQueryies().get(0).getQuery()));
+				if (queryDTO.getBooleanQueryies().get(0).getArea().equals("everything")) {
+					SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
+							.setTypes(TYPE_NAME_PAPER)
+							.setQuery(QueryBuilders
+									.multiMatchQuery(queryDTO.getBooleanQueryies().get(0).getQuery(), "title",
+											"journaltitle", "authors", "keywords", "area", "content")
+									.type("phrase").analyzer("serbian"))
+							.setSearchType(SearchType.DEFAULT).highlighter(highlightBuilder).setSize(100);
+					System.out.println(request);
+					SearchResponse response = request.get();
+					System.out.println(response.toString());
+					retVal = getResponse(response);
+				} else {
+
+					SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
+							.setTypes(TYPE_NAME_PAPER)
+							.setQuery(
+									QueryBuilders
+											.matchPhraseQuery(queryDTO.getBooleanQueryies().get(0).getArea(),
+													queryDTO.getBooleanQueryies().get(0).getQuery())
+											.analyzer("serbian"))
+							.setSearchType(SearchType.DEFAULT).highlighter(highlightBuilder).setSize(100);
+					System.out.println(request);
+					SearchResponse response = request.get();
+					System.out.println(response.toString());
+					retVal = getResponse(response);
+				}
+
 			} else {
-				SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
-						.setTypes(TYPE_NAME_PAPER)
-						.setQuery(QueryBuilders.matchQuery(queryDTO.getBooleanQueryies().get(0).getArea(),
-								queryDTO.getBooleanQueryies().get(0).getQuery()).analyzer("serbian"))
-						.setSearchType(SearchType.DEFAULT).highlighter(highlightBuilder)
-						.setSize(100);
-				SearchResponse response = request.get();
-				// System.out.println(response.toString());
-				retVal = getResponse(response);
-				System.out.println("query: " + QueryBuilders.matchQuery(queryDTO.getBooleanQueryies().get(0).getArea(),
-						queryDTO.getBooleanQueryies().get(0).getQuery()));
+				if (queryDTO.getBooleanQueryies().get(0).getArea().equals("everything")) {
+					SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
+							.setTypes(TYPE_NAME_PAPER)
+							.setQuery(QueryBuilders
+									.multiMatchQuery(queryDTO.getBooleanQueryies().get(0).getQuery(), "title",
+											"journaltitle", "authors", "keywords", "area", "content")
+									.analyzer("serbian").operator(Operator.AND))
+							.setSearchType(SearchType.DEFAULT).highlighter(highlightBuilder).setSize(100);
+					System.out.println(request);
+					SearchResponse response = request.get();
+					System.out.println(response.toString());
+					retVal = getResponse(response);
+				} else {
+					SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
+							.setTypes(TYPE_NAME_PAPER)
+							.setQuery(
+									QueryBuilders
+											.matchQuery(queryDTO.getBooleanQueryies().get(0).getArea(),
+													queryDTO.getBooleanQueryies().get(0).getQuery())
+											.analyzer("serbian").operator(Operator.AND))
+							.setSearchType(SearchType.DEFAULT).highlighter(highlightBuilder).setSize(100);
+					System.out.println(request);
+					SearchResponse response = request.get();
+					System.out.println(response.toString());
+					retVal = getResponse(response);
+				}
 			}
 
 			return new ResponseEntity(retVal, HttpStatus.OK);
@@ -148,7 +187,7 @@ public class SearchController {
 					if (dto.getIsPhraze() != null && dto.getIsPhraze() == true) {
 						if (dto.getArea().equals("everything")) {
 							booleanQuery.must(QueryBuilders.multiMatchQuery(dto.getQuery(), "title", "journaltitle",
-									"author", "keywords", "area", "content").type("phrase").analyzer("serbian"));
+									"authors", "keywords", "area", "content").type("phrase").analyzer("serbian"));
 						} else {
 							booleanQuery.must(
 									QueryBuilders.matchPhraseQuery(dto.getArea(), dto.getQuery()).analyzer("serbian"));
@@ -156,10 +195,9 @@ public class SearchController {
 					} else {
 						if (dto.getArea().equals("everything")) {
 							booleanQuery.must(QueryBuilders.multiMatchQuery(dto.getQuery(), "title", "journaltitle",
-									"author", "keywords", "area", "content").analyzer("serbian"));
+									"authors", "keywords", "area", "content").analyzer("serbian"));
 						} else {
-							booleanQuery
-									.must(QueryBuilders.matchQuery(dto.getArea(), dto.getQuery()).analyzer("serbian"));
+							booleanQuery.must(QueryBuilders.matchQuery(dto.getArea(), dto.getQuery()).analyzer("serbian"));
 						}
 					}
 
@@ -167,7 +205,7 @@ public class SearchController {
 					if (dto.getIsPhraze() != null && dto.getIsPhraze() == true) {
 						if (dto.getArea().equals("everything")) {
 							booleanQuery.should(QueryBuilders.multiMatchQuery(dto.getQuery(), "title", "journaltitle",
-									"author", "keywords", "area", "content").type("phrase").analyzer("serbian"));
+									"authors", "keywords", "area", "content").type("phrase").analyzer("serbian"));
 						} else {
 							booleanQuery.should(
 									QueryBuilders.matchPhraseQuery(dto.getArea().toLowerCase(), dto.getQuery()));
@@ -175,7 +213,7 @@ public class SearchController {
 					} else {
 						if (dto.getArea().equals("everything")) {
 							booleanQuery.should(QueryBuilders.multiMatchQuery(dto.getQuery(), "title", "journaltitle",
-									"author", "keywords", "area", "content").analyzer("serbian"));
+									"authors", "keywords", "area", "content").analyzer("serbian"));
 						} else {
 							booleanQuery.should(QueryBuilders.matchQuery(dto.getArea().toLowerCase(), dto.getQuery())
 									.analyzer("serbian"));
@@ -188,8 +226,7 @@ public class SearchController {
 			highlightBuilder.highlightQuery(booleanQuery);
 			SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
 					.setTypes(TYPE_NAME_PAPER).setQuery(booleanQuery).setSearchType(SearchType.DEFAULT)
-					.highlighter(highlightBuilder)
-					.setSize(100);
+					.highlighter(highlightBuilder).setSize(100);
 			System.out.println("BQB");
 			System.out.println(booleanQuery);
 			System.out.println("REQUEST");
@@ -202,34 +239,33 @@ public class SearchController {
 		}
 
 	}
-	
+
 	@GetMapping(path = "/findRecenzentsByScientificArea/{id}", produces = "application/json")
 	public ResponseEntity<?> findRecenzentsByScientificArea(@PathVariable Long id) {
 		Optional<Paper> paper = this.paperService.findById(id);
 		if (paper.isPresent()) {
 			SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_RECENZENT)
 					.setTypes(TYPE_NAME_RECENZENT)
-					.setQuery(QueryBuilders.matchQuery("areas",paper.get().getArea().getName()).analyzer("serbian"))
-					.setSearchType(SearchType.DEFAULT)
-					.setSize(100);
+					.setQuery(QueryBuilders.matchQuery("areas", paper.get().getArea().getName()).analyzer("serbian"))
+					.setSearchType(SearchType.DEFAULT).setSize(100);
 			System.out.println(request);
 			SearchResponse response = request.get();
 			System.out.println(response);
-			Set<Long> recenzents= new HashSet<Long>();
-	        for (SearchHit hit : response.getHits().getHits()) {
+			Set<Long> recenzents = new HashSet<Long>();
+			for (SearchHit hit : response.getHits().getHits()) {
 				Gson gson = new Gson();
 				RecenzentDoc object = gson.fromJson(hit.getSourceAsString(), RecenzentDoc.class);
 				recenzents.add(object.getId());
-	        }
-	        
-	        
-	        List<RecenzentDTO> recenzentsDTO = new ArrayList<RecenzentDTO>();
-	        for(Long recenzent :recenzents) {
-	        	recenzentsDTO.add(new RecenzentDTO(this.userService.findRecenzentById(recenzent)));
-	        }
-	        
-	        
-	        return new ResponseEntity(recenzentsDTO, HttpStatus.OK);
+			}
+			List<Recenzent> recenzentsOfJournal = this.journalService.findAllRecenzentsByJournal(paper.get().getJournal());
+			List<RecenzentDTO> recenzentsDTO = new ArrayList<RecenzentDTO>();
+			for (Long recenzent : recenzents) {
+				if(recenzentsOfJournal.contains(this.userService.findRecenzentById(recenzent))) {
+					recenzentsDTO.add(new RecenzentDTO(this.userService.findRecenzentById(recenzent)));
+				}
+			}
+
+			return new ResponseEntity(recenzentsDTO, HttpStatus.OK);
 		}
 		return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 	}
@@ -248,98 +284,94 @@ public class SearchController {
 			query.minimumShouldMatch("65%");
 			query.minDocFreq(1);
 			query.analyzer("serbian");
-			
+
 			SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
-	                .setTypes(TYPE_NAME_PAPER)
-	                .setQuery(query)
-	                .setSearchType(SearchType.DEFAULT)
-	                .setSize(100);
-	        request.setFetchSource(null, "content");;
+					.setTypes(TYPE_NAME_PAPER).setQuery(query).setSearchType(SearchType.DEFAULT).setSize(100);
+			request.setFetchSource(null, "content");
+			;
 			System.out.println("REQUEST");
 			System.out.println(request);
 			SearchResponse response = request.get();
-	        System.out.println(response.toString());
-	        Set<Long> recenzents= new HashSet<Long>();
-	        for (SearchHit hit : response.getHits().getHits()) {
+			System.out.println(response.toString());
+			Set<Long> recenzents = new HashSet<Long>();
+			for (SearchHit hit : response.getHits().getHits()) {
 				Gson gson = new Gson();
 				PaperDoc object = gson.fromJson(hit.getSourceAsString(), PaperDoc.class);
 				recenzents.addAll(object.getRecenzentsId());
-	        }
-	        
-	        SearchRequestBuilder requestRejected = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER_REJECTED)
-	                .setTypes(TYPE_NAME_PAPER_REJECTED)
-	                .setQuery(query)
-	                .setSearchType(SearchType.DEFAULT)
-	                .setSize(100);
-	        request.setFetchSource(null, "content");;
+			}
+
+			SearchRequestBuilder requestRejected = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER_REJECTED)
+					.setTypes(TYPE_NAME_PAPER_REJECTED).setQuery(query).setSearchType(SearchType.DEFAULT).setSize(100);
+			request.setFetchSource(null, "content");
+			;
 			SearchResponse responseRejected = requestRejected.get();
-	        System.out.println(responseRejected.toString());
-	        for (SearchHit hit : responseRejected.getHits().getHits()) {
+			System.out.println(responseRejected.toString());
+			for (SearchHit hit : responseRejected.getHits().getHits()) {
 				Gson gson = new Gson();
 				PaperDoc object = gson.fromJson(hit.getSourceAsString(), PaperDoc.class);
 				recenzents.addAll(object.getRecenzentsId());
-	        }
-	        List<RecenzentDTO> recenzentsDTO = new ArrayList<RecenzentDTO>();
-	        for(Long recenzent :recenzents) {
-	        	recenzentsDTO.add(new RecenzentDTO(this.userService.findRecenzentById(recenzent)));
-	        }
-	        
-	        
-	        return new ResponseEntity(recenzentsDTO, HttpStatus.OK);
+			}
+			List<Recenzent> recenzentsOfJournal = this.journalService.findAllRecenzentsByJournal(paper.get().getJournal());
+			List<RecenzentDTO> recenzentsDTO = new ArrayList<RecenzentDTO>();
+			for (Long recenzent : recenzents) {
+				if(recenzentsOfJournal.contains(this.userService.findRecenzentById(recenzent))) {
+					recenzentsDTO.add(new RecenzentDTO(this.userService.findRecenzentById(recenzent)));
+				}
+			}
+			
+
+			return new ResponseEntity(recenzentsDTO, HttpStatus.OK);
 		}
 		return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 	}
-	
-	
+
 	@GetMapping(path = "/geoPoint/{id}", produces = "application/json")
 	public ResponseEntity<?> geoPoint(@PathVariable Long id) {
 		Optional<Paper> paper = this.paperService.findById(id);
 		if (paper.isPresent()) {
-			
+
 			BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
 			GeoDistanceQueryBuilder geoQuery = new GeoDistanceQueryBuilder("location");
-			geoQuery.distance("100km");//, DistanceUnit.KILOMETERS);
-			geoQuery.point(new GeoPoint(paper.get().getAuthor().getLat(),paper.get().getAuthor().getLon()));
-            boolQuery.mustNot(geoQuery);
-            
-            //System.out.println(geoQuery);
-            //System.out.println(boolQuery);
-            List<Coauthor> coauthors = this.coauthorService.findAllByPaper(paper.get().getId());
-            BoolQueryBuilder boolQueryFinal = QueryBuilders.boolQuery().must(boolQuery);
-            for(int i = 0; i < coauthors.size(); i++) {
-            	BoolQueryBuilder boolQuery1 = QueryBuilders.boolQuery();
-                GeoDistanceQueryBuilder geoQuery1 = new GeoDistanceQueryBuilder("location");
-    			geoQuery1.distance("100km");//, DistanceUnit.KILOMETERS);
-    			geoQuery1.point(new GeoPoint(coauthors.get(i).getLat(), coauthors.get(i).getLon()));//obrnuto
-                boolQuery1.mustNot(geoQuery1);
-                boolQueryFinal.must(boolQuery1);
-            }
-            
+			geoQuery.distance("100km");// , DistanceUnit.KILOMETERS);
+			geoQuery.point(new GeoPoint(paper.get().getAuthor().getLat(), paper.get().getAuthor().getLon()));
+			boolQuery.mustNot(geoQuery);
+
+			// System.out.println(geoQuery);
+			// System.out.println(boolQuery);
+			List<Coauthor> coauthors = this.coauthorService.findAllByPaper(paper.get().getId());
+			BoolQueryBuilder boolQueryFinal = QueryBuilders.boolQuery().must(boolQuery);
+			for (int i = 0; i < coauthors.size(); i++) {
+				BoolQueryBuilder boolQuery1 = QueryBuilders.boolQuery();
+				GeoDistanceQueryBuilder geoQuery1 = new GeoDistanceQueryBuilder("location");
+				geoQuery1.distance("100km");// , DistanceUnit.KILOMETERS);
+				geoQuery1.point(new GeoPoint(coauthors.get(i).getLat(), coauthors.get(i).getLon()));// obrnuto
+				boolQuery1.mustNot(geoQuery1);
+				boolQueryFinal.must(boolQuery1);
+			}
+
 			SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_RECENZENT)
-	                .setTypes(TYPE_NAME_RECENZENT)
-	                .setQuery(boolQueryFinal)
-	                .setSearchType(SearchType.DEFAULT)
-	                .setSize(100);
-	        request.setFetchSource(null, "content");
+					.setTypes(TYPE_NAME_RECENZENT).setQuery(boolQueryFinal).setSearchType(SearchType.DEFAULT)
+					.setSize(100);
+			request.setFetchSource(null, "content");
 			System.out.println("REQUEST");
 			System.out.println(request);
 			SearchResponse response = request.get();
-	        System.out.println(response.toString());
-	        Set<Long> recenzents= new HashSet<Long>();
-	        for (SearchHit hit : response.getHits().getHits()) {
+			System.out.println(response.toString());
+			Set<Long> recenzents = new HashSet<Long>();
+			for (SearchHit hit : response.getHits().getHits()) {
 				Gson gson = new Gson();
 				RecenzentDoc object = gson.fromJson(hit.getSourceAsString(), RecenzentDoc.class);
 				recenzents.add(object.getId());
-	        }
-	        
-	        
-	        List<RecenzentDTO> recenzentsDTO = new ArrayList<RecenzentDTO>();
-	        for(Long recenzent :recenzents) {
-	        	recenzentsDTO.add(new RecenzentDTO(this.userService.findRecenzentById(recenzent)));
-	        }
-	        
-	        
-	        return new ResponseEntity(recenzentsDTO, HttpStatus.OK);
+			}
+			List<Recenzent> recenzentsOfJournal = this.journalService.findAllRecenzentsByJournal(paper.get().getJournal());
+			List<RecenzentDTO> recenzentsDTO = new ArrayList<RecenzentDTO>();
+			for (Long recenzent : recenzents) {
+				if(recenzentsOfJournal.contains(this.userService.findRecenzentById(recenzent))) {
+					recenzentsDTO.add(new RecenzentDTO(this.userService.findRecenzentById(recenzent)));
+				}
+			}
+
+			return new ResponseEntity(recenzentsDTO, HttpStatus.OK);
 		}
 		return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 	}
@@ -398,60 +430,45 @@ public class SearchController {
 		return null;
 
 	}
-/*
- * 	@GetMapping(path = "/geoPoint/{id}", produces = "application/json")
-	public ResponseEntity<?> geoPoint(@PathVariable Long id) {
-		Optional<Paper> paper = this.paperService.findById(id);
-		if (paper.isPresent()) {
-			BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
-			GeoDistanceQueryBuilder geoQuery = new GeoDistanceQueryBuilder("location");
-			geoQuery.distance("100km");//, DistanceUnit.KILOMETERS);
-			geoQuery.point(new GeoPoint(paper.get().getAuthor().getLon(),paper.get().getAuthor().getLat()));
-            boolQuery.mustNot(geoQuery);
-            
-            //System.out.println(geoQuery);
-            //System.out.println(boolQuery);
-            List<Coauthor> coauthors = this.coauthorService.findAllByPaper(paper.get().getId());
-            BoolQueryBuilder boolQueryFinal = QueryBuilders.boolQuery().must(boolQuery);
-            for(int i = 0; i < coauthors.size(); i++) {
-            	BoolQueryBuilder boolQuery1 = QueryBuilders.boolQuery();
-                GeoDistanceQueryBuilder geoQuery1 = new GeoDistanceQueryBuilder("location");
-    			geoQuery1.distance("100km");//, DistanceUnit.KILOMETERS);
-    			geoQuery1.point(new GeoPoint(coauthors.get(i).getLon(), coauthors.get(i).getLat()));//obrnuto
-                boolQuery1.mustNot(geoQuery1);
-                boolQueryFinal.must(boolQuery1);
-            }
-            SearchQuery searchQuery = new NativeSearchQueryBuilder()
-                    .withFilter(geoQuery)
-                    .build();
-            System.out.println(searchQuery.toString());
-			SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_RECENZENT)
-	                .setTypes(TYPE_NAME_RECENZENT)
-	                .setQuery(boolQueryFinal)
-	                .setSearchType(SearchType.DEFAULT);
-	        request.setFetchSource(null, "content");;
-			System.out.println("REQUEST");
-			System.out.println(request);
-			SearchResponse response = request.get();
-	        System.out.println(response.toString());
-	        Set<Long> recenzents= new HashSet<Long>();
-	        for (SearchHit hit : response.getHits().getHits()) {
-				Gson gson = new Gson();
-				RecenzentDoc object = gson.fromJson(hit.getSourceAsString(), RecenzentDoc.class);
-				recenzents.add(object.getId());
-	        }
-	        
-	        
-	        List<RecenzentDTO> recenzentsDTO = new ArrayList<RecenzentDTO>();
-	        for(Long recenzent :recenzents) {
-	        	recenzentsDTO.add(new RecenzentDTO(this.userService.findRecenzentById(recenzent)));
-	        }
-	        
-	        
-	        return new ResponseEntity(recenzentsDTO, HttpStatus.OK);
-		}
-		return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-	}
- * /
- */
+	/*
+	 * @GetMapping(path = "/geoPoint/{id}", produces = "application/json") public
+	 * ResponseEntity<?> geoPoint(@PathVariable Long id) { Optional<Paper> paper =
+	 * this.paperService.findById(id); if (paper.isPresent()) { BoolQueryBuilder
+	 * boolQuery = QueryBuilders.boolQuery(); GeoDistanceQueryBuilder geoQuery = new
+	 * GeoDistanceQueryBuilder("location"); geoQuery.distance("100km");//,
+	 * DistanceUnit.KILOMETERS); geoQuery.point(new
+	 * GeoPoint(paper.get().getAuthor().getLon(),paper.get().getAuthor().getLat()));
+	 * boolQuery.mustNot(geoQuery);
+	 * 
+	 * //System.out.println(geoQuery); //System.out.println(boolQuery);
+	 * List<Coauthor> coauthors =
+	 * this.coauthorService.findAllByPaper(paper.get().getId()); BoolQueryBuilder
+	 * boolQueryFinal = QueryBuilders.boolQuery().must(boolQuery); for(int i = 0; i
+	 * < coauthors.size(); i++) { BoolQueryBuilder boolQuery1 =
+	 * QueryBuilders.boolQuery(); GeoDistanceQueryBuilder geoQuery1 = new
+	 * GeoDistanceQueryBuilder("location"); geoQuery1.distance("100km");//,
+	 * DistanceUnit.KILOMETERS); geoQuery1.point(new
+	 * GeoPoint(coauthors.get(i).getLon(), coauthors.get(i).getLat()));//obrnuto
+	 * boolQuery1.mustNot(geoQuery1); boolQueryFinal.must(boolQuery1); } SearchQuery
+	 * searchQuery = new NativeSearchQueryBuilder() .withFilter(geoQuery) .build();
+	 * System.out.println(searchQuery.toString()); SearchRequestBuilder request =
+	 * nodeClient.prepareSearch().setIndices(INDEX_NAME_RECENZENT)
+	 * .setTypes(TYPE_NAME_RECENZENT) .setQuery(boolQueryFinal)
+	 * .setSearchType(SearchType.DEFAULT); request.setFetchSource(null, "content");;
+	 * System.out.println("REQUEST"); System.out.println(request); SearchResponse
+	 * response = request.get(); System.out.println(response.toString()); Set<Long>
+	 * recenzents= new HashSet<Long>(); for (SearchHit hit :
+	 * response.getHits().getHits()) { Gson gson = new Gson(); RecenzentDoc object =
+	 * gson.fromJson(hit.getSourceAsString(), RecenzentDoc.class);
+	 * recenzents.add(object.getId()); }
+	 * 
+	 * 
+	 * List<RecenzentDTO> recenzentsDTO = new ArrayList<RecenzentDTO>(); for(Long
+	 * recenzent :recenzents) { recenzentsDTO.add(new
+	 * RecenzentDTO(this.userService.findRecenzentById(recenzent))); }
+	 * 
+	 * 
+	 * return new ResponseEntity(recenzentsDTO, HttpStatus.OK); } return new
+	 * ResponseEntity(null, HttpStatus.BAD_REQUEST); } /
+	 */
 }

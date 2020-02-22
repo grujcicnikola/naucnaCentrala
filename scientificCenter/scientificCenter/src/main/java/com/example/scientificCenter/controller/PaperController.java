@@ -127,6 +127,19 @@ public class PaperController {
 	@Autowired
 	private PaperDocRejectedDAO resultRetrieverRejected;
 
+	@GetMapping("/getPapers")
+    public ResponseEntity<?> getPaper() {
+
+	 	System.out.println("get paper");
+	 	List<Paper> papers = this.paperService.findAll();
+	 	List<PaperDTO> papersDTO = new ArrayList<PaperDTO>();
+	 	for(int i =0; i< papers.size(); i++) {
+	 		papersDTO.add(new PaperDTO(papers.get(i)));
+	 	}
+	 	return new ResponseEntity<>(papersDTO, HttpStatus.OK);
+
+    }
+	
 	@RequestMapping(value = "/create/{email}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getRegistrationForm(@PathVariable String email, @RequestBody JournalDTO journalDTO) {
 		System.out.println("ZAPOCINJE PROCES Submitting paper");
@@ -356,9 +369,26 @@ public class PaperController {
 				e.printStackTrace();
 				return new ResponseEntity(  HttpStatus.BAD_REQUEST);
 			}
+			List<String> authors = new ArrayList<String>();
+			authors.add(paper.get().getAuthor().getName()+" "+paper.get().getAuthor().getSurname());
+			List<Coauthor> coauthors = this.coauthorService.findAllByPaper(paper.get().getId());
+			if(coauthors != null) {
+				for(int i =0; i < coauthors.size(); i++) {
+					authors.add(coauthors.get(i).getName());
+				}
+			}
+			
+			List<Long> recenzentsId = new ArrayList<Long>();
+			List<Recenzent> recenzents = this.journalService.findAllRecenzentsByJournal(paper.get().getJournal());
+			if(recenzents != null) {
+				for(int i =0; i < recenzents.size(); i++) {
+					recenzentsId.add(recenzents.get(i).getId());
+				}
+			}
 			PaperDocRejected paperDoc = new PaperDocRejected();
 			paperDoc.setArea(paper.get().getArea().getName());
-			paperDoc.setAuthor(paper.get().getAuthor().getName() + " " + paper.get().getAuthor().getSurname());
+			paperDoc.setAuthors(authors);
+			paperDoc.setRecenzentsId(recenzentsId);
 			paperDoc.setIdPaper(paper.get().getId());
 			paperDoc.setJournaltitle(paper.get().getJournal().getTitle());
 			paperDoc.setKeywords(paper.get().getKeywords());
@@ -402,15 +432,32 @@ public class PaperController {
 				e.printStackTrace();
 				return;
 			}
+			List<String> authors = new ArrayList<String>();
+			authors.add(paper.getAuthor().getName()+" "+paper.getAuthor().getSurname());
+			List<Coauthor> coauthors = this.coauthorService.findAllByPaper(paper.getId());
+			if(coauthors != null) {
+				for(int i =0; i < coauthors.size(); i++) {
+					authors.add(coauthors.get(i).getName());
+				}
+			}
+			
+			List<Long> recenzentsId = new ArrayList<Long>();
+			List<Recenzent> recenzents = this.journalService.findAllRecenzentsByJournal(paper.getJournal());
+			if(recenzents != null) {
+				for(int i =0; i < recenzents.size(); i++) {
+					recenzentsId.add(recenzents.get(i).getId());
+				}
+			}
 			PaperDoc paperDoc = new PaperDoc();
 			paperDoc.setArea(paper.getArea().getName());
-			paperDoc.setAuthor(paper.getAuthor().getName() + " " + paper.getAuthor().getSurname());
+			paperDoc.setAuthors(authors);
 			paperDoc.setIdPaper(paper.getId());
 			paperDoc.setJournaltitle(paper.getJournal().getTitle());
 			paperDoc.setKeywords(paper.getKeywords());
 			paperDoc.setTitle(paper.getTitle());
 			paperDoc.setStatus(paper.getStatus());
 			paperDoc.setContent(parsedText);
+			paperDoc.setRecenzentsId(recenzentsId);
 			//System.out.println(parsedText);
 			this.resultRetriever.add(paperDoc);
 

@@ -1,5 +1,6 @@
 package com.example.scientificCenter.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,10 @@ public class PaperService {
 	public Optional<Paper> findById(Long id) {
 		// TODO Auto-generated method stub
 		return this.paperRepository.findById(id);
+	}
+
+	public List<Paper> findAll() {
+		// TODO Auto-generated method stub
+		return this.paperRepository.findAll();
 	}
 }
