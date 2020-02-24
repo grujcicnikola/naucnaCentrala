@@ -121,7 +121,7 @@ public class StartData {
 		List<String> coauthors2= new ArrayList<String>();
 		coauthors2.add(coauthor2.getName());
 		List<Long> recenzents2= new ArrayList<Long>();
-		recenzents2.add(Long.parseLong("3")); recenzents2.add(Long.parseLong("9"));	
+		recenzents2.add(Long.parseLong("3"));	
 		indexPaper(paper1Saved2, recenzents2, coauthors2);
 		
 		Optional<com.example.scientificCenter.domain.User> author3 = this.userService.getByEmail("author3@gmail.com");
@@ -168,7 +168,7 @@ public class StartData {
 		List<String> coauthors4= new ArrayList<String>();
 		coauthors4.add(coauthor4.getName());
 		List<Long> recenzents4= new ArrayList<Long>();
-		recenzents4.add(Long.parseLong("11")); recenzents4.add(Long.parseLong("3"));	
+		recenzents4.add(Long.parseLong("3"));	
 		indexPaper(paper1Saved4, recenzents4, coauthors4);
 		
 		Optional<com.example.scientificCenter.domain.User> author5 = this.userService.getByEmail("author1@gmail.com");
@@ -181,7 +181,7 @@ public class StartData {
 				"čokolada, slatkiši", journal5, "");
 		Paper paper1Saved5 = this.paperService.save(paper5);
 		List<Long> recenzents5= new ArrayList<Long>();
-		recenzents5.add(Long.parseLong("2")); recenzents5.add(Long.parseLong("3"));	
+		recenzents5.add(Long.parseLong("2"));	
 		indexPaper(paper1Saved5, recenzents5, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author6 = this.userService.getByEmail("author1@gmail.com");
@@ -233,7 +233,7 @@ public class StartData {
 				"fizika, komete", journal9, "");
 		Paper paper1Saved9= this.paperService.save(paper9);
 		List<Long> recenzents9= new ArrayList<Long>();
-		recenzents9.add(Long.parseLong("9")); recenzents9.add(Long.parseLong("3"));	
+		recenzents9.add(Long.parseLong("9"));	
 		indexPaper(paper1Saved9, recenzents9, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author10 = this.userService.getByEmail("author4@gmail.com");
@@ -273,7 +273,7 @@ public class StartData {
 				"fizika, mesec ,mena", journal12, "");
 		Paper paper1Saved12 = this.paperService.save(paper12);
 		List<Long> recenzents12= new ArrayList<Long>();
-		recenzents12.add(Long.parseLong("2")); recenzents12.add(Long.parseLong("3"));	
+		recenzents12.add(Long.parseLong("2"));	
 		indexPaper(paper1Saved12, recenzents12, null);
 		
 		
@@ -289,7 +289,7 @@ public class StartData {
 				"mleko, čokolada", journal13, "");
 		Paper paper1Saved13 = this.paperService.save(paper13);
 		List<Long> recenzents13= new ArrayList<Long>();
-		recenzents13.add(Long.parseLong("10")); recenzents13.add(Long.parseLong("3"));	
+		recenzents13.add(Long.parseLong("10"));	
 		indexPaper(paper1Saved13, recenzents13, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author14 = this.userService.getByEmail("author4@gmail.com");
@@ -341,7 +341,7 @@ public class StartData {
 				"more, okean", journal17, "");
 		Paper paper1Saved17 = this.paperService.save(paper17);
 		List<Long> recenzents17= new ArrayList<Long>();
-		recenzents17.add(Long.parseLong("2")); recenzents17.add(Long.parseLong("3"));	
+		recenzents17.add(Long.parseLong("2"));	
 		indexPaper(paper1Saved17, recenzents17, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author18 = this.userService.getByEmail("author4@gmail.com");
@@ -354,7 +354,7 @@ public class StartData {
 				"more, voda", journal18, "");
 		Paper paper1Saved18 = this.paperService.save(paper18);
 		List<Long> recenzents18= new ArrayList<Long>();
-		recenzents18.add(Long.parseLong("9")); recenzents18.add(Long.parseLong("3"));	
+		recenzents18.add(Long.parseLong("9"));	
 		indexPaper(paper1Saved18, recenzents18, null);
 		
 		Optional<com.example.scientificCenter.domain.User> author19 = this.userService.getByEmail("author4@gmail.com");
@@ -425,7 +425,7 @@ public class StartData {
 			areas.add(sc.getName());
 		}
 		RecenzentDoc recDoc = new RecenzentDoc(recenzent.getId(), recenzent.getUsername(), new GeoPoint(recenzent.getLat(), recenzent.getLon()),areas);
-		this.recenzentRetriever.add(recDoc);
+		//this.recenzentRetriever.add(recDoc);
 	}
 
 	public void saveCamundaUser(String email, String name, String password, String surname, String username) {
@@ -442,7 +442,7 @@ public class StartData {
 	}
 
 	public void indexPaper(Paper paper, List<Long> recenzents, List<String> coauthors ) {
-		
+		/*
 		if (paper != null) {
 			PDFTextStripper pdfStripper = null;
 			PDDocument pdDoc = null;

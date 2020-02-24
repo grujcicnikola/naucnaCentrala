@@ -113,10 +113,11 @@ public class SearchController {
 		if (queryDTO.getBooleanQueryies().size() == 1) {// basic search
 			System.out.println("obicna pretraga");
 			ArrayList<ResponsePaperDTO> retVal = new ArrayList<>();
-			highlightBuilder
-					.highlightQuery(QueryBuilders.queryStringQuery(queryDTO.getBooleanQueryies().get(0).getQuery()));
+			
 			if (queryDTO.getBooleanQueryies().get(0).getIsPhraze() != null
 					&& queryDTO.getBooleanQueryies().get(0).getIsPhraze() == true) {
+				highlightBuilder
+				.highlightQuery(QueryBuilders.queryStringQuery("\""+queryDTO.getBooleanQueryies().get(0).getQuery()+"\"").defaultOperator(Operator.AND));
 				if (queryDTO.getBooleanQueryies().get(0).getArea().equals("everything")) {
 					SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
 							.setTypes(TYPE_NAME_PAPER)
@@ -146,6 +147,8 @@ public class SearchController {
 				}
 
 			} else {
+				highlightBuilder
+				.highlightQuery(QueryBuilders.queryStringQuery(queryDTO.getBooleanQueryies().get(0).getQuery()).defaultOperator(Operator.AND));
 				if (queryDTO.getBooleanQueryies().get(0).getArea().equals("everything")) {
 					SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
 							.setTypes(TYPE_NAME_PAPER)
@@ -176,6 +179,8 @@ public class SearchController {
 
 			return new ResponseEntity(retVal, HttpStatus.OK);
 		} else {
+			highlightBuilder
+			.highlightQuery(QueryBuilders.queryStringQuery(queryDTO.getBooleanQueryies().get(0).getQuery()).defaultOperator(Operator.AND));
 			List<BooleanQueryDTO> query = queryDTO.getBooleanQueryies();
 			ArrayList<ResponsePaperDTO> retVal = new ArrayList<>();
 
@@ -187,7 +192,7 @@ public class SearchController {
 					if (dto.getIsPhraze() != null && dto.getIsPhraze() == true) {
 						if (dto.getArea().equals("everything")) {
 							booleanQuery.must(QueryBuilders.multiMatchQuery(dto.getQuery(), "title", "journaltitle",
-									"authors", "keywords", "area", "content").type("phrase").analyzer("serbian"));
+									"authors", "keywords", "area", "content").type("phrase").analyzer("serbian").operator(Operator.AND));
 						} else {
 							booleanQuery.must(
 									QueryBuilders.matchPhraseQuery(dto.getArea(), dto.getQuery()).analyzer("serbian"));
@@ -195,9 +200,9 @@ public class SearchController {
 					} else {
 						if (dto.getArea().equals("everything")) {
 							booleanQuery.must(QueryBuilders.multiMatchQuery(dto.getQuery(), "title", "journaltitle",
-									"authors", "keywords", "area", "content").analyzer("serbian"));
+									"authors", "keywords", "area", "content").analyzer("serbian").operator(Operator.AND));
 						} else {
-							booleanQuery.must(QueryBuilders.matchQuery(dto.getArea(), dto.getQuery()).analyzer("serbian"));
+							booleanQuery.must(QueryBuilders.matchQuery(dto.getArea(), dto.getQuery()).analyzer("serbian").operator(Operator.AND));
 						}
 					}
 
@@ -205,7 +210,7 @@ public class SearchController {
 					if (dto.getIsPhraze() != null && dto.getIsPhraze() == true) {
 						if (dto.getArea().equals("everything")) {
 							booleanQuery.should(QueryBuilders.multiMatchQuery(dto.getQuery(), "title", "journaltitle",
-									"authors", "keywords", "area", "content").type("phrase").analyzer("serbian"));
+									"authors", "keywords", "area", "content").type("phrase").analyzer("serbian").operator(Operator.AND));
 						} else {
 							booleanQuery.should(
 									QueryBuilders.matchPhraseQuery(dto.getArea().toLowerCase(), dto.getQuery()));
@@ -213,7 +218,7 @@ public class SearchController {
 					} else {
 						if (dto.getArea().equals("everything")) {
 							booleanQuery.should(QueryBuilders.multiMatchQuery(dto.getQuery(), "title", "journaltitle",
-									"authors", "keywords", "area", "content").analyzer("serbian"));
+									"authors", "keywords", "area", "content").analyzer("serbian").operator(Operator.AND));
 						} else {
 							booleanQuery.should(QueryBuilders.matchQuery(dto.getArea().toLowerCase(), dto.getQuery())
 									.analyzer("serbian"));
@@ -283,6 +288,7 @@ public class SearchController {
 			query.minTermFreq(1);
 			query.minimumShouldMatch("65%");
 			query.minDocFreq(1);
+			query.maxDocFreq(20);
 			query.analyzer("serbian");
 
 			SearchRequestBuilder request = nodeClient.prepareSearch().setIndices(INDEX_NAME_PAPER)
